@@ -89,6 +89,11 @@ namespace JavaToCSharpConverter.Model.Java
                             if (tmpClassPartType == CodeResultType.LineEnd)
                             {
                                 var tmpProperty = tmpClassPart.Item2.RemoveNewlines().Trim(' ');
+                                //Sometimes someone adds a ; after a Curly Bracket.
+                                if (tmpProperty == ";")
+                                {
+                                    continue;
+                                }
 
                                 if (tmpClass.AttributeList.Contains("interface") && tmpProperty.EndsWith(");"))
                                 {
@@ -246,25 +251,36 @@ package {tmpPackage};
             //Extends und Implements absplitten
             var tmpSplit = tmpClassDefinition.Split(new string[] { " extends " }, StringSplitOptions.None);
             tmpSplit = tmpSplit.SelectMany(inItem => inItem.Split(new string[] { " implements " }, StringSplitOptions.None)).ToArray();
-
-            if (tmpSplit.Length > 1)
-            {
-                //Interfaces Setzen
-                var tmpInterfaces = CodeSplitter.FileDataSplitter(string.Join(" ", tmpSplit.Skip(1)), new ClassInterfaceSplitter())
-                    .Select(inItem => inItem.Item2)
-                    .ToList()
-                    .Foreach(inItem => inItem.RemoveNewlines().Trim(' '))
-                    .Where(inItem => !string.IsNullOrEmpty(inItem))
-                    .ToList();
-                tmpClass.InterfaceList = tmpInterfaces;
-            }
-
+            
             tmpClassDefinition = tmpSplit[0];
 
             //Set the Class Name
             var tmpClassParts = tmpClassDefinition.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             tmpClass.AttributeList = tmpClassParts.Reverse().Skip(1).ToList();
             tmpClass.Name = tmpClassParts.Last().RemoveNewlines().Trim(' ');
+
+            //Add Generic Types of Class to Header
+            if (tmpClass.Name.Contains("<"))
+            {
+                //Get All Generic Arguments
+                tmpClass.GenericTypeParamList = CTSExtensions.GetGenericObjectsForType(tmpClass.Name);
+                //Save the Name back
+                tmpClass.Name = tmpClass.Name.Substring(0, tmpClass.Name.IndexOf("<"));
+            }
+
+            //Handle Extension and Implement of Java classes
+            if (tmpSplit.Length > 1)
+            {
+                //TODO Handle Generic Interfaces?
+
+                //Set All Interfaces of this Class 
+                var tmpInterfaces = CodeSplitter.FileDataSplitter(string.Join(" ", tmpSplit.Skip(1)), new ClassInterfaceSplitter())
+                    .Select(inItem => inItem.Item2)
+                    .Foreach(inItem => inItem.RemoveNewlines().Trim(' '))
+                    .Where(inItem => !string.IsNullOrEmpty(inItem))
+                    .ToList();
+                tmpClass.InterfaceList = tmpInterfaces;
+            }
         }
 
         /// <summary>

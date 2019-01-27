@@ -31,6 +31,11 @@ namespace JavaToCSharpConverter.Model
         public List<string> UsingList { get; set; } = new List<string>();
 
         /// <summary>
+        /// List of Generic Type params (Class<T>, Generic<B,B2>) to be recognized later
+        /// </summary>
+        public List<string> GenericTypeParamList { get; set; } = new List<string>();
+
+        /// <summary>
         /// Parent and a List of Implemented Interfaces
         /// </summary>
         public List<string> InterfaceList { get; set; } = new List<string>();

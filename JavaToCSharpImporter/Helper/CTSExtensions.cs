@@ -1,10 +1,11 @@
-﻿using System;
+﻿using JavaToCSharpConverter.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace JavaToCSharpConverter.Helper
 {
-    public static class MoreLinq
+    public static class CTSExtensions
     {
         /// <summary>
         /// Forach auf einer Liste ausführen
@@ -58,6 +59,22 @@ namespace JavaToCSharpConverter.Helper
                 return -1;
             }
             return tmpFirstIndex;
+        }
+
+        /// <summary>
+        /// Gets all Valid Types for a Generic Value.
+        /// The Last one might be 'IsArray'
+        /// </summary>
+        /// <param name="inFullType"></param>
+        /// <returns></returns>
+        public static List<string> GetGenericObjectsForType(this string inFullType)
+        {
+            return inFullType
+                .Split(new char[] { '<', '>', ',' })
+                .Select(inItem => inItem.Trim(' '))
+                .Where(inItem => !string.IsNullOrEmpty(inItem))
+                .Skip(1) //Skip the first Element (Class Name)
+                .ToList();
         }
     }
 }

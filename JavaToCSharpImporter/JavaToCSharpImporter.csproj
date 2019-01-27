@@ -84,7 +84,7 @@
   <ItemGroup>
     <Compile Include="Helper\CodeSplitter.cs" />
     <Compile Include="Helper\DataHelper.cs" />
-    <Compile Include="Helper\MoreLinq.cs" />
+    <Compile Include="Helper\CTSExtensions.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Interface\CodeResultType.cs" />
     <Compile Include="Interface\INameConverter.cs" />

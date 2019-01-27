@@ -173,6 +173,11 @@ namespace JavaToCSharpConverter.Model.CSharp
                             .Where(inItem => !string.IsNullOrEmpty(inItem))
                             .ToList();
 
+
+                        if (tmpLeftParts.First() == "final")
+                        {
+                            tmpLeftParts = tmpLeftParts.Skip(1).ToList();
+                        }
                         if (tmpLeftParts.Count > 1)
                         {
                             //Map Type to new Type
@@ -180,6 +185,11 @@ namespace JavaToCSharpConverter.Model.CSharp
                             //TODO: Resolve var Types (from Return Type of Right side)
                             inCodeState.AddVariable(tmpType, tmpLeftParts.Last().Trim(' ').TrimEnd(';'));
                             inStringBuilder.Append(tmpType + " ");
+                        }
+
+                        if (tmpLeftParts.Contains("."))
+                        {
+                            //Do something? Maybe not
                         }
 
                         inStringBuilder.Append(tmpLeftParts.Last());
@@ -241,7 +251,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                             {
                                 tmpCurrentPropertyText = tmpCurrentPropertyText.Substring(7).TrimStart(' ');
                                 //TODO Throw new with inner Methodes usage
-                                AddUsingIfRequired(inRequiredUsings, "System");
+                                //AddUsingIfRequired(inRequiredUsings, "System");
                                 inStringBuilder.Append(tmpCodePart.Item2);
                                 break;
                             }
@@ -261,7 +271,11 @@ namespace JavaToCSharpConverter.Model.CSharp
 
                             if (tmpIsFunction)
                             {
-                                var tmpNewFunctionNameList = inConverter.MapFunction(tmpCurrentPropertyText, tmpType.Name, new List<string> { tmpType.Namespace });
+                                if (tmpType == null)
+                                {
+                                    tmpType = inClass; 
+                                }
+                                    var tmpNewFunctionNameList = inConverter.MapFunction(tmpCurrentPropertyText, tmpType.Name, new List<string> { tmpType.Namespace });
                                 var tmpNewFunctionName = tmpNewFunctionNameList.Split('.').Last();
 
                                 inStringBuilder.Append(tmpNewFunctionName + tmpSplitChar + tmpRemainingText);
