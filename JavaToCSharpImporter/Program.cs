@@ -8,22 +8,29 @@ using System.Linq;
 
 namespace JavaToCSharpConverter
 {
-    class Program
+    public class Program
     {
+
+        public static string JavaMapperPath;
+        public static string LuceneReplacerPath;
         static void Main(string[] args)
         {
-            //ReplaceHelper.Run();
+            var tmpJavaSourcePath = @"C:\Data\LucenTestData\";
+            var tmpCSharpOutputpath = @"Z:\Result\Code\";
+            JavaMapperPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\JavaMapper.ini";
+            LuceneReplacerPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\LuceneReplacer.ini";
 
             var tmpClassList = new List<ClassContainer>();
 
-            var tmpFileList = Directory.EnumerateFiles(@"C:\Data\LucenTestData"/*,"*", SearchOption.AllDirectories*/).ToList();
+            var tmpFileList = Directory.EnumerateFiles(tmpJavaSourcePath, "*", SearchOption.AllDirectories).ToList();
             for (var tmpI = 0; tmpI < tmpFileList.Count; tmpI++)
             {
                 tmpFileList[tmpI] = File.ReadAllText(tmpFileList[tmpI]);
             }
 
             //tmpFileList = TestData.Filelist;
-            tmpFileList.AddRange(TestData.Filelist);
+            //tmpFileList.AddRange(TestData.Filelist);
+
             foreach (var tmpFile in tmpFileList)
             {
                 tmpClassList.AddRange(JavaClassLoader.LoadFile(tmpFile));
@@ -50,10 +57,9 @@ namespace JavaToCSharpConverter
                     }
                 });
 
-            var tmpOutPath = @"Z:\Result\Code\";
-            Directory.CreateDirectory(tmpOutPath);
+            Directory.CreateDirectory(tmpCSharpOutputpath);
 
-            var tmpReplacer = new IniParser.Parser.IniDataParser().Parse(File.ReadAllText(@"C:\Data\ini\replacer.ini"));
+            var tmpReplacer = new IniParser.Parser.IniDataParser().Parse(File.ReadAllText(LuceneReplacerPath));
 
             foreach (var tmpClass in tmpClassList)
             {
@@ -65,10 +71,11 @@ namespace JavaToCSharpConverter
                     tmpCSharp = tmpCSharp.Replace(tmpKV.KeyName, tmpKV.Value);
                 }
 
-                File.WriteAllText(tmpOutPath + tmpClass.Name.Split('<')[0] + ".cs", tmpCSharp);
+                File.WriteAllText(Path.Combine(tmpCSharpOutputpath, tmpClass.Name.Split('<')[0] + ".cs"), tmpCSharp);
                 // Console.Write(tmpCSharp);
             }
 
+            //Create C# Solution with all created Files
             File.WriteAllText(@"Z:\Result\TestProject.csproj", $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project ToolsVersion=""15.0"" xmlns=""http://schemas.microsoft.com/developer/msbuild/2003"">
   <Import Project=""$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"" Condition=""Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"" />

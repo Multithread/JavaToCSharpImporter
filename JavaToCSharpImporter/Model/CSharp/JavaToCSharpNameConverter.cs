@@ -11,7 +11,7 @@ namespace JavaToCSharpConverter.Model.CSharp
         {
             _objectInformation = inOjectInformation;
 
-            _iniData = DataHelper.LoadIni(@"C:\Data\ini\mapper.ini");
+            _iniData = DataHelper.LoadIni(Program.JavaMapperPath);
 
         }
         private IniParser.Model.IniData _iniData;
