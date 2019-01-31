@@ -96,6 +96,7 @@
     <Compile Include="Interface\INameConverter.cs" />
     <Compile Include="Model\CSharp\JavaToCSharpNameConverter.cs" />
     <Compile Include="Model\Java\antlr\IJavaParserListener.cs" />
+    <Compile Include="Model\Java\antlr\Interfaces.cs" />
     <Compile Include="Model\Java\antlr\JavaLexer.g4.cs">
       <DependentUpon>JavaLexer.g4</DependentUpon>
     </Compile>

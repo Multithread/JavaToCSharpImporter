@@ -897,7 +897,7 @@ namespace JavaToCSharpConverter.Model.Java
             return _localctx;
         }
 
-        public partial class ClassDeclarationContext : ParserRuleContext
+        public partial class ClassDeclarationContext : ParserRuleContext, IClassAndInterfaceBaseData
         {
             public ITerminalNode CLASS() { return GetToken(JavaParser.CLASS, 0); }
             public ITerminalNode IDENTIFIER() { return GetToken(JavaParser.IDENTIFIER, 0); }
@@ -1604,7 +1604,7 @@ namespace JavaToCSharpConverter.Model.Java
             return _localctx;
         }
 
-        public partial class InterfaceDeclarationContext : ParserRuleContext
+        public partial class InterfaceDeclarationContext : ParserRuleContext, IClassAndInterfaceBaseData
         {
             public ITerminalNode INTERFACE() { return GetToken(JavaParser.INTERFACE, 0); }
             public ITerminalNode IDENTIFIER() { return GetToken(JavaParser.IDENTIFIER, 0); }

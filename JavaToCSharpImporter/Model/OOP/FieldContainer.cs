@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Antlr4.Runtime.Tree;
+using System.Collections.Generic;
 
 namespace JavaToCSharpConverter.Model
 {
@@ -31,6 +32,11 @@ namespace JavaToCSharpConverter.Model
         /// Default Wert
         /// </summary>
         public string DefaultValue { get; set; }
+        
+        /// <summary>
+        /// Default Wert
+        /// </summary>
+        public IParseTree AntlrDefaultValue { get; set; }
 
         /// <summary>
         /// Existiert ein Default wert?

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Antlr4.Runtime.Tree;
+using System.Collections.Generic;
 
 namespace JavaToCSharpConverter.Model
 {
@@ -35,7 +36,12 @@ namespace JavaToCSharpConverter.Model
         /// <summary>
         /// Code, from Inside the Methode
         /// </summary>
-        public string Code{ get; set; }
+        public string Code { get; set; }
+
+        /// <summary>
+        /// Code, from Inside the Methode
+        /// </summary>
+        public IParseTree AntlrCode { get; set; }
 
         /// <summary>
         /// Filled, if the Methode is a Constructor with a Base Call (:this /:base)
