@@ -88,6 +88,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\AntlrHelper.cs" />
     <Compile Include="Helper\CodeSplitter.cs" />
     <Compile Include="Helper\DataHelper.cs" />
     <Compile Include="Helper\CTSExtensions.cs" />

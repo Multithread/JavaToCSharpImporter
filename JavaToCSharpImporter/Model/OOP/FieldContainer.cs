@@ -1,11 +1,13 @@
 ﻿using Antlr4.Runtime.Tree;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace JavaToCSharpConverter.Model
 {
     /// <summary>
     /// Variablendeklaration, Felddeklaration, Methodenparameter,...
     /// </summary>
+    [DebuggerDisplay("{Type}: {Name}")]
     public class FieldContainer
     {
         /// <summary>

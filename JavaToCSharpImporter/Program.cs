@@ -33,8 +33,8 @@ namespace JavaToCSharpConverter
 
             foreach (var tmpFile in tmpFileList)
             {
-                tmpClassList.AddRange(JavaClassLoader.LoadFile(tmpFile));
-                JavaAntlrClassLoader.LoaderOptimization(tmpFile);
+                //tmpClassList.AddRange(JavaClassLoader.LoadFile(tmpFile));
+                tmpClassList.AddRange(JavaAntlrClassLoader.LoaderOptimization(tmpFile));
             }
             var tmpObjectInformation = new ObjectInformation()
                 .FillClasses(tmpClassList);

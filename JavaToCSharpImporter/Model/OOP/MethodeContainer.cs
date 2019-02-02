@@ -36,7 +36,7 @@ namespace JavaToCSharpConverter.Model
         /// <summary>
         /// Code, from Inside the Methode
         /// </summary>
-        public string Code { get; set; }
+        public string Code { get; set; } = "";
 
         /// <summary>
         /// Code, from Inside the Methode
@@ -47,5 +47,7 @@ namespace JavaToCSharpConverter.Model
         /// Filled, if the Methode is a Constructor with a Base Call (:this /:base)
         /// </summary>
         public MethodeContainer Constructorinfo { get; set; }
+
+        public bool IsConstructor { get; set; }
     }
 }
