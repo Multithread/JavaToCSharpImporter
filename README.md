@@ -4,6 +4,8 @@ The Importer does not try to create a 100% Working copy of the Java class, but r
 
 The main target is to port Lucene 7.6 or 8 to C#, since IKVM might be dead.
 
+> The whole Importer is not written on a AST Compiler, since there was none, except for the generic ANTLR.
+
 
 **Current Work Parts**
 
