@@ -24,37 +24,35 @@ namespace JavaToCSharpConverter.Model.CSharp
         {
             var tmpStringBuilder = new StringBuilder();
 
-            //TODO Check what new Namespaces are Required for the Class, not onyl use the existing?
-            foreach (var tmpUsing in inClass.UsingList)
-            {
-                //tmpStringBuilder.AppendLine($"using {inConverter.ChangeNamespace(tmpUsing)};");
-            }
-
+            //Usings need to be added at the very end.
             var tmpRequiredUsings = new List<string>();
-
             tmpStringBuilder.AppendLine($"namespace {inConverter.ChangeNamespace(inClass.Namespace)}{Environment.NewLine}{{");
 
-            tmpStringBuilder.AppendLine(inClass.Comment);
+            if (!string.IsNullOrEmpty(inClass.Comment))
+            {
+                tmpStringBuilder.AppendLine(inClass.Comment);
+            }
 
             tmpStringBuilder.Append(string.Join(" ", inConverter.MapAndSortAttributes(inClass.AttributeList)));
-            tmpStringBuilder.Append($" {inClass.Name} ");
+
+            //Resolve Type to String
+            tmpStringBuilder.Append($" {TypeToString(inClass, inConverter, tmpRequiredUsings, inClass.Type)}");
             if (inClass.InterfaceList.Count > 0)
             {
                 //Interface Type Mapping
                 tmpStringBuilder.Append(" : " + string.Join(" ", inClass.InterfaceList.Select(inItem
                     => inConverter.DoTypeMap(inItem, inClass, tmpRequiredUsings))));
             }
+            tmpStringBuilder.AppendLine("");
             tmpStringBuilder.AppendLine("{");
 
             var tmpDepth = 1;
             //Set Fields
             foreach (var tmpField in inClass.FieldList)
             {
-                tmpStringBuilder.AppendLine();
-                tmpStringBuilder.AppendLine();
 
                 //Map Type to New and Manage Usings
-                var tmpTypeString = inConverter.DoTypeMap(tmpField.Type, inClass, tmpRequiredUsings);
+                var tmpTypeString = TypeToString(inClass, inConverter, tmpRequiredUsings, tmpField.Type);
 
                 tmpStringBuilder.Append(GetLeftSpace(tmpDepth) + $"{string.Join(" ", inConverter.MapAndSortAttributes(tmpField.ModifierList, true))} {tmpTypeString} {tmpField.Name}");
                 if (tmpField.HasDefaultValue)
@@ -67,7 +65,6 @@ namespace JavaToCSharpConverter.Model.CSharp
                         var tmpCodeState = new CodeState(inConverter, inClass.UsingList);
                         RewriteAntlrFunctionCode(tmpStringBuilder, tmpField.AntlrDefaultValue, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
 
-                        //tmpStringBuilder.Append($" = ");
                     }
                     else
                     {
@@ -78,14 +75,13 @@ namespace JavaToCSharpConverter.Model.CSharp
                 {
                     tmpStringBuilder.Append(";");
                 }
+                tmpStringBuilder.AppendLine();
+                tmpStringBuilder.AppendLine();
             }
 
             //Set Methodes
             foreach (var tmpMethode in inClass.MethodeList)
             {
-                tmpStringBuilder.AppendLine();
-                tmpStringBuilder.AppendLine();
-
                 var tmpNewReturnType = string.IsNullOrEmpty(tmpMethode.ReturnType) ? "void" : inConverter.DoTypeMap(tmpMethode.ReturnType, inClass, tmpRequiredUsings);
                 if (tmpMethode.IsConstructor)
                 {
@@ -111,16 +107,24 @@ namespace JavaToCSharpConverter.Model.CSharp
                 tmpStringBuilder.Append(GetLeftSpace(tmpDepth) + $"{string.Join(" ", tmpMethodeModifier)} {tmpNewReturnType} {tmpNewMethodeName}");
 
                 //TODO ref und out ergänzen
-                tmpStringBuilder.Append($"({string.Join(", ", tmpMethode.Parameter.Select(inItem => inConverter.DoTypeMap(inItem.Type, inClass, tmpRequiredUsings) + " " + inItem.Name))})");
+                tmpStringBuilder.Append($"({string.Join(", ", tmpMethode.Parameter.Select(inItem => TypeToString(inClass, inConverter, tmpRequiredUsings, inItem.Type) + " " + inItem.Name))})");
 
+                tmpStringBuilder.AppendLine();
                 if (tmpMethode.AntlrCode != null)
                 {
                     //TODO Methode Parsing
-                    tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"{{}}");
+                    tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"{{");
+
+                    var tmpCodeState = new CodeState(inConverter, inClass.UsingList);
+                    RewriteAntlrFunctionCode(tmpStringBuilder, tmpMethode.AntlrCode, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
+
+                    tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"}}");
                 }
                 else if (!string.IsNullOrEmpty(tmpMethode.Code))
                 {
                     tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"{{");
+
+                    var tmpCodeState = new CodeState(inConverter, inClass.UsingList);
 
                     //Rewrite the Linear Code
                     RewriteFunctionCode(tmpStringBuilder, tmpMethode, inClass, inConverter, tmpRequiredUsings);
@@ -134,8 +138,10 @@ namespace JavaToCSharpConverter.Model.CSharp
                 {
                     tmpStringBuilder.Append($";");
                 }
+                tmpStringBuilder.AppendLine();
+                tmpStringBuilder.AppendLine();
             }
-
+            tmpStringBuilder.AppendLine("");
             tmpStringBuilder.AppendLine(GetLeftSpace(1) + $"}}{Environment.NewLine}}}");
 
             var tmpMoreUsings = "";
@@ -146,6 +152,41 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
 
             return tmpMoreUsings + tmpStringBuilder.ToString();
+        }
+
+        private static string TypeToString(ClassContainer inClass, INameConverter inConverter, List<string> tmpRequiredUsings, TypeContainer tmpType)
+        {
+            //? Type Mapping to something else. Might be done better later
+            if (tmpType.Name == "?")
+            {
+                tmpType.Name = "OtherType";
+            }
+
+            var tmpTypeString2 = DoTypeMap(inConverter, tmpType.Name, inClass, tmpRequiredUsings);
+            if (tmpType.GenericTypes.Count > 0)
+            {
+                tmpTypeString2 += "<";
+                bool tmpIsFirst = true;
+                foreach (var tmpIdentifier in tmpType.GenericTypes)
+                {
+                    if (!tmpIsFirst)
+                    {
+                        tmpTypeString2 += ",";
+                    }
+                    tmpTypeString2 += TypeToString(inClass, inConverter, tmpRequiredUsings, tmpIdentifier);
+                    tmpIsFirst = false;
+                }
+                tmpTypeString2 += ">";
+            }
+            if (tmpType.Extends.Count > 0)
+            {
+                //Handle Extends somehow
+            }
+            if (tmpType.IsArray)
+            {
+                tmpTypeString2 += "[]";
+            }
+            return tmpTypeString2;
         }
 
         private static string GetLeftSpace(int inDepth)
@@ -161,7 +202,7 @@ namespace JavaToCSharpConverter.Model.CSharp
 
 
         /// <summary>
-        /// Rewrite Linnear code from Functions
+        /// Rewrite Linear code from Functions
         /// </summary>
         private static void RewriteAntlrFunctionCode(StringBuilder inStringBuilder, IParseTree inTreeElement, ClassContainer inClass, INameConverter inConverter, List<string> inRequiredUsings, CodeState inCodeState = null)
         {
@@ -193,20 +234,33 @@ namespace JavaToCSharpConverter.Model.CSharp
                     {
                         inStringBuilder.Append(tmpLiteralContext.integerLiteral().GetText());
                     }
+                    else if (tmpLiteralContext.BOOL_LITERAL() != null)
+                    {
+                        inStringBuilder.Append(tmpLiteralContext.BOOL_LITERAL().GetText());
+                    }
+                    else if (tmpLiteralContext.NULL_LITERAL() != null)
+                    {
+                        inStringBuilder.Append("null");
+                    }
                     else
                     {
-
+                        throw new NotImplementedException("Missing");
                     }
                 }
                 else if (tmpPrimaryContext.IDENTIFIER() != null)
                 {
                     inStringBuilder.Append(tmpPrimaryContext.IDENTIFIER());
                 }
+                else if (tmpPrimaryContext.THIS() != null)
+                {
+                    inStringBuilder.Append("this.");
+                }
                 else
                 {
-
+                    throw new NotImplementedException("Missing");
 
                 }
+                return;
             }
             else if (inTreeElement is CreatorContext)
             {
@@ -219,6 +273,9 @@ namespace JavaToCSharpConverter.Model.CSharp
                 {
                     var tmpClassCreator = tmpCreator.classCreatorRest();
                     //TODO Handle creation of class
+
+                    inStringBuilder.Append(tmpClassCreator.GetText());
+                    return;
                 }
                 if (tmpCreator.arrayCreatorRest() != null)
                 {
@@ -244,21 +301,160 @@ namespace JavaToCSharpConverter.Model.CSharp
                     RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
                 }
                 inStringBuilder.AppendLine(";");
-
-                return;
             }
-            if (inTreeElement is ExpressionContext)
+            else if (inTreeElement is ExpressionContext)
             {
                 var tmpExpr = inTreeElement as ExpressionContext;
                 HandleExpressionContext(inStringBuilder, tmpExpr, inClass, inConverter, inRequiredUsings, inCodeState);
             }
-            //else if (inTreeElement is TerminalNodeImpl && WordRegex.IsMatch(inTreeElement.GetText()))
-            //{
-            //    //Ist ein Wort
-            //    inStringBuilder.Append(inTreeElement.GetText() + " ");
-            //}
+            else if (inTreeElement is MethodCallContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is ExpressionListContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is ITerminalNode)
+            {
+                //Just for output
+               inStringBuilder.Append(" " + inTreeElement.GetText());
+            }
+            else if (inTreeElement is BlockContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is StatementContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is ParExpressionContext)
+            {
+                foreach (var tmpElement in (inTreeElement as ParExpressionContext).expression().GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is CatchClauseContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is CatchTypeContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is MethodBodyContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is LocalVariableDeclarationContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is TypeTypeContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is VariableDeclaratorsContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is VariableDeclaratorContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is QualifiedNameContext)
+            {
+                inStringBuilder.AppendLine(inTreeElement.GetText() + " ");
+            }
+            else if (inTreeElement is PrimitiveTypeContext)
+            {
+                //TODO Type Map
+                inStringBuilder.AppendLine(inTreeElement.GetText() + " ");
+            }
+            else if (inTreeElement is BlockStatementContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+                inStringBuilder.AppendLine(";");
+            }
+            else if (inTreeElement is VariableDeclaratorIdContext)
+            {
+                inStringBuilder.Append(inTreeElement.GetText() + " ");
+            }
+            else if (inTreeElement is ForControlContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is ForInitContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is ClassOrInterfaceTypeContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is TypeArgumentsContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
+            else if (inTreeElement is TypeArgumentContext)
+            {
+                foreach (var tmpElement in inTreeElement.GetChildren())
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
+            }
             else
             {
+                throw new NotImplementedException("Missing");
                 foreach (var tmpElement in inTreeElement.GetChildren())
                 {
                     //RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
@@ -290,11 +486,11 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
             else if (tmpExpr.THIS() != null)
             {
-                inStringBuilder.Append("this.");
+                inStringBuilder.Append("this");
             }
             else if (tmpExpr.SUPER() != null)
             {
-                inStringBuilder.Append("base.");
+                inStringBuilder.Append("base");
             }
             foreach (var tmpElement in tmpExpr.GetChildren())
             {
@@ -302,7 +498,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                 {
                     if (tmpElement.GetText() == ".")
                     {
-                        inStringBuilder.Append(tmpElement.GetText());
+                       // inStringBuilder.Append(tmpElement.GetText());
                         continue;
                     }
                 }
@@ -324,12 +520,12 @@ namespace JavaToCSharpConverter.Model.CSharp
                 //Add Methode params to State
                 foreach (var tmpParam in inMethode.Parameter)
                 {
-                    inCodeState.AddVariable(tmpParam.Type, tmpParam.Name);
+                    inCodeState.AddVariable(tmpParam.Type.Name, tmpParam.Name);
                 }
                 //Add Fields of Class
                 foreach (var tmpParam in inClass.FieldList)
                 {
-                    inCodeState.AddVariable(tmpParam.Type, tmpParam.Name, false);
+                    inCodeState.AddVariable(tmpParam.Type.Name, tmpParam.Name, false);
                 }
             }
 
@@ -416,13 +612,13 @@ namespace JavaToCSharpConverter.Model.CSharp
                                 tmpCurrentPropertyText = tmpRemainingText.Substring(0, tmpFirstIndex).RemoveNewlines().Trim(' ');
                             }
 
-                            var tmpIsFunction = false;
+                            var tmpIsFirstInFunction = false;
                             var tmpIndex = 1;
                             while (tmpRemainingText.Length > tmpIndex)
                             {
                                 if (tmpRemainingText[tmpIndex] == '(')
                                 {
-                                    tmpIsFunction = true;
+                                    tmpIsFirstInFunction = true;
                                     break;
                                 }
                                 if (tmpRemainingText[tmpIndex] == '.')
@@ -462,7 +658,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                                 break;
                             }
 
-                            if (tmpIsFunction)
+                            if (tmpIsFirstInFunction)
                             {
                                 if (tmpType == null)
                                 {

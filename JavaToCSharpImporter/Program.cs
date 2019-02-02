@@ -13,8 +13,11 @@ namespace JavaToCSharpConverter
 
         public static string JavaMapperPath;
         public static string LuceneReplacerPath;
+
         static void Main(string[] args)
         {
+            //TODO Class<T> to Type mapping
+
             var tmpJavaSourcePath = @"C:\Data\LucenTestData\";
             var tmpCSharpOutputpath = @"Z:\Result\Code\";
             JavaMapperPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\JavaMapper.ini";
@@ -22,7 +25,7 @@ namespace JavaToCSharpConverter
 
             var tmpClassList = new List<ClassContainer>();
 
-            var tmpFileList = Directory.EnumerateFiles(tmpJavaSourcePath, "*", SearchOption.AllDirectories).ToList();
+            var tmpFileList = Directory.EnumerateFiles(tmpJavaSourcePath, "*", SearchOption.TopDirectoryOnly).ToList();
             for (var tmpI = 0; tmpI < tmpFileList.Count; tmpI++)
             {
                 tmpFileList[tmpI] = File.ReadAllText(tmpFileList[tmpI]);
@@ -45,15 +48,15 @@ namespace JavaToCSharpConverter
                 {
                     new ClassContainer
                     {
-                        Name="int",
+                        Type="int",
                         Namespace="System"
                     },new ClassContainer
                     {
-                        Name="string",
+                        Type="string",
                         Namespace="System"
                     },new ClassContainer
                     {
-                        Name="File",
+                        Type="File",
                         Namespace="java.io"
                     }
                 });

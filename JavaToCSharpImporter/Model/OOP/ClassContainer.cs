@@ -11,9 +11,20 @@ namespace JavaToCSharpConverter.Model
     public class ClassContainer
     {
         /// <summary>
-        /// Klassenname
+        /// Class-Name
         /// </summary>
-        public string Name { get; set; }
+        public string Name
+        {
+            get
+            {
+                return Type.Name;
+            }
+        }
+
+        /// <summary>
+        /// Class Type
+        /// </summary>
+        public TypeContainer Type { get; set; }
 
         /// <summary>
         /// Namespace der Klasse

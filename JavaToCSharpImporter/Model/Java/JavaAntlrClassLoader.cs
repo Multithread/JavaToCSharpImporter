@@ -1,6 +1,7 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using JavaToCSharpConverter.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using static JavaToCSharpConverter.Model.Java.JavaParser;
@@ -73,11 +74,25 @@ namespace JavaToCSharpConverter.Model.Java
                 if (tmpChild is IClassAndInterfaceBaseData)
                 {
                     var tmpContext = tmpChild as IClassAndInterfaceBaseData;
-                    tmpClass.Name = tmpContext.IDENTIFIER().GetText();
-                    var tmpExtends = tmpContext.EXTENDS()?.GetText();
-                    if (tmpExtends != null)
+                    tmpClass.Type = tmpContext.IDENTIFIER().GetText();
+
+                    if (tmpContext.typeParameters() != null)
                     {
-                        tmpClass.InterfaceList.Add(tmpExtends);
+                        //Fill Type Parameters
+                        foreach (var tmpParam in tmpContext.typeParameters().typeParameter())
+                        {
+                            var tmpInnerType = (TypeContainer)tmpParam.IDENTIFIER().GetText();
+                            if (tmpParam.annotation().Length > 0 || tmpParam.EXTENDS() != null)
+                            {
+
+                            }
+                            tmpClass.Type.GenericTypes.Add(tmpInnerType);
+                        }
+                        var tmpExtends = tmpContext.EXTENDS()?.GetText();
+                        if (tmpExtends != null)
+                        {
+                            tmpClass.InterfaceList.Add(tmpExtends);
+                        }
                     }
                 }
                 if (tmpChild is ClassOrInterfaceModifierContext)
@@ -188,6 +203,22 @@ namespace JavaToCSharpConverter.Model.Java
                     UsingList = tmpClass.UsingList,
                     Namespace = tmpClass.Namespace,
                 };
+
+                tmpSubClass.Type = tmpBodyPart.classDeclaration().IDENTIFIER().GetText();
+                if (tmpBodyPart.classDeclaration().typeParameters() != null)
+                {
+                    //Fill Type Parameters
+                    foreach (var tmpParam in tmpBodyPart.classDeclaration().typeParameters().typeParameter())
+                    {
+                        var tmpInnerType = (TypeContainer)tmpParam.IDENTIFIER().GetText();
+                        if (tmpParam.annotation().Length > 0 || tmpParam.EXTENDS() != null)
+                        {
+
+                        }
+                        tmpSubClass.Type.GenericTypes.Add(tmpInnerType);
+                    }
+                }
+
                 FillClassContext(tmpSubClass, tmpBodyPart.classDeclaration());
                 tmpClass.InnerClasses.Add(tmpSubClass);
             }
@@ -204,7 +235,6 @@ namespace JavaToCSharpConverter.Model.Java
         /// <param name="inClassContext"></param>
         private static void FillClassContext(ClassContainer inClass, ClassDeclarationContext inClassContext)
         {
-            inClass.Name = inClassContext.IDENTIFIER().GetText();
             inClass.InterfaceList.AddRange(inClassContext.typeList().GetChildren().Select(inItem => inItem.GetText()));
             inClass.AttributeList.Add("class");
 
@@ -335,8 +365,33 @@ namespace JavaToCSharpConverter.Model.Java
                     var tmpNewMethode = new FieldContainer
                     {
                         Name = tmpParam.variableDeclaratorId().IDENTIFIER().GetText(),
-                        Type = tmpParam.typeType().GetText(),
                     };
+                    tmpNewMethode.Type = tmpParam.typeType().classOrInterfaceType().IDENTIFIER(0).GetText();
+                    if (tmpParam.typeType().GetText().Contains("extends"))
+                    {
+                        if (tmpParam.GetText().Contains("["))
+                        {
+
+                        }
+                        foreach (var tmpArg in tmpParam.typeType().classOrInterfaceType().typeArguments())
+                        {
+                            var tmpCon = new TypeContainer
+                            {
+                                Name = tmpArg.typeArgument()[0].GetChildren().First().GetText(),
+                            };
+                            var tmpLastType = tmpArg.typeArgument()[0].GetChildren().Last() as TypeTypeContext;
+                            if (tmpLastType.GetChildren().Count() > 1)
+                            {
+                                throw new NotImplementedException("Generic in Generic needs to be handled");
+                            }
+                            tmpCon.Extends.Add(tmpArg.typeArgument()[0].typeType().GetText());
+                            tmpNewMethode.Type.GenericTypes.Add(tmpCon);
+                        }
+                    }
+                    if (tmpParam.typeType().classOrInterfaceType().IDENTIFIER().Length > 1)
+                    {
+                        throw new NotImplementedException("Multi-Identifier needs to be handled");
+                    }
                     if (tmpParam.variableModifier().Length > 0)
                     {
                         foreach (var tmpModifierContext in tmpParam.variableModifier())

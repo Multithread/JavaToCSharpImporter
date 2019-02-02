@@ -18,7 +18,7 @@ namespace JavaToCSharpConverter.Model
         /// <summary>
         /// Name des Feldes
         /// </summary>
-        public string Type { get; set; }
+        public TypeContainer Type { get; set; }
 
         /// <summary>
         /// Attributes (private, public, abstract, override,...)

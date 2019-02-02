@@ -257,7 +257,7 @@ package {tmpPackage};
             //Set the Class Name
             var tmpClassParts = tmpClassDefinition.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             tmpClass.AttributeList = tmpClassParts.Reverse().Skip(1).ToList();
-            tmpClass.Name = tmpClassParts.Last().RemoveNewlines().Trim(' ');
+            tmpClass.Type = tmpClassParts.Last().RemoveNewlines().Trim(' ');
 
             //Add Generic Types of Class to Header
             if (tmpClass.Name.Contains("<"))
@@ -265,7 +265,7 @@ package {tmpPackage};
                 //Get All Generic Arguments
                 tmpClass.GenericTypeParamList = CTSExtensions.GetGenericObjectsForType(tmpClass.Name);
                 //Save the Name back
-                tmpClass.Name = tmpClass.Name.Substring(0, tmpClass.Name.IndexOf("<"));
+                tmpClass.Type = tmpClass.Name.Substring(0, tmpClass.Name.IndexOf("<"));
             }
 
             //Handle Extension and Implement of Java classes

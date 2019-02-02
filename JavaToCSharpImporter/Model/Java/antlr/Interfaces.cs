@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static JavaToCSharpConverter.Model.Java.JavaParser;
 
 namespace JavaToCSharpConverter.Model
 {
@@ -12,5 +13,7 @@ namespace JavaToCSharpConverter.Model
         ITerminalNode IDENTIFIER();
 
         ITerminalNode EXTENDS();
+
+        TypeParametersContext typeParameters();
     }
 }
