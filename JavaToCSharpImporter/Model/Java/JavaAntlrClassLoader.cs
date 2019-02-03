@@ -291,35 +291,19 @@ namespace JavaToCSharpConverter.Model.Java
                             Name = tmpConstructor.IDENTIFIER().GetText(),
                             AntlrCode = tmpConstructor.block(),
                             IsConstructor = true,
-                            Comment= tmpComment,
+                            Comment = tmpComment,
                         };
                         tmpComment = "";
                         var tmpParams = tmpConstructor.formalParameters()?.formalParameterList()?.formalParameter();
                         if (tmpParams != null)
                         {
-                            foreach (var tmpParam in tmpParams)
+                            foreach (IFormalParameterContext tmpParam in tmpParams)
                             {
-                                //Set parameters
-                                var tmpNewMethode = new FieldContainer
-                                {
-                                    Name = tmpParam.variableDeclaratorId().IDENTIFIER().GetText(),
-                                    Type = tmpParam.typeType().GetText(),
-                                };
-
-                                if (tmpParam.variableModifier().Length > 0)
-                                {
-                                    foreach (var tmpModifierContext in tmpParam.variableModifier())
-                                    {
-                                        var tmpParamModifier = tmpModifierContext.GetText();
-                                        //Fuck it: If it starts with @ it probably is an override. If Not -> Fix the C# Code:D
-                                        if (tmpParamModifier.StartsWith("@"))
-                                        {
-                                            tmpParamModifier = tmpParamModifier.Substring(1).ToLower();
-                                        }
-                                        tmpNewMethode.ModifierList.Add(tmpParamModifier);
-                                    }
-                                }
-                                tmpMethode.Parameter.Add(tmpNewMethode);
+                                HandlMethodeParameterContext(tmpMethode, tmpParam);
+                            }
+                            if (tmpConstructor.formalParameters()?.formalParameterList()?.lastFormalParameter() != null)
+                            {
+                                HandlMethodeParameterContext(tmpMethode, tmpConstructor.formalParameters().formalParameterList().lastFormalParameter());
                             }
                         }
                         tmpMethode.ModifierList = tmpModifierList;
@@ -361,6 +345,31 @@ namespace JavaToCSharpConverter.Model.Java
 
                 }
             }
+        }
+
+        private static void HandlMethodeParameterContext(MethodeContainer tmpMethode, IFormalParameterContext tmpParam)
+        {
+            //Set parameters
+            var tmpNewMethode = new FieldContainer
+            {
+                Name = tmpParam.variableDeclaratorId().IDENTIFIER().GetText(),
+                Type = tmpParam.typeType().GetText(),
+            };
+
+            if (tmpParam.variableModifier().Length > 0)
+            {
+                foreach (var tmpModifierContext in tmpParam.variableModifier())
+                {
+                    var tmpParamModifier = tmpModifierContext.GetText();
+                    //Fuck it: If it starts with @ it probably is an override. If Not -> Fix the C# Code:D
+                    if (tmpParamModifier.StartsWith("@"))
+                    {
+                        tmpParamModifier = tmpParamModifier.Substring(1).ToLower();
+                    }
+                    tmpNewMethode.ModifierList.Add(tmpParamModifier);
+                }
+            }
+            tmpMethode.Parameter.Add(tmpNewMethode);
         }
 
         /// <summary>

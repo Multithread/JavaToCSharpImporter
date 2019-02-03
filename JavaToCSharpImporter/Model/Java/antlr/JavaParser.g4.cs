@@ -4218,7 +4218,7 @@ namespace JavaToCSharpConverter.Model.Java
             return _localctx;
         }
 
-        public partial class FormalParameterContext : ParserRuleContext
+        public partial class FormalParameterContext : ParserRuleContext, IFormalParameterContext
         {
             public TypeTypeContext typeType()
             {
@@ -4303,7 +4303,7 @@ namespace JavaToCSharpConverter.Model.Java
             return _localctx;
         }
 
-        public partial class LastFormalParameterContext : ParserRuleContext
+        public partial class LastFormalParameterContext : ParserRuleContext, IFormalParameterContext
         {
             public TypeTypeContext typeType()
             {
