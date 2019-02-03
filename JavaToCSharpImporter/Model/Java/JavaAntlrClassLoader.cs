@@ -237,6 +237,7 @@ namespace JavaToCSharpConverter.Model.Java
         {
             inClass.InterfaceList.AddRange(inClassContext.typeList().GetChildren().Select(inItem => inItem.GetText()));
             inClass.AttributeList.Add("class");
+            var tmpComment = "";
 
             foreach (var tmpItem in inClassContext.classBody().GetChildren())
             {
@@ -271,7 +272,9 @@ namespace JavaToCSharpConverter.Model.Java
                         {
                             Name = tmpModifier.variableDeclarators().variableDeclarator(0).variableDeclaratorId().IDENTIFIER().GetText(),
                             Type = tmpModifier.typeType().GetText(),
+                            Comment = tmpComment,
                         };
+                        tmpComment = "";
                         if (tmpModifier.variableDeclarators().variableDeclarator().Length > 0)
                         {
                             tmpFieldContainer.AntlrDefaultValue = tmpModifier.variableDeclarators().variableDeclarator()[0].variableInitializer();
@@ -288,7 +291,9 @@ namespace JavaToCSharpConverter.Model.Java
                             Name = tmpConstructor.IDENTIFIER().GetText(),
                             AntlrCode = tmpConstructor.block(),
                             IsConstructor = true,
+                            Comment= tmpComment,
                         };
+                        tmpComment = "";
                         var tmpParams = tmpConstructor.formalParameters()?.formalParameterList()?.formalParameter();
                         if (tmpParams != null)
                         {
@@ -334,6 +339,22 @@ namespace JavaToCSharpConverter.Model.Java
                 }
                 else if (tmpItem is TerminalNodeImpl)
                 {
+                    if (tmpItem.GetText().StartsWith("/"))
+                    {
+                        tmpComment = tmpItem.GetText();
+                    }
+                    else if (tmpItem.GetText() == "{")
+                    {
+
+                    }
+                    else if (tmpItem.GetText() == "}")
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
                 }
                 else
                 {

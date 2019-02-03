@@ -142,7 +142,6 @@ namespace JavaToCSharpConverter.Model.CSharp
         public ClassContainer GetClassForType(string inType, List<string> inNamespaces)
         {
             return _objectInformation.GetClassForType(inType.Trim(' '), inNamespaces);
-
         }
 
         public string MapFunction(string inFunction, string inType, List<string> inNamespaces)
@@ -157,12 +156,37 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
 
             var tmpQualifiedType = tmpClassInformation.Namespace + "." + tmpClassInformation.Name + "." + inFunction.PascalCase();
-            //if (_typeMapping.TryGetValue(tmpQualifiedType, out var tmpType))
-            //{
-            //    return tmpType;
-            //}
 
             return tmpQualifiedType;
+        }
+
+        /// <summary>
+        /// Change methode in Parameter Name
+        /// </summary>
+        /// <param name="inMethodeParameterName"></param>
+        /// <returns></returns>
+        public string ChangeMethodeParameterName(string inMethodeParameterName)
+        {
+            if (!inMethodeParameterName.StartsWith("in") || inMethodeParameterName.StartsWith("int"))
+            {
+                return "in" + inMethodeParameterName.PascalCase();
+            }
+            return inMethodeParameterName;
+        }
+
+        /// <summary>
+        /// Change Field Name
+        /// TODO: Check for Actial Type and Properties of Field for the name? 
+        /// </summary>
+        /// <param name="inFieldName"></param>
+        /// <returns></returns>
+        public string ChangeFieldName(string inFieldName)
+        {
+            if (!inFieldName.StartsWith("_"))
+            {
+                return "_" + inFieldName;
+            }
+            return inFieldName;
         }
     }
 }

@@ -106,28 +106,27 @@ namespace JavaToCSharpConverter.Model.CSharp
 
                 tmpStringBuilder.Append(GetLeftSpace(tmpDepth) + $"{string.Join(" ", tmpMethodeModifier)} {tmpNewReturnType} {tmpNewMethodeName}");
 
+                var tmpCodeState = new CodeState(inConverter, inClass.UsingList);
+                tmpMethode.Parameter.ForEach(inItem => tmpCodeState.AddMethodeParam(inClass.Namespace, inItem.Name));
                 //TODO ref und out ergänzen
-                tmpStringBuilder.Append($"({string.Join(", ", tmpMethode.Parameter.Select(inItem => TypeToString(inClass, inConverter, tmpRequiredUsings, inItem.Type) + " " + inItem.Name))})");
+                tmpStringBuilder.Append($"({string.Join(", ", tmpMethode.Parameter.Select(inItem => TypeToString(inClass, inConverter, tmpRequiredUsings, inItem.Type) + " " + inConverter.ChangeMethodeParameterName(inItem.Name)))})");
 
                 tmpStringBuilder.AppendLine();
                 if (tmpMethode.AntlrCode != null)
                 {
                     //TODO Methode Parsing
-                    tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"{{");
+                    //tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"{{");
 
-                    var tmpCodeState = new CodeState(inConverter, inClass.UsingList);
                     RewriteAntlrFunctionCode(tmpStringBuilder, tmpMethode.AntlrCode, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
 
-                    tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"}}");
+                    //tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"}}");
                 }
                 else if (!string.IsNullOrEmpty(tmpMethode.Code))
                 {
                     tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"{{");
 
-                    var tmpCodeState = new CodeState(inConverter, inClass.UsingList);
-
                     //Rewrite the Linear Code
-                    RewriteFunctionCode(tmpStringBuilder, tmpMethode, inClass, inConverter, tmpRequiredUsings);
+                    RewriteFunctionCode(tmpStringBuilder, tmpMethode, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
 
                     if (!tmpMethode.Code.EndsWith("}"))
                     {
@@ -222,7 +221,7 @@ namespace JavaToCSharpConverter.Model.CSharp
             else if (inTreeElement is CreatedNameContext)
             {
                 var tmpNameContext = inTreeElement as CreatedNameContext;
-                ManageNamedContext(inStringBuilder, tmpNameContext);
+                ManageNamedContext(inStringBuilder, tmpNameContext, inClass, inConverter, inRequiredUsings, inCodeState);
             }
             else if (inTreeElement is PrimaryContext)
             {
@@ -267,7 +266,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                 var tmpCreator = inTreeElement as CreatorContext;
 
                 var tmpNameContext = tmpCreator.createdName();
-                ManageNamedContext(inStringBuilder, tmpNameContext);
+                ManageNamedContext(inStringBuilder, tmpNameContext, inClass, inConverter, inRequiredUsings, inCodeState);
 
                 if (tmpCreator.classCreatorRest() != null)
                 {
@@ -321,10 +320,15 @@ namespace JavaToCSharpConverter.Model.CSharp
                     RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
                 }
             }
+            //Write Comments with Newline at end
+            else if (inTreeElement is ErrorNodeImpl)
+            {
+                inStringBuilder.AppendLine(inTreeElement.GetText());
+            }
             else if (inTreeElement is ITerminalNode)
             {
                 //Just for output
-               inStringBuilder.Append(" " + inTreeElement.GetText());
+                inStringBuilder.Append(inTreeElement.GetText());
             }
             else if (inTreeElement is BlockContext)
             {
@@ -335,10 +339,18 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
             else if (inTreeElement is StatementContext)
             {
+                var tmpStatement = inTreeElement as StatementContext;
+                //Assert remove. Closed might be #if (DEDBUG)
+                if (tmpStatement.ASSERT() != null)
+                {
+                    inStringBuilder.AppendLine("//" + tmpStatement.GetText());
+                    return;
+                }
                 foreach (var tmpElement in inTreeElement.GetChildren())
                 {
                     RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
                 }
+                inStringBuilder.AppendLine(GetLeftSpace(1));
             }
             else if (inTreeElement is ParExpressionContext)
             {
@@ -411,7 +423,6 @@ namespace JavaToCSharpConverter.Model.CSharp
                 {
                     RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
                 }
-                inStringBuilder.AppendLine(";");
             }
             else if (inTreeElement is VariableDeclaratorIdContext)
             {
@@ -447,10 +458,7 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
             else if (inTreeElement is TypeArgumentContext)
             {
-                foreach (var tmpElement in inTreeElement.GetChildren())
-                {
-                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
-                }
+                HandleTypeArgumentContext(inStringBuilder, inTreeElement, inClass, inConverter, inRequiredUsings, inCodeState);
             }
             else
             {
@@ -462,7 +470,15 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
         }
 
-        private static void ManageNamedContext(StringBuilder inStringBuilder, CreatedNameContext tmpNameContext)
+        private static void HandleTypeArgumentContext(StringBuilder inStringBuilder, IParseTree inTreeElement, ClassContainer inClass, INameConverter inConverter, List<string> inRequiredUsings, CodeState inCodeState)
+        {
+            foreach (var tmpElement in inTreeElement.GetChildren())
+            {
+                RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+            }
+        }
+
+        private static void ManageNamedContext(StringBuilder inStringBuilder, CreatedNameContext tmpNameContext, ClassContainer inClass, INameConverter inConverter, List<string> inRequiredUsings, CodeState inCodeState)
         {
             bool tmpIsFirst = true;
             foreach (var tmpIdentifier in tmpNameContext.IDENTIFIER())
@@ -476,34 +492,122 @@ namespace JavaToCSharpConverter.Model.CSharp
                 tmpIsFirst = false;
                 //TODO Handle Usings
             }
+            if (tmpNameContext.typeArgumentsOrDiamond().Length > 0)
+            {
+                inStringBuilder.Append("<");
+                foreach (var tmpIdentifier in tmpNameContext.typeArgumentsOrDiamond().SelectMany(inItem => inItem.typeArguments().typeArgument()))
+                {
+                    if (tmpIdentifier is TypeArgumentContext)
+                    {
+                        HandleTypeArgumentContext(inStringBuilder, tmpIdentifier, inClass, inConverter, inRequiredUsings, inCodeState);
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("Unahndled NamedContext State");
+                    }
+                }
+                inStringBuilder.Append(">");
+            }
         }
 
         private static void HandleExpressionContext(StringBuilder inStringBuilder, ExpressionContext tmpExpr, ClassContainer inClass, INameConverter inConverter, List<string> inRequiredUsings, CodeState inCodeState)
         {
-            if (tmpExpr.NEW() != null)
-            {
-                inStringBuilder.Append("new ");
-            }
-            else if (tmpExpr.THIS() != null)
-            {
-                inStringBuilder.Append("this");
-            }
-            else if (tmpExpr.SUPER() != null)
-            {
-                inStringBuilder.Append("base");
-            }
             foreach (var tmpElement in tmpExpr.GetChildren())
             {
-                if (tmpElement is TerminalNodeImpl)
+                if (tmpElement is PrimaryContext)
                 {
-                    if (tmpElement.GetText() == ".")
+                    var tmpText = tmpElement.GetText();
+                    if (tmpText == "this")
                     {
-                       // inStringBuilder.Append(tmpElement.GetText());
-                        continue;
+                        inStringBuilder.Append("this");
+                        inCodeState.CurrentType = inConverter.GetClassForType(inClass.Name, inClass.FullUsingList).Type;
+                    }
+                    else
+                    {
+                        tmpText = ManageNames(inStringBuilder, inClass, inConverter, inCodeState, tmpText);
                     }
                 }
-                RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                else if (tmpElement is TerminalNodeImpl)
+                {
+                    if (tmpExpr.NEW() != null)
+                    {
+                        inStringBuilder.Append("new ");
+                        inCodeState.CurrentType = null;
+                    }
+                    else if (tmpExpr.SUPER() != null)
+                    {
+                        inStringBuilder.Append("base");
+                        var tmpClass = inConverter.GetClassForType(inClass.Name, inClass.UsingList);
+                        //TODO Get Parent Type,
+                        throw new NotImplementedException("Base not handled");
+                        inCodeState.CurrentType = null;
+                    }
+                    else
+                    {
+                        var tmpText = tmpElement.GetText();
+                        tmpText = ManageNames(inStringBuilder, inClass, inConverter, inCodeState, tmpText);
+                    }
+                }
+                else
+                {
+                    RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
+                }
             }
+        }
+
+        private static string ManageNames(StringBuilder inStringBuilder, ClassContainer inClass, INameConverter inConverter, CodeState inCodeState, string tmpText)
+        {
+            if (WordRegex.IsMatch(tmpText))
+            {
+                if (inCodeState.CurrentType == null && inCodeState.HasVariable(tmpText))
+                {
+                    if (inCodeState.IsVariableMethodeParam(tmpText))
+                    {
+                        tmpText = inConverter.ChangeMethodeParameterName(tmpText);
+                    }
+                    inCodeState.CurrentType = null;
+                }
+                else
+                {
+                    //Get Type for Recognition
+                    var tmpType = inCodeState.CurrentType;
+                    if (tmpType == null)
+                    {
+                        tmpType = inClass.Type;
+                    }
+
+                    //Correct Type Handling required
+                    var tmpClass = inConverter.GetClassForType(tmpType.Name, inClass.FullUsingList);
+                    if (tmpClass.MethodeList.Any(inItem => inItem.Name == tmpText))
+                    {
+                        tmpText = inConverter.MapFunction(tmpText, tmpType.Name, inClass.FullUsingList);
+                    }
+                    else
+                    {
+                        tmpText = inConverter.ChangeFieldName(tmpText);
+                    }
+                }
+            }
+
+            if (tmpText == "=")
+            {
+                inStringBuilder.Append(" = ");
+                inCodeState.CurrentType = null;
+            }
+            else if (tmpText == ".")
+            {
+                inStringBuilder.Append(".");
+            }
+            else
+            {
+                inStringBuilder.Append(tmpText);
+                if (WordRegex.IsMatch(tmpText))
+                {
+                    //inStringBuilder.Append(" ");
+                }
+            }
+
+            return tmpText;
         }
 
         private static Regex WordRegex = new Regex("\\w");

@@ -35,6 +35,31 @@ namespace JavaToCSharpConverter.Model.OOP
             _typeDictionary.Add(inName, tmpClass);
         }
 
+        //Add a Variable to the Code State
+        public void AddMethodeParam(string inType, string inName, bool inForceAdd = true)
+        {
+            AddVariable(inType, inName, inForceAdd);
+            _MethodeParams.Add(inName);
+        }
+
+        //Add a Variable to the Code State
+        public bool HasVariable(string inName)
+        {
+            return _typeDictionary.ContainsKey(inName);
+        }
+
+        public TypeContainer CurrentType { get; set; } 
+
+        /// <summary>
+        /// Is it a Methode in Params?
+        /// </summary>
+        /// <param name="inName"></param>
+        /// <returns></returns>
+        public bool IsVariableMethodeParam(string inName)
+        {
+            return _MethodeParams.Contains(inName);
+        }
+
         /// <summary>
         /// Typ aufgrund des Namens laden
         /// </summary>
@@ -50,5 +75,6 @@ namespace JavaToCSharpConverter.Model.OOP
         }
 
         private Dictionary<string, ClassContainer> _typeDictionary = new Dictionary<string, ClassContainer>();
+        private HashSet<string> _MethodeParams = new HashSet<string>();
     }
 }

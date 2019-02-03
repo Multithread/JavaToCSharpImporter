@@ -20,6 +20,18 @@ namespace JavaToCSharpConverter.Interface
         /// Change the Name of a Methode
         /// Consistency Required for the Code to work Propertly
         /// </summary>
+        string ChangeMethodeParameterName(string inMethodeParameterName);
+
+        /// <summary>
+        /// Change the Name of a Methode
+        /// Consistency Required for the Code to work Propertly
+        /// </summary>
+        string ChangeFieldName(string inFieldName);
+
+        /// <summary>
+        /// Change the Name of a Methode
+        /// Consistency Required for the Code to work Propertly
+        /// </summary>
         List<string> MapAndSortAttributes(List<string> inAttributeList, bool inProperty = false);
 
         /// <summary>
