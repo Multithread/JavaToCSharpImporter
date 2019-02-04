@@ -1,5 +1,4 @@
 ﻿using JavaToCSharpConverter.Interface;
-using System;
 using System.Collections.Generic;
 
 namespace JavaToCSharpConverter.Model.OOP
@@ -16,6 +15,28 @@ namespace JavaToCSharpConverter.Model.OOP
         }
         private INameConverter _converter;
         private List<string> _usingList;
+
+        private int LeftSpacing = 1;
+
+        public void AddSpacing()
+        {
+            LeftSpacing++;
+        }
+        public void ReduceSpacing()
+        {
+            LeftSpacing--;
+        }
+
+        public string GetSpacing()
+        {
+            var tmpString = "";
+
+            for (var tmpI = 0; tmpI < LeftSpacing; tmpI++)
+            {
+                tmpString += "    ";
+            }
+            return tmpString;
+        }
 
         //Add a Variable to the Code State
         public void AddVariable(string inType, string inName, bool inForceAdd = true)
@@ -35,7 +56,21 @@ namespace JavaToCSharpConverter.Model.OOP
             _typeDictionary.Add(inName, tmpClass);
         }
 
-        //Add a Variable to the Code State
+        /// <summary>
+        /// Clear all Variables
+        /// </summary>
+        public void ClearVariableList()
+        {
+            _MethodeParams.Clear();
+            _typeDictionary.Clear();
+        }
+
+        /// <summary>
+        /// Add a Variable to the Code State
+        /// </summary>
+        /// <param name="inType"></param>
+        /// <param name="inName"></param>
+        /// <param name="inForceAdd"></param>
         public void AddMethodeParam(string inType, string inName, bool inForceAdd = true)
         {
             AddVariable(inType, inName, inForceAdd);
@@ -48,7 +83,7 @@ namespace JavaToCSharpConverter.Model.OOP
             return _typeDictionary.ContainsKey(inName);
         }
 
-        public TypeContainer CurrentType { get; set; } 
+        public TypeContainer CurrentType { get; set; }
 
         /// <summary>
         /// Is it a Methode in Params?

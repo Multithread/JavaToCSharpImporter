@@ -122,6 +122,10 @@ namespace JavaToCSharpConverter.Model.CSharp
                 {
                     return "bool";
                 }
+                if (inType == "String")
+                {
+                    return "string";
+                }
                 if (inType == "int")
                 {
                     return "System.Int32";

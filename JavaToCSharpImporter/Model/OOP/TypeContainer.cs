@@ -66,5 +66,18 @@ namespace JavaToCSharpConverter.Model
 
             return tmpContainer;
         }
+
+        /// <summary>
+        /// Override ToString
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if (GenericTypes.Count == 0)
+            {
+                return $"{Name}{(IsArray ? "[]" : "")}";
+            }
+            return $"{Name}<{string.Join(", ", GenericTypes)}>{(IsArray ? "[]" : "")}";
+        }
     }
 }

@@ -251,7 +251,7 @@ package {tmpPackage};
             //Extends und Implements absplitten
             var tmpSplit = tmpClassDefinition.Split(new string[] { " extends " }, StringSplitOptions.None);
             tmpSplit = tmpSplit.SelectMany(inItem => inItem.Split(new string[] { " implements " }, StringSplitOptions.None)).ToArray();
-            
+
             tmpClassDefinition = tmpSplit[0];
 
             //Set the Class Name
@@ -263,7 +263,8 @@ package {tmpPackage};
             if (tmpClass.Name.Contains("<"))
             {
                 //Get All Generic Arguments
-                tmpClass.GenericTypeParamList = CTSExtensions.GetGenericObjectsForType(tmpClass.Name);
+                CTSExtensions.GetGenericObjectsForType(tmpClass.Name).ForEach(inItem => tmpClass.Type.GenericTypes.Add(inItem));
+
                 //Save the Name back
                 tmpClass.Type = tmpClass.Name.Substring(0, tmpClass.Name.IndexOf("<"));
             }
