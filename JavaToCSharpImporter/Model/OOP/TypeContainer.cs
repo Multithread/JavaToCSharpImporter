@@ -45,7 +45,7 @@ namespace JavaToCSharpConverter.Model
             if (inType.Contains("extends"))
             {
                 tmpContainer.Name = inType.Split(' ')[0];
-                var tmpExtends = inType.Substring(inType.IndexOf("extends "));
+                var tmpExtends = inType.Substring(inType.IndexOf("extends"));
 
                 tmpContainer.Extends = tmpExtends.Split(',').Select(inItem => inItem.Trim(' ')).ToList();
             }
@@ -78,6 +78,44 @@ namespace JavaToCSharpConverter.Model
                 return $"{Name}{(IsArray ? "[]" : "")}";
             }
             return $"{Name}<{string.Join(", ", GenericTypes)}>{(IsArray ? "[]" : "")}";
+        }
+
+        /// <summary>
+        /// OVerride Equals to be correct for our usage
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            var tmpOther = obj as TypeContainer;
+            if (tmpOther.Name != Name)
+            {
+                return false;
+            }
+            if (tmpOther.GenericTypes.Count != GenericTypes.Count)
+            {
+                return false;
+            }
+            for(var tmpI= 0; tmpI < GenericTypes.Count; tmpI++)
+            {
+                if (tmpOther.GenericTypes[tmpI] != GenericTypes[tmpI])
+                {
+                    return false;
+                }
+            }
+
+            if (tmpOther.Extends.Count!= Extends.Count)
+            {
+                return false;
+            }
+            for (var tmpI = 0; tmpI < Extends.Count; tmpI++)
+            {
+                if(tmpOther.Extends[tmpI]!= Extends[tmpI])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

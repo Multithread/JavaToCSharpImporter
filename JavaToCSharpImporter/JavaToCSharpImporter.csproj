@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="Helper\AntlrHelper.cs" />
     <Compile Include="Helper\CodeSplitter.cs" />
+    <Compile Include="Helper\ConverterHelper.cs" />
     <Compile Include="Helper\DataHelper.cs" />
     <Compile Include="Helper\CTSExtensions.cs" />
     <Compile Include="Helper\StringHelper.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Model\Java\antlr\JavaParserVisitor.cs" />
     <Compile Include="Model\Java\JavaAntlrClassLoader.cs" />
     <Compile Include="Model\OOP\CodeState.cs" />
+    <Compile Include="Model\OOP\MissingFunctionInformation.cs" />
     <Compile Include="Model\OOP\TypeContainer.cs" />
     <Compile Include="Model\OOP\ObjectInformation.cs" />
     <Compile Include="Interface\CodeSplitterEvents.cs" />

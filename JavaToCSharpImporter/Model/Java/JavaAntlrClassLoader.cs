@@ -246,7 +246,10 @@ namespace JavaToCSharpConverter.Model.Java
                 {
                     var tmpClassBody = tmpItem as ClassBodyDeclarationContext;
                     var tmpDeclaration = tmpClassBody.memberDeclaration();
-
+                    if (tmpDeclaration == null)
+                    {
+                        continue;
+                    }
                     var tmpModifierList = new List<string>();
                     //get modifiers together
                     foreach (var tmpClassBodyContextModifier in tmpClassBody.modifier())
@@ -395,32 +398,53 @@ namespace JavaToCSharpConverter.Model.Java
                     var tmpNewMethode = new FieldContainer
                     {
                         Name = tmpParam.variableDeclaratorId().IDENTIFIER().GetText(),
-                    };
-                    tmpNewMethode.Type = tmpParam.typeType().classOrInterfaceType().IDENTIFIER(0).GetText();
-                    if (tmpParam.typeType().GetText().Contains("extends"))
+                    }; if (tmpParam.typeType().classOrInterfaceType() != null)
                     {
-                        if (tmpParam.GetText().Contains("["))
+                        tmpNewMethode.Type = tmpParam.typeType().classOrInterfaceType().IDENTIFIER(0).GetText();
+                        if (tmpParam.typeType().GetText().Contains("extends"))
                         {
+                            if (tmpParam.GetText().Contains("["))
+                            {
 
-                        }
-                        foreach (var tmpArg in tmpParam.typeType().classOrInterfaceType().typeArguments())
-                        {
-                            var tmpCon = new TypeContainer
-                            {
-                                Name = tmpArg.typeArgument()[0].GetChildren().First().GetText(),
-                            };
-                            var tmpLastType = tmpArg.typeArgument()[0].GetChildren().Last() as TypeTypeContext;
-                            if (tmpLastType.GetChildren().Count() > 1)
-                            {
-                                throw new NotImplementedException("Generic in Generic needs to be handled");
                             }
-                            tmpCon.Extends.Add(tmpArg.typeArgument()[0].typeType().GetText());
-                            tmpNewMethode.Type.GenericTypes.Add(tmpCon);
+                            foreach (var tmpArg in tmpParam.typeType().classOrInterfaceType().typeArguments())
+                            {
+                                var tmpCon = new TypeContainer
+                                {
+                                    Name = tmpArg.typeArgument()[0].GetChildren().First().GetText(),
+                                };
+                                var tmpLastType = tmpArg.typeArgument()[0].GetChildren().Last() as TypeTypeContext;
+                                if (tmpLastType.GetChildren().Count() > 1)
+                                {
+                                    throw new NotImplementedException("Generic in Generic needs to be handled");
+                                }
+                                foreach (var tmpArgument in tmpArg.typeArgument())
+                                {
+                                    if (tmpArgument.GetText() == "?")
+                                    {
+                                        tmpCon.Extends.Add("OtherType1");
+                                    }
+                                    else
+                                    {
+                                        var tmpArgText = tmpArgument.typeType().GetText();
+                                        tmpCon.Extends.Add(tmpArgText);
+                                    }
+                                }
+                                tmpNewMethode.Type.GenericTypes.Add(tmpCon);
+                            }
+                        }
+                        if (tmpParam.typeType().classOrInterfaceType().IDENTIFIER().Length > 1)
+                        {
+                            //throw new NotImplementedException("Multi-Identifier needs to be handled");
                         }
                     }
-                    if (tmpParam.typeType().classOrInterfaceType().IDENTIFIER().Length > 1)
+                    else if (tmpParam.typeType().primitiveType() != null)
                     {
-                        throw new NotImplementedException("Multi-Identifier needs to be handled");
+                        tmpNewMethode.Type = tmpParam.typeType().primitiveType().GetText();
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("Other Type Missing");
                     }
                     if (tmpParam.variableModifier().Length > 0)
                     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JavaToCSharpConverter.Model.OOP;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,6 +21,15 @@ namespace JavaToCSharpConverter.Model
         /// </summary>
         private Dictionary<string, List<ClassContainer>> ClassDict = new Dictionary<string, List<ClassContainer>>();
 
+        public string MigrationHelperNamespace { get; set; } = "Migration";
+
+        public string MigrationHelperStaticClass { get; set; } = "MigrationHelper";
+
+        /// <summary>
+        /// List of Methodes, that are Missing
+        /// </summary>
+        internal List<MissingFunctionInformation> MissingMethodes { get; set; } = new List<MissingFunctionInformation>();
+        
         /// <summary>
         /// Add Class to InformationList
         /// </summary>

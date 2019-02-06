@@ -1,4 +1,5 @@
-﻿using JavaToCSharpConverter.Helper;
+﻿using IniParser.Model;
+using JavaToCSharpConverter.Helper;
 using JavaToCSharpConverter.Interface;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,14 +8,13 @@ namespace JavaToCSharpConverter.Model.CSharp
 {
     public class JavaToCSharpNameConverter : INameConverter
     {
-        public JavaToCSharpNameConverter(ObjectInformation inOjectInformation)
+        public JavaToCSharpNameConverter(ObjectInformation inOjectInformation, IniData inData)
         {
             _objectInformation = inOjectInformation;
-
-            _iniData = DataHelper.LoadIni(Program.JavaMapperPath);
-
+            _iniData = inData;
         }
-        private IniParser.Model.IniData _iniData;
+
+        private IniData _iniData;
 
         private ObjectInformation _objectInformation;
 
@@ -117,14 +117,9 @@ namespace JavaToCSharpConverter.Model.CSharp
             var tmpClassInformation = _objectInformation.GetClassForType(inType, inNamespaces);
             if (tmpClassInformation == null)
             {
-                //If FrameworkTypes
-                if (inType == "boolean")
+                if (_iniData["Type"][inType] != null)
                 {
-                    return "bool";
-                }
-                if (inType == "String")
-                {
-                    return "string";
+                    return _iniData["Type"][inType];
                 }
                 if (inType == "int")
                 {
@@ -135,6 +130,10 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
 
             var tmpQualifiedType = tmpClassInformation.Namespace + "." + tmpClassInformation.Name;
+            if (_iniData["Type"][tmpQualifiedType] != null)
+            {
+                return _iniData["Type"][tmpQualifiedType];
+            }
             if (_typeMapping.TryGetValue(tmpQualifiedType, out var tmpType))
             {
                 return tmpType;
