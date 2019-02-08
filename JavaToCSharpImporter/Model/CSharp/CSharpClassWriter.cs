@@ -73,7 +73,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                         tmpStringBuilder.Append($" = ");
 
                         RewriteAntlrFunctionCode(tmpStringBuilder, tmpField.AntlrDefaultValue, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
-
+                        tmpStringBuilder.Append(";");
                     }
                     else
                     {
@@ -289,7 +289,6 @@ namespace JavaToCSharpConverter.Model.CSharp
                 {
                     RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
                 }
-                inStringBuilder.AppendLine("");
             }
             else if (inTreeElement is CreatedNameContext)
             {
