@@ -117,7 +117,7 @@ namespace JavaToCSharpConverter.Model.CSharp
 
                 tmpCodeState.ClearVariableList();
 
-                var tmpMethodeGenericWhere = new List<string>();
+                var tmpMethodeGenericWhere = new List<Tuple<string, string>>();
                 var tmpGenericList = new List<string>();
                 foreach (var tmpParam in tmpMethode.Parameter)
                 {
@@ -152,17 +152,20 @@ namespace JavaToCSharpConverter.Model.CSharp
                     }
                     if (tmpParam.Type.Extends.Count > 0)
                     {
-                        tmpMethodeGenericWhere.AddRange(tmpParam.Type.Extends);
+                        tmpMethodeGenericWhere.AddRange(tmpParam.Type.Extends.Select(inItem => new Tuple<string, string>(tmpParam.Type.Name, inItem)));
                     }
-                    foreach (var tmpExtends in tmpParam.Type.GenericTypes.SelectMany(inItem => inItem.Extends).Concat(tmpParam.Type.Extends))
+                    foreach (var tmpExtendType in tmpParam.Type.GenericTypes.Append(tmpParam.Type))
                     {
-                        if (inClass.Type.GenericTypes.Any(inItem => inItem.Name == tmpExtends))
+                        foreach (var tmpExtends in tmpExtendType.Extends)
                         {
-                            continue;
-                        }
-                        if (inConverter.GetClassForType(tmpExtends, inClass.FullUsingList) == null)
-                        {
-                            tmpMethodeGenericWhere.Add(tmpExtends);
+                            if (inClass.Type.GenericTypes.Any(inItem => inItem.Name == tmpExtends))
+                            {
+                                //continue;
+                            }
+                            if (inConverter.GetClassForType(tmpExtends, inClass.FullUsingList) == null)
+                            {
+                                tmpMethodeGenericWhere.Add(new Tuple<string, string>(tmpExtendType.Name, tmpExtends));
+                            }
                         }
                     }
                 }
@@ -177,7 +180,7 @@ namespace JavaToCSharpConverter.Model.CSharp
 
                 if (tmpMethodeGenericWhere.Count > 0)
                 {
-                   // throw new NotImplementedException("Generic Where to be Implemented");
+                    tmpStringBuilder.Append($"where {string.Join(",", tmpMethodeGenericWhere.Select(inItem => $"{(inItem.Item1 == "?" ? "OtherType" : inItem.Item1)} : {inItem.Item2}"))}");
                 }
                 tmpStringBuilder.AppendLine();
                 if (tmpMethode.AntlrCode != null)

@@ -1,6 +1,7 @@
 ﻿using JavaToCSharpConverter.Helper;
 using JavaToCSharpConverter.Model.Splitter;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace JavaToCSharpConverter.Model
@@ -8,6 +9,7 @@ namespace JavaToCSharpConverter.Model
     /// <summary>
     /// Methodendefinition für eine Klasse
     /// </summary>
+    [DebuggerDisplay("{ToString()}")]
     public class TypeContainer
     {
         /// <summary>
@@ -75,7 +77,15 @@ namespace JavaToCSharpConverter.Model
         {
             if (GenericTypes.Count == 0)
             {
+                if (Extends.Count > 0)
+                {
+                    return $"{Name} extends {string.Join(", ", Extends)}{(IsArray ? "[]" : "")}";
+                }
                 return $"{Name}{(IsArray ? "[]" : "")}";
+            }
+            if (Extends.Count > 0)
+            {
+                return $"{Name}<{string.Join(", ", GenericTypes)} extends {string.Join(", ", Extends)}>{(IsArray ? "[]" : "")}";
             }
             return $"{Name}<{string.Join(", ", GenericTypes)}>{(IsArray ? "[]" : "")}";
         }
@@ -96,7 +106,7 @@ namespace JavaToCSharpConverter.Model
             {
                 return false;
             }
-            for(var tmpI= 0; tmpI < GenericTypes.Count; tmpI++)
+            for (var tmpI = 0; tmpI < GenericTypes.Count; tmpI++)
             {
                 if (tmpOther.GenericTypes[tmpI] != GenericTypes[tmpI])
                 {
@@ -104,13 +114,13 @@ namespace JavaToCSharpConverter.Model
                 }
             }
 
-            if (tmpOther.Extends.Count!= Extends.Count)
+            if (tmpOther.Extends.Count != Extends.Count)
             {
                 return false;
             }
             for (var tmpI = 0; tmpI < Extends.Count; tmpI++)
             {
-                if(tmpOther.Extends[tmpI]!= Extends[tmpI])
+                if (tmpOther.Extends[tmpI] != Extends[tmpI])
                 {
                     return false;
                 }

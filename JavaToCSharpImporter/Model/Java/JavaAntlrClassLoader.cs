@@ -401,41 +401,26 @@ namespace JavaToCSharpConverter.Model.Java
                     }; if (tmpParam.typeType().classOrInterfaceType() != null)
                     {
                         tmpNewMethode.Type = tmpParam.typeType().classOrInterfaceType().IDENTIFIER(0).GetText();
-                        if (tmpParam.typeType().GetText().Contains("extends"))
+                        foreach (var tmpGeneric in tmpParam.typeType().classOrInterfaceType().typeArguments().SelectMany(inItem => inItem.typeArgument()))
                         {
-                            if (tmpParam.GetText().Contains("["))
+                            var tmpType = new TypeContainer
                             {
-
-                            }
-                            foreach (var tmpArg in tmpParam.typeType().classOrInterfaceType().typeArguments())
+                                Name = tmpGeneric.GetChild(0).GetText(),
+                            };
+                            if (tmpGeneric.EXTENDS() != null)
                             {
-                                var tmpCon = new TypeContainer
-                                {
-                                    Name = tmpArg.typeArgument()[0].GetChildren().First().GetText(),
-                                };
-                                var tmpLastType = tmpArg.typeArgument()[0].GetChildren().Last() as TypeTypeContext;
-                                if (tmpLastType.GetChildren().Count() > 1)
-                                {
-                                    throw new NotImplementedException("Generic in Generic needs to be handled");
-                                }
-                                foreach (var tmpArgument in tmpArg.typeArgument())
-                                {
-                                    if (tmpArgument.GetText() == "?")
-                                    {
-                                        tmpCon.Extends.Add("OtherType1");
-                                    }
-                                    else
-                                    {
-                                        var tmpArgText = tmpArgument.typeType().GetText();
-                                        tmpCon.Extends.Add(tmpArgText);
-                                    }
-                                }
-                                tmpNewMethode.Type.GenericTypes.Add(tmpCon);
+                                tmpType.Extends.Add(tmpGeneric.typeType().GetText());
                             }
+                            tmpNewMethode.Type.GenericTypes.Add(tmpType);
+                        }
+                        
+                        if (tmpParam.GetText().Contains("["))
+                        {
+                            tmpNewMethode.Type.IsArray = true;
                         }
                         if (tmpParam.typeType().classOrInterfaceType().IDENTIFIER().Length > 1)
                         {
-                            //throw new NotImplementedException("Multi-Identifier needs to be handled");
+                            throw new NotImplementedException("Multi-Identifier needs to be handled");
                         }
                     }
                     else if (tmpParam.typeType().primitiveType() != null)
