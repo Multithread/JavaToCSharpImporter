@@ -95,6 +95,7 @@
     <Compile Include="Helper\CTSExtensions.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Interface\CodeResultType.cs" />
+    <Compile Include="Interface\IMissingTypes.cs" />
     <Compile Include="Interface\INameConverter.cs" />
     <Compile Include="Model\CSharp\JavaToCSharpNameConverter.cs" />
     <Compile Include="Model\Java\antlr\IFormalParameterContext.cs" />

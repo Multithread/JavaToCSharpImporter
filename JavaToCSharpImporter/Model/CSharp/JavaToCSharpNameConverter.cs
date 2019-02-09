@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace JavaToCSharpConverter.Model.CSharp
 {
-    public class JavaToCSharpNameConverter : INameConverter
+    public class JavaToCSharpNameConverter : INameConverter, IMissingTypes
     {
         public JavaToCSharpNameConverter(ObjectInformation inOjectInformation, IniData inData)
         {
@@ -190,6 +190,21 @@ namespace JavaToCSharpConverter.Model.CSharp
                 return "_" + inFieldName;
             }
             return inFieldName;
+        }
+
+        /// <summary>
+        /// Add unknown Type 
+        /// </summary>
+        /// <param name="inTypeName"></param>
+        public void AddMissingClass(string inTypeName)
+        {
+            _objectInformation.MissingClassList.Add(inTypeName);
+        }
+
+
+        public void AddMissingMethode(string inMethodeName, TypeContainer inClassType, List<TypeContainer> inParamList, string inOutType)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

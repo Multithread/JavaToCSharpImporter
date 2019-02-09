@@ -73,6 +73,11 @@ namespace JavaToCSharpConverter.Model
             tmpDataList.Add(inSelector(inObject));
         }
 
+        /// <summary>
+        /// List of Missing Classes
+        /// </summary>
+        public List<string> MissingClassList = new List<string>();
+
         internal object ClassesForType(string inType)
         {
             throw new NotImplementedException();

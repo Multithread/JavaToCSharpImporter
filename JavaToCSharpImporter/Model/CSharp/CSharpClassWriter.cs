@@ -830,7 +830,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                     }
                     else
                     {
-                        tmpText = ManageNames(inStringBuilder, inClass, inConverter, inCodeState, tmpText);
+                        tmpText = ManageNames(inStringBuilder, inClass, inConverter, inCodeState, tmpText, inRequiredUsings);
                     }
                 }
                 else if (tmpElement is TerminalNodeImpl)
@@ -851,7 +851,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                     else
                     {
                         var tmpText = tmpElement.GetText();
-                        tmpText = ManageNames(inStringBuilder, inClass, inConverter, inCodeState, tmpText);
+                        tmpText = ManageNames(inStringBuilder, inClass, inConverter, inCodeState, tmpText, inRequiredUsings);
                     }
                 }
                 else
@@ -861,7 +861,7 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
         }
 
-        private static string ManageNames(StringBuilder inStringBuilder, ClassContainer inClass, INameConverter inConverter, CodeState inCodeState, string tmpText)
+        private static string ManageNames(StringBuilder inStringBuilder, ClassContainer inClass, INameConverter inConverter, CodeState inCodeState, string tmpText, List<string> inRequiredUsings)
         {
             if (WordRegex.IsMatch(tmpText))
             {
@@ -888,9 +888,26 @@ namespace JavaToCSharpConverter.Model.CSharp
                     {
                         tmpText = inConverter.MapFunction(tmpText, tmpType.Name, inClass.FullUsingList);
                     }
-                    else
+                    else if (tmpClass.FieldList.Any(inItem => inItem.Name == tmpText))
                     {
                         tmpText = inConverter.ChangeFieldName(tmpText);
+                    }
+                    else if (inConverter.GetClassForType(tmpText, inClass.FullUsingList) != null)
+                    {
+                        //Type Name Mapping
+                        tmpText = inConverter.DoTypeMap(tmpText, inClass);
+                    }
+                    else
+                    {
+                        //Maybe nothing to to?
+                        //Might need to Create the Missing Type, if Required
+
+                        //TODO Find out how to only add real Types and not Variable or methode Names (maybe by Javas Name Conventions?)
+                        if (inConverter is IMissingTypes)
+                        {
+                            (inConverter as IMissingTypes).AddMissingClass(tmpText);
+                            AddUsingIfRequired(inRequiredUsings, "MigrationHelper");
+                        }
                     }
                 }
             }
@@ -916,7 +933,7 @@ namespace JavaToCSharpConverter.Model.CSharp
             return tmpText;
         }
 
-        private static Regex WordRegex = new Regex("\\w");
+        private static Regex WordRegex = new Regex("\\w", RegexOptions.IgnoreCase);
 
 
         /// <summary>
