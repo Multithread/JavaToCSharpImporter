@@ -285,6 +285,10 @@ namespace JavaToCSharpConverter.Model.CSharp
             {
                 return;
             }
+            if (inTreeElement.GetText() == ("booleanoverridden=false;"))
+            {
+
+            }
             var tmpType = inTreeElement.GetType().Name;
             if (inTreeElement is VariableInitializerContext)
             {
@@ -496,6 +500,7 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
             else if (inTreeElement is LocalVariableDeclarationContext)
             {
+                var tmpVardec = inTreeElement as LocalVariableDeclarationContext;
                 foreach (var tmpElement in inTreeElement.GetChildren())
                 {
                     RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
@@ -503,6 +508,7 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
             else if (inTreeElement is TypeTypeContext)
             {
+                inCodeState.CurrentType = inTreeElement.GetText();
                 foreach (var tmpElement in inTreeElement.GetChildren())
                 {
                     RewriteAntlrFunctionCode(inStringBuilder, tmpElement, inClass, inConverter, inRequiredUsings, inCodeState);
@@ -544,6 +550,11 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
             else if (inTreeElement is VariableDeclaratorIdContext)
             {
+                if (inCodeState.CurrentType != null)
+                {
+                    inCodeState.AddVariable(inCodeState.CurrentType.ToString(), inTreeElement.GetText());
+                    inCodeState.CurrentType = null;
+                }
                 inStringBuilder.Append(inTreeElement.GetText() + " ");
             }
             else if (inTreeElement is ForControlContext)
@@ -565,6 +576,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                 if (inTreeElement.GetText() == "Class<?>")
                 {
                     inStringBuilder.Append("object ");
+                    inCodeState.CurrentType = "object";
                     return;
                 }
                 var tmpTypeContext = inTreeElement as ClassOrInterfaceTypeContext;
@@ -574,6 +586,8 @@ namespace JavaToCSharpConverter.Model.CSharp
                     tmpIdentifierText = inConverter.DoTypeMap(tmpIdentifierText, inClass);
 
                     inStringBuilder.Append(tmpIdentifierText);
+
+                    inCodeState.CurrentType = tmpIdentifierText;
                 }
 
                 foreach (var tmpElement in tmpTypeContext.typeArguments())
@@ -896,11 +910,11 @@ namespace JavaToCSharpConverter.Model.CSharp
 
                     //Correct Type Handling required
                     var tmpClass = inConverter.GetClassForType(tmpType.Name, inClass.FullUsingList);
-                    if (tmpClass.MethodeList.Any(inItem => inItem.Name == tmpText))
+                    if (tmpClass != null && tmpClass.MethodeList.Any(inItem => inItem.Name == tmpText))
                     {
                         tmpText = inConverter.MapFunction(tmpText, tmpType.Name, inClass.FullUsingList);
                     }
-                    else if (tmpClass.FieldList.Any(inItem => inItem.Name == tmpText))
+                    else if (tmpClass != null && tmpClass.FieldList.Any(inItem => inItem.Name == tmpText))
                     {
                         tmpText = inConverter.ChangeFieldName(tmpText);
                     }
@@ -912,6 +926,14 @@ namespace JavaToCSharpConverter.Model.CSharp
                     else if (inCodeState.HasVariable(tmpText))
                     {
                         //Nothing todo when we have a Variable
+                    }
+                    else if (inClass.FieldList.Any(inItem => inItem.Name == tmpText))
+                    {
+                        //Nothing todo when we have a Field-Value
+                    }
+                    else if (inClass.MethodeList.Any(inItem => inItem.Name == tmpText))
+                    {
+                        //Nothing todo when we have a Field-Value
                     }
                     else
                     {
