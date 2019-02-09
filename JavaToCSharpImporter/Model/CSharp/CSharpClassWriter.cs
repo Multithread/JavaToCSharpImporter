@@ -823,14 +823,26 @@ namespace JavaToCSharpConverter.Model.CSharp
                         inStringBuilder.Append("this");
                         inCodeState.CurrentType = inConverter.GetClassForType(inClass.Name, inClass.FullUsingList).Type;
                     }
-                    else if (tmpText.StartsWith("\""))
+                    if (tmpElement.GetChild(0) is LiteralContext)
                     {
-                        //Add String Primary Context to Result
                         inStringBuilder.Append(tmpText);
                     }
                     else
                     {
-                        tmpText = ManageNames(inStringBuilder, inClass, inConverter, inCodeState, tmpText, inRequiredUsings);
+                        if (tmpText == "this")
+                        {
+                            inStringBuilder.Append("this");
+                            inCodeState.CurrentType = inConverter.GetClassForType(inClass.Name, inClass.FullUsingList).Type;
+                        }
+                        else if (tmpText.StartsWith("\""))
+                        {
+                            //Add String Primary Context to Result
+                            inStringBuilder.Append(tmpText);
+                        }
+                        else
+                        {
+                            tmpText = ManageNames(inStringBuilder, inClass, inConverter, inCodeState, tmpText, inRequiredUsings);
+                        }
                     }
                 }
                 else if (tmpElement is TerminalNodeImpl)
@@ -896,6 +908,10 @@ namespace JavaToCSharpConverter.Model.CSharp
                     {
                         //Type Name Mapping
                         tmpText = inConverter.DoTypeMap(tmpText, inClass);
+                    }
+                    else if (inCodeState.HasVariable(tmpText))
+                    {
+                        //Nothing todo when we have a Variable
                     }
                     else
                     {
