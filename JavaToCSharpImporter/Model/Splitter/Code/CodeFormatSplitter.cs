@@ -14,8 +14,12 @@ namespace JavaToCSharpConverter.Model.Splitter
             if (inChar == ';')
             {
                 var tmpStack = GetCurrentStack();
-                if (tmpStack.Count == 0 || GetCurrentStack().First().Start != "(")
+                if (tmpStack.Count == 0 || tmpStack.First().Start != "(")
                 {
+                    if (tmpStack.Any(inItem => inItem.Start.StartsWith("/")))
+                    {
+                        return null;
+                    }
                     return FormatResultType.EndOfLine;
                 }
             }

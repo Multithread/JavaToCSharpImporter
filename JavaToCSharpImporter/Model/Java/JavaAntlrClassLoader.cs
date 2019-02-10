@@ -41,6 +41,10 @@ namespace JavaToCSharpConverter.Model.Java
                 {
                     tmpClasses.Add(tmpChild as TypeDeclarationContext);
                 }
+                else if (tmpChild is IErrorNode)
+                {
+                    tmpComments.Add(tmpChild);
+                }
                 else
                 {
 
@@ -55,6 +59,12 @@ namespace JavaToCSharpConverter.Model.Java
                 tmpClass.UsingList = tmpUsingList;
                 if (tmpComments.Count > 0)
                 {
+                    //Add Namespace-comment, if existing
+                    if(tmpComments.Count> tmpClasses.Count)
+                    {
+                        tmpClass.NamespaceComment = tmpComments[0].GetText();
+                        tmpComments.RemoveAt(0);
+                    }
                     tmpClass.Comment = tmpComments[0].GetText();
                     tmpComments.RemoveAt(0);
                 }

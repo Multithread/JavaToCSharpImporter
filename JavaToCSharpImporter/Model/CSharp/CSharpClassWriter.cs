@@ -44,6 +44,15 @@ namespace JavaToCSharpConverter.Model.CSharp
                 tmpStringBuilder.Append(" : " + string.Join(" ", inClass.InterfaceList.Select(inItem
                     => inConverter.DoTypeMap(inItem, inClass, tmpRequiredUsings))));
             }
+
+            var tmpClassExtends = new List<Tuple<string, string>>();
+            ManageTypeExtends(inClass, inConverter, tmpClassExtends, inClass.Type);
+
+            if (tmpClassExtends.Count > 0)
+            {
+                tmpStringBuilder.Append($"where {string.Join(",", tmpClassExtends.Select(inItem => $"{(inItem.Item1 == "?" ? "OtherType" : inItem.Item1)} : {inItem.Item2}"))}");
+            }
+
             tmpStringBuilder.AppendLine("");
             tmpStringBuilder.AppendLine("{");
 
@@ -63,7 +72,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                 //Map Type to New and Manage Usings
                 var tmpTypeString = TypeToString(inClass, inConverter, tmpRequiredUsings, tmpType);
 
-                tmpStringBuilder.Append( $"{string.Join(" ", inConverter.MapAndSortAttributes(tmpField.ModifierList, true))} {tmpTypeString} {tmpField.Name}");
+                tmpStringBuilder.Append($"{string.Join(" ", inConverter.MapAndSortAttributes(tmpField.ModifierList, true))} {tmpTypeString} {tmpField.Name}");
                 if (tmpField.HasDefaultValue)
                 {
                     if (string.IsNullOrEmpty(tmpField.DefaultValue))
@@ -112,7 +121,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                     }
                 }
 
-                tmpStringBuilder.Append( $"{string.Join(" ", tmpMethodeModifier)} {tmpNewReturnType} {tmpNewMethodeName}");
+                tmpStringBuilder.Append($"{string.Join(" ", tmpMethodeModifier)} {tmpNewReturnType} {tmpNewMethodeName}");
 
                 tmpCodeState.ClearVariableList();
 
@@ -149,24 +158,8 @@ namespace JavaToCSharpConverter.Model.CSharp
                             }
                         }
                     }
-                    if (tmpParam.Type.Extends.Count > 0)
-                    {
-                        tmpMethodeGenericWhere.AddRange(tmpParam.Type.Extends.Select(inItem => new Tuple<string, string>(tmpParam.Type.Name, inItem)));
-                    }
-                    foreach (var tmpExtendType in tmpParam.Type.GenericTypes.Append(tmpParam.Type))
-                    {
-                        foreach (var tmpExtends in tmpExtendType.Extends)
-                        {
-                            if (inClass.Type.GenericTypes.Any(inItem => inItem.Name == tmpExtends))
-                            {
-                                //continue;
-                            }
-                            if (inConverter.GetClassForType(tmpExtends, inClass.FullUsingList) == null)
-                            {
-                                tmpMethodeGenericWhere.Add(new Tuple<string, string>(tmpExtendType.Name, tmpExtends));
-                            }
-                        }
-                    }
+                    var tmpParamType = tmpParam.Type;
+                    ManageTypeExtends(inClass, inConverter, tmpMethodeGenericWhere, tmpParamType);
                 }
 
                 if (tmpGenericList.Count > 0 && !tmpMethode.IsConstructor)
@@ -216,7 +209,29 @@ namespace JavaToCSharpConverter.Model.CSharp
                 tmpMoreUsings += Environment.NewLine;
             }
 
-            return tmpMoreUsings + tmpStringBuilder.ToString();
+            return inClass.NamespaceComment + Environment.NewLine + tmpMoreUsings + tmpStringBuilder.ToString();
+        }
+
+        private static void ManageTypeExtends(ClassContainer inClass, INameConverter inConverter, List<Tuple<string, string>> tmpMethodeGenericWhere, TypeContainer tmpParamType)
+        {
+            if (tmpParamType.Extends.Count > 0)
+            {
+                tmpMethodeGenericWhere.AddRange(tmpParamType.Extends.Select(inItem => new Tuple<string, string>(tmpParamType.Name, inItem)));
+            }
+            foreach (var tmpExtendType in tmpParamType.GenericTypes.Append(tmpParamType))
+            {
+                foreach (var tmpExtends in tmpExtendType.Extends)
+                {
+                    if (inClass.Type.GenericTypes.Any(inItem => inItem.Name == tmpExtends))
+                    {
+                        //continue;
+                    }
+                    if (inConverter.GetClassForType(tmpExtends, inClass.FullUsingList) == null)
+                    {
+                        tmpMethodeGenericWhere.Add(new Tuple<string, string>(tmpExtendType.Name, tmpExtends));
+                    }
+                }
+            }
         }
 
         private static string TypeToString(ClassContainer inClass, INameConverter inConverter, List<string> tmpRequiredUsings, TypeContainer tmpType)

@@ -32,6 +32,11 @@ namespace JavaToCSharpConverter.Model
         public string Namespace { get; set; }
 
         /// <summary>
+        /// Comment in the Namespace iof the Class
+        /// </summary>
+        public string NamespaceComment { get; set; }
+
+        /// <summary>
         /// Class Comment
         /// </summary>
         public string Comment { get; set; }
