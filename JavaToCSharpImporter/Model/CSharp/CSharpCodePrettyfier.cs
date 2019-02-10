@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace JavaToCSharpConverter.Model.CSharp
 {
-    public static class CSharpCodePretifier
+    public static class CSharpCodePrettyfier
     {
         /// <summary>
         /// Format C# code to be pretty

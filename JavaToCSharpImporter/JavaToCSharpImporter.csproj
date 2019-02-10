@@ -97,7 +97,7 @@
     <Compile Include="Interface\CodeResultType.cs" />
     <Compile Include="Interface\IMissingTypes.cs" />
     <Compile Include="Interface\INameConverter.cs" />
-    <Compile Include="Model\CSharp\CSharpCodePretifier.cs" />
+    <Compile Include="Model\CSharp\CSharpCodePrettyfier.cs" />
     <Compile Include="Model\CSharp\JavaToCSharpNameConverter.cs" />
     <Compile Include="Model\Java\antlr\IFormalParameterContext.cs" />
     <Compile Include="Model\Java\antlr\IJavaParserListener.cs" />

@@ -834,11 +834,6 @@ namespace JavaToCSharpConverter.Model.CSharp
                 if (tmpElement is PrimaryContext)
                 {
                     var tmpText = tmpElement.GetText();
-                    if (tmpText == "this")
-                    {
-                        inStringBuilder.Append("this");
-                        inCodeState.CurrentType = inConverter.GetClassForType(inClass.Name, inClass.FullUsingList).Type;
-                    }
                     if (tmpElement.GetChild(0) is LiteralContext)
                     {
                         inStringBuilder.Append(tmpText);
@@ -876,10 +871,24 @@ namespace JavaToCSharpConverter.Model.CSharp
                         throw new NotImplementedException("Base not handled");
                         inCodeState.CurrentType = null;
                     }
+                    else if (tmpElement.GetText() == ".")
+                    {
+                        inStringBuilder.Append(".");
+                    }
                     else
                     {
-                        var tmpText = tmpElement.GetText();
-                        tmpText = ManageNames(inStringBuilder, inClass, inConverter, inCodeState, tmpText, inRequiredUsings);
+                        //var tmpElementText = tmpElement.GetText();
+                        ////if (new[] { "==", "!=", "<=", ">=", "||", "&&", }.Contains(tmpElement.GetText()))
+                        //if (!WordRegex.IsMatch(tmpElementText))
+                        //{
+                        //    inCodeState.CurrentType = null;
+                        //    inStringBuilder.Append(tmpElementText);
+                        //}
+                        //else
+                        {
+                            var tmpText = tmpElement.GetText();
+                            tmpText = ManageNames(inStringBuilder, inClass, inConverter, inCodeState, tmpText, inRequiredUsings);
+                        }
                     }
                 }
                 else
@@ -951,24 +960,15 @@ namespace JavaToCSharpConverter.Model.CSharp
                     }
                 }
             }
-
-            if (tmpText == "=")
-            {
-                inStringBuilder.Append(" = ");
-                inCodeState.CurrentType = null;
-            }
-            else if (tmpText == ".")
-            {
-                inStringBuilder.Append(".");
-            }
             else
             {
-                inStringBuilder.Append(tmpText);
-                if (WordRegex.IsMatch(tmpText))
+                if (tmpText != ".")
                 {
-                    //inStringBuilder.Append(" ");
+                    inCodeState.CurrentType = null;
                 }
             }
+
+            inStringBuilder.Append(tmpText);
 
             return tmpText;
         }
