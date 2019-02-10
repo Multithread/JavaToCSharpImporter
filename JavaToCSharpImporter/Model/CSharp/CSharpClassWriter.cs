@@ -47,7 +47,6 @@ namespace JavaToCSharpConverter.Model.CSharp
             tmpStringBuilder.AppendLine("");
             tmpStringBuilder.AppendLine("{");
 
-            var tmpDepth = 1;
             //Set Fields
             foreach (var tmpField in inClass.FieldList)
             {
@@ -64,7 +63,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                 //Map Type to New and Manage Usings
                 var tmpTypeString = TypeToString(inClass, inConverter, tmpRequiredUsings, tmpType);
 
-                tmpStringBuilder.Append(GetLeftSpace(tmpDepth) + $"{string.Join(" ", inConverter.MapAndSortAttributes(tmpField.ModifierList, true))} {tmpTypeString} {tmpField.Name}");
+                tmpStringBuilder.Append( $"{string.Join(" ", inConverter.MapAndSortAttributes(tmpField.ModifierList, true))} {tmpTypeString} {tmpField.Name}");
                 if (tmpField.HasDefaultValue)
                 {
                     if (string.IsNullOrEmpty(tmpField.DefaultValue))
@@ -113,7 +112,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                     }
                 }
 
-                tmpStringBuilder.Append(GetLeftSpace(tmpDepth) + $"{string.Join(" ", tmpMethodeModifier)} {tmpNewReturnType} {tmpNewMethodeName}");
+                tmpStringBuilder.Append( $"{string.Join(" ", tmpMethodeModifier)} {tmpNewReturnType} {tmpNewMethodeName}");
 
                 tmpCodeState.ClearVariableList();
 
@@ -190,14 +189,14 @@ namespace JavaToCSharpConverter.Model.CSharp
                 }
                 else if (!string.IsNullOrEmpty(tmpMethode.Code))
                 {
-                    tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"{{");
+                    tmpStringBuilder.AppendLine($"{{");
 
                     //Rewrite the Linear Code
                     RewriteFunctionCode(tmpStringBuilder, tmpMethode, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
 
                     if (!tmpMethode.Code.EndsWith("}"))
                     {
-                        tmpStringBuilder.AppendLine(GetLeftSpace(tmpDepth) + $"}}");
+                        tmpStringBuilder.AppendLine($"}}");
                     }
                 }
                 else
@@ -208,7 +207,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                 tmpStringBuilder.AppendLine();
             }
             tmpStringBuilder.AppendLine("");
-            tmpStringBuilder.AppendLine(GetLeftSpace(1) + $"}}{Environment.NewLine}}}");
+            tmpStringBuilder.AppendLine($"}}{Environment.NewLine}}}");
 
             var tmpMoreUsings = "";
             if (tmpRequiredUsings.Count > 0)
@@ -263,18 +262,6 @@ namespace JavaToCSharpConverter.Model.CSharp
             }
             return tmpTypeString2;
         }
-
-        private static string GetLeftSpace(int inDepth)
-        {
-            var tmpString = "";
-
-            for (var tmpI = 0; tmpI < inDepth; tmpI++)
-            {
-                tmpString += "    ";
-            }
-            return tmpString;
-        }
-
 
         /// <summary>
         /// Rewrite Linear code from Functions
@@ -466,7 +453,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                         inStringBuilder.Append(" ");
                     }
                 }
-                inStringBuilder.AppendLine(GetLeftSpace(1));
+                inStringBuilder.AppendLine("");
             }
             else if (inTreeElement is ParExpressionContext)
             {

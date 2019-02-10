@@ -57,6 +57,8 @@ namespace JavaToCSharpConverter.Helper
                     tmpCSharp = tmpCSharp.Replace(tmpKV.KeyName, tmpKV.Value);
                 }
 
+                tmpCSharp = CSharpCodePretifier.FormatCode(tmpCSharp);
+
                 var tmpNewNamespace = tmpConverter.ChangeNamespace(tmpClass.Namespace).Split('.');
                 var tmpNewPath = Path.Combine(inOutPath, Path.Combine(tmpNewNamespace));
 

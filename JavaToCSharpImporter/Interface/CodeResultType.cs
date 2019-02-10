@@ -16,4 +16,16 @@
         CurlyStart = 3,
         CurlyEnd = 4,
     }
+
+
+    public enum FormatResultType
+    {
+        EndOfLine = 1,
+        CurlyStart = 2,
+        CurlyEnd = 3,
+        SingleLineCommentStart = 4,
+        SingleLineCommentEnd = 5,
+        MultiLineCommentStart = 6,
+        MultiLineCommentEnd = 7,
+    }
 }

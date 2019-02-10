@@ -97,6 +97,7 @@
     <Compile Include="Interface\CodeResultType.cs" />
     <Compile Include="Interface\IMissingTypes.cs" />
     <Compile Include="Interface\INameConverter.cs" />
+    <Compile Include="Model\CSharp\CSharpCodePretifier.cs" />
     <Compile Include="Model\CSharp\JavaToCSharpNameConverter.cs" />
     <Compile Include="Model\Java\antlr\IFormalParameterContext.cs" />
     <Compile Include="Model\Java\antlr\IJavaParserListener.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Model\ReplaceJob.cs" />
     <Compile Include="Model\SearchAndReplacePattern.cs" />
     <Compile Include="Model\Splitter\ClassInterfaceSplitter.cs" />
+    <Compile Include="Model\Splitter\Code\CodeFormatSplitter.cs" />
     <Compile Include="Model\Splitter\Code\CodeLineSplitter.cs" />
     <Compile Include="Model\Splitter\FullFlatSplitter.cs" />
     <Compile Include="Model\Splitter\EndCharSplitter.cs" />
