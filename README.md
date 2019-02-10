@@ -24,7 +24,7 @@ The main target is to port Lucene 7.6 or 8 to C#, since IKVM might be dead.
 - Recognition for Array Type Definitions
 
 
-**Current State of COnversion**
+**Current State of Conversion (2019.02.10)**
 
 ```java
 /**
@@ -71,6 +71,7 @@ public final class GenericMethode<C, D extends C> {
  }}
 
 ```
+gets converted to:
 
 ```C#
 /// <summary>
