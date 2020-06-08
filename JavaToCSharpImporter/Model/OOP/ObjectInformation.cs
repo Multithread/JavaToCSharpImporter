@@ -9,12 +9,15 @@ namespace JavaToCSharpConverter.Model
     {
         public ObjectInformation FillClasses(List<ClassContainer> inClasses)
         {
+            ClassList.AddRange(inClasses);
             foreach (var tmpClass in inClasses)
             {
                 AddClass(tmpClass);
             }
             return this;
         }
+
+        public List<ClassContainer> ClassList= new List<ClassContainer>();
 
         /// <summary>
         /// ObjectName, Namespaces
@@ -29,7 +32,7 @@ namespace JavaToCSharpConverter.Model
         /// List of Methodes, that are Missing
         /// </summary>
         internal List<MissingFunctionInformation> MissingMethodes { get; set; } = new List<MissingFunctionInformation>();
-        
+
         /// <summary>
         /// Add Class to InformationList
         /// </summary>

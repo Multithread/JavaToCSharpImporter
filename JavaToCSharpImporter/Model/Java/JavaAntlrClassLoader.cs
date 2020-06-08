@@ -24,7 +24,8 @@ namespace JavaToCSharpConverter.Model.Java
             parser.BuildParseTree = true;
             IParseTree tree = parser.compilationUnit();
             var tmpClasses = new List<TypeDeclarationContext>();
-            var tmpComments = new List<IParseTree>();
+            var tmpClassComments = new List<IParseTree>();
+            var tmpPrePackageComments = new List<IParseTree>();
             for (var tmpI = 0; tmpI < tree.ChildCount; tmpI++)
             {
                 var tmpChild = tree.GetChild(tmpI);
@@ -43,7 +44,14 @@ namespace JavaToCSharpConverter.Model.Java
                 }
                 else if (tmpChild is IErrorNode)
                 {
-                    tmpComments.Add(tmpChild);
+                    if (string.IsNullOrEmpty(tmpPackage))
+                    {
+                        tmpPrePackageComments.Add(tmpChild);
+                    }
+                    else
+                    {
+                        tmpClassComments.Add(tmpChild);
+                    }
                 }
                 else
                 {
@@ -57,16 +65,16 @@ namespace JavaToCSharpConverter.Model.Java
                 tmpClassList.Add(tmpClass);
                 tmpClass.Namespace = tmpPackage;
                 tmpClass.UsingList = tmpUsingList;
-                if (tmpComments.Count > 0)
+                //Add Namespace-comment, if existing
+                if (tmpPrePackageComments.Count > 0)
                 {
-                    //Add Namespace-comment, if existing
-                    if(tmpComments.Count> tmpClasses.Count)
-                    {
-                        tmpClass.NamespaceComment = tmpComments[0].GetText();
-                        tmpComments.RemoveAt(0);
-                    }
-                    tmpClass.Comment = tmpComments[0].GetText();
-                    tmpComments.RemoveAt(0);
+                    tmpClass.NamespaceComment = tmpPrePackageComments[0].GetText();
+                }
+                //Add Class Comments
+                if (tmpClassComments.Count > 0)
+                {
+                    tmpClass.Comment = tmpClassComments[0].GetText();
+                    tmpClassComments.RemoveAt(0);
                 }
 
                 ExtractClassFromTree(tmpElement, tmpClass);

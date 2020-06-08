@@ -1,4 +1,5 @@
-﻿using JavaToCSharpConverter.Model;
+﻿using JavaToCSharpConverter.Interface;
+using JavaToCSharpConverter.Model;
 using JavaToCSharpConverter.Model.CSharp;
 using JavaToCSharpConverter.Model.Java;
 using MoreLinq;
@@ -19,9 +20,8 @@ namespace JavaToCSharpConverter.Helper
             JavaMapperPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\JavaMapper.ini";
             LuceneReplacerPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\LuceneReplacer.ini";
 
-            var tmpClassList = new List<ClassContainer>();
-            var tmpIniData = DataHelper.LoadIni(JavaMapperPath);
-            ObjectInformation tmpObjectInformation = LoadJavaFiles(inSourcePath, tmpClassList, tmpIniData);
+            var tmpIniData = DataHelper.LoadIniByPath(JavaMapperPath);
+            ObjectInformation tmpObjectInformation = LoadFilesByPath(inSourcePath, tmpIniData, new JavaLoader());
 
             Directory.CreateDirectory(inOutPath);
 
@@ -31,9 +31,9 @@ namespace JavaToCSharpConverter.Helper
             {
                 throw new Exception("Missing Methodes Class to be Implemented");
             }
-            WriteCSharpCode(inOutPath, tmpClassList, tmpIniData, tmpObjectInformation, tmpReplacer);
+            WriteCSharpCode(inOutPath, tmpIniData, tmpObjectInformation, tmpReplacer);
 
-            CreateCSharpSLNFile(tmpClassList, tmpObjectInformation, tmpIniData);
+            CreateCSharpSLNFile(tmpObjectInformation, tmpIniData);
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace JavaToCSharpConverter.Helper
         /// <param name="tmpIniData"></param>
         /// <param name="tmpObjectInformation"></param>
         /// <param name="tmpReplacer"></param>
-        private static void WriteCSharpCode(string inOutPath, List<ClassContainer> tmpClassList, IniParser.Model.IniData tmpIniData, ObjectInformation tmpObjectInformation, IniParser.Model.IniData tmpReplacer)
+        private static void WriteCSharpCode(string inOutPath, IniParser.Model.IniData tmpIniData, ObjectInformation tmpObjectInformation, IniParser.Model.IniData tmpReplacer)
         {
-            foreach (var tmpClass in tmpClassList)
+            foreach (var tmpClass in tmpObjectInformation.ClassList)
             {
                 var tmpConverter = new JavaToCSharpNameConverter(tmpObjectInformation, tmpIniData);
                 var tmpCSharp = CSharpClassWriter.CreateFile(tmpClass, tmpConverter);
@@ -68,7 +68,7 @@ namespace JavaToCSharpConverter.Helper
             }
         }
 
-        private static ObjectInformation LoadJavaFiles(string inSourcePath, List<ClassContainer> tmpClassList, IniParser.Model.IniData tmpIniData)
+        private static ObjectInformation LoadFilesByPath(string inSourcePath, IniParser.Model.IniData inConfiguration, ILoadOOPLanguage inLanguageLoader)
         {
             var tmpFileList = Directory.EnumerateFiles(inSourcePath, "*", SearchOption.TopDirectoryOnly).ToList();
             for (var tmpI = 0; tmpI < tmpFileList.Count; tmpI++)
@@ -80,65 +80,7 @@ namespace JavaToCSharpConverter.Helper
 
                 tmpFileList[tmpI] = tmpFileText;
             }
-
-            foreach (var tmpFile in tmpFileList)
-            {
-                //tmpClassList.AddRange(JavaClassLoader.LoadFile(tmpFile));
-                tmpClassList.AddRange(JavaAntlrClassLoader.LoaderOptimization(tmpFile));
-            }
-            var tmpObjectInformation = new ObjectInformation()
-                .FillClasses(tmpClassList);
-            //Add Mapped Methodes to Class List (So we don't need String oä as a Class List
-            var tmpAdditionalClasses = new List<ClassContainer>
-                {
-                    new ClassContainer
-                    {
-                        Type="int",
-                        Namespace=""
-                    },new ClassContainer
-                    {
-                        Type="String",
-                        Namespace=""
-                    },new ClassContainer
-                    {
-                        Type="File",
-                        Namespace="java.io"
-                    }
-                };
-
-            //Load all Classes, with Methodes we might need
-            foreach (var tmpMap in tmpIniData["Methode"])
-            {
-                var tmpLeftSplit = tmpMap.KeyName.Split('.');
-                var tmpNamespace = string.Join(".", tmpLeftSplit.SkipLast(2));
-                var tmpName = (TypeContainer)tmpLeftSplit.SkipLast(1).Last();
-                var tmpMethodeName = tmpLeftSplit.Last();
-
-                var tmpMethode = tmpAdditionalClasses.FirstOrDefault(inItem =>
-                    inItem.Namespace == tmpNamespace && inItem.Type == tmpName);
-                if (tmpMethode == null)
-                {
-                    tmpMethode = new ClassContainer
-                    {
-                        Type = tmpName,
-                        Namespace = tmpNamespace
-                    };
-                    tmpAdditionalClasses.Add(tmpMethode);
-                }
-
-                if (!tmpMethode.MethodeList.Any(inItem => inItem.Name == tmpMethodeName))
-                {
-                    //TODO Check for Param Equality
-                    var tmpNewMethode = new MethodeContainer();
-                    tmpNewMethode.Name = tmpMethodeName;
-                    tmpNewMethode.ModifierList = new List<string> { "public" };
-                    tmpMethode.MethodeList.Add(tmpNewMethode);
-                }
-            }
-
-            //Fill them into the object Information
-            tmpObjectInformation.FillClasses(tmpAdditionalClasses);
-            return tmpObjectInformation;
+            return inLanguageLoader.CreateObjectInformation(tmpFileList, inConfiguration);
         }
 
         /// <summary>
@@ -147,7 +89,7 @@ namespace JavaToCSharpConverter.Helper
         /// <param name="tmpClassList"></param>
         /// <param name="tmpObjectInformation"></param>
         /// <param name="tmpIniData"></param>
-        private static void CreateCSharpSLNFile(List<ClassContainer> tmpClassList, ObjectInformation tmpObjectInformation, IniParser.Model.IniData tmpIniData)
+        private static void CreateCSharpSLNFile(ObjectInformation tmpObjectInformation, IniParser.Model.IniData tmpIniData)
         {
             var tmpPathConverter = new JavaToCSharpNameConverter(tmpObjectInformation, tmpIniData);
 
@@ -233,7 +175,7 @@ namespace JavaToCSharpConverter.Helper
     <Reference Include=""System.Xml"" />
   </ItemGroup>
   <ItemGroup>
-{string.Join(Environment.NewLine, tmpClassList.Select(inItem => $"<Compile Include=\"{Path.Combine(tmpPathConverter.ChangeNamespace(inItem.Namespace).Split('.'))}\\{inItem.Name}.cs\" />"))}
+{string.Join(Environment.NewLine, tmpObjectInformation.ClassList.Select(inItem => $"<Compile Include=\"{Path.Combine(tmpPathConverter.ChangeNamespace(inItem.Namespace).Split('.'))}\\{inItem.Name}.cs\" />"))}
   </ItemGroup>
   <ItemGroup>
 {""    /*<None Include=""App.config"" />

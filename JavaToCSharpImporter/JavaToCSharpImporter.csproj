@@ -95,6 +95,7 @@
     <Compile Include="Helper\CTSExtensions.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Interface\CodeResultType.cs" />
+    <Compile Include="Interface\ILoadOOPLanguage.cs" />
     <Compile Include="Interface\IMissingTypes.cs" />
     <Compile Include="Interface\INameConverter.cs" />
     <Compile Include="Model\CSharp\CSharpCodePrettyfier.cs" />
@@ -110,6 +111,7 @@
     </Compile>
     <Compile Include="Model\Java\antlr\JavaParserVisitor.cs" />
     <Compile Include="Model\Java\JavaAntlrClassLoader.cs" />
+    <Compile Include="Model\Java\JavaLoader.cs" />
     <Compile Include="Model\OOP\CodeState.cs" />
     <Compile Include="Model\OOP\MissingFunctionInformation.cs" />
     <Compile Include="Model\OOP\TypeContainer.cs" />
