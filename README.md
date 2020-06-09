@@ -91,7 +91,7 @@ namespace LuceNET.Util
         private readonly string method;
         public  GenericMethode(string inMethod)   
         {
-            thisthis._method = inMethod;            
+            this._method = inMethod;            
         }
         Int32 Methode1<OtherType>(OtherType inSubclazz, C inDataClazz)where OtherType : D    
         {
@@ -103,9 +103,8 @@ namespace LuceNET.Util
         }
         public bool MethodCompare(string inMethod)   
         {
-            return thisthis._method == _method;            
+            return this._method == inMethod;            
         }
     }
 }
-
 ```
