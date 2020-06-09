@@ -77,13 +77,13 @@ namespace JavaToCSharpConverter.Model.Java
                     tmpClassComments.RemoveAt(0);
                 }
 
-                ExtractClassFromTree(tmpElement, tmpClass);
+                ExtractClassFromTreeTypeDeclaration(tmpElement, tmpClass);
             }
 
             return tmpClassList;
         }
 
-        private static void ExtractClassFromTree(TypeDeclarationContext tmpElement, ClassContainer tmpClass)
+        private static void ExtractClassFromTreeTypeDeclaration(TypeDeclarationContext tmpElement, ClassContainer tmpClass)
         {
             for (var tmpI = 0; tmpI < tmpElement.ChildCount; tmpI++)
             {
@@ -96,15 +96,48 @@ namespace JavaToCSharpConverter.Model.Java
 
                     if (tmpContext.typeParameters() != null)
                     {
-                        //Fill Type Parameters
-                        foreach (var tmpParam in tmpContext.typeParameters().typeParameter())
+                        TypeContainer tmpCurrentGenericType = null;
+                        foreach (var tmpGenericClassDeclarationChild in tmpContext.typeParameters().GetChildren())
                         {
-                            var tmpInnerType = (TypeContainer)tmpParam.IDENTIFIER().GetText();
-                            if (tmpParam.annotation().Length > 0 || tmpParam.EXTENDS() != null)
+                            if (tmpGenericClassDeclarationChild is TypeParameterContext)
                             {
-
+                                var tmpParam = tmpGenericClassDeclarationChild as TypeParameterContext;
+                                tmpCurrentGenericType = (TypeContainer)tmpParam.IDENTIFIER().GetText();
+                                tmpClass.Type.GenericTypes.Add(tmpCurrentGenericType);
+                                if (tmpParam.annotation().Length > 0 || tmpParam.EXTENDS() != null)
+                                {
+                                    throw new NotImplementedException("TypeParametersContext Extenmsion und Annotiations sind nicht Implementiert");
+                                }
                             }
-                            tmpClass.Type.GenericTypes.Add(tmpInnerType);
+                            else if (tmpGenericClassDeclarationChild is ErrorNodeImpl)
+                            {
+                                if (tmpCurrentGenericType != null)
+                                {
+                                    if (tmpGenericClassDeclarationChild.GetText() == "[" || tmpGenericClassDeclarationChild.GetText() == "]")
+                                    {
+                                        tmpCurrentGenericType.IsArray = true;
+                                    }
+                                    else if (tmpGenericClassDeclarationChild.GetText() == ">")
+                                    {
+                                        //TO Nothing
+                                    }
+                                    else
+                                    {
+                                        throw new NotImplementedException($"Unknown Type inside Generic Class Header as Class {tmpClass.Name}");
+                                    }
+                                }
+                            }
+                            else if (tmpGenericClassDeclarationChild is TerminalNodeImpl)
+                            {
+                                if (tmpGenericClassDeclarationChild.GetText() == ",")
+                                {
+                                    tmpCurrentGenericType = null;
+                                }
+                            }
+                            else
+                            {
+                                throw new NotImplementedException($"Unknown Type inside tmpGenericClassDeclarationChild of Class {tmpClass.Name}");
+                            }
                         }
                         var tmpExtends = tmpContext.EXTENDS()?.GetText();
                         if (tmpExtends != null)
@@ -431,7 +464,7 @@ namespace JavaToCSharpConverter.Model.Java
                             }
                             tmpNewMethode.Type.GenericTypes.Add(tmpType);
                         }
-                        
+
                         if (tmpParam.GetText().Contains("["))
                         {
                             tmpNewMethode.Type.IsArray = true;
