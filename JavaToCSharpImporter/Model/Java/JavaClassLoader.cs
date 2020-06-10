@@ -202,7 +202,7 @@ package {tmpPackage};
                 var tmpMethode = new MethodeContainer
                 {
                     Comment = tmpLastComment,
-                    Code = tmpClassPart.Item2,
+                    //Code = tmpClassPart.Item2,
                     Name = tmpMethodeDef.First(),
                     ReturnType = tmpMethodeDef.Skip(1).First(),
                     ModifierList = tmpMethodeDef.Skip(2).Select(inItem => inItem).ToList(),

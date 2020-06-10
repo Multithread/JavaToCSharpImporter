@@ -95,9 +95,11 @@
     <Compile Include="Helper\CTSExtensions.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Interface\CodeResultType.cs" />
+    <Compile Include="Interface\ICodeEntry.cs" />
     <Compile Include="Interface\ILoadOOPLanguage.cs" />
     <Compile Include="Interface\IMissingTypes.cs" />
     <Compile Include="Interface\INameConverter.cs" />
+    <Compile Include="Interface\IResolveMethodeContentToIL.cs" />
     <Compile Include="Model\CSharp\CSharpCodePrettyfier.cs" />
     <Compile Include="Model\CSharp\JavaToCSharpNameConverter.cs" />
     <Compile Include="Model\Java\antlr\IFormalParameterContext.cs" />
@@ -112,7 +114,10 @@
     <Compile Include="Model\Java\antlr\JavaParserVisitor.cs" />
     <Compile Include="Model\Java\JavaAntlrClassLoader.cs" />
     <Compile Include="Model\Java\JavaLoader.cs" />
+    <Compile Include="Model\Java\JavaMethodeCodeResolver.cs" />
     <Compile Include="Model\OOP\CodeState.cs" />
+    <Compile Include="Model\OOP\Methode\CodeBlock.cs" />
+    <Compile Include="Model\OOP\Methode\VariableDeclaration.cs" />
     <Compile Include="Model\OOP\MissingFunctionInformation.cs" />
     <Compile Include="Model\OOP\TypeContainer.cs" />
     <Compile Include="Model\OOP\ObjectInformation.cs" />

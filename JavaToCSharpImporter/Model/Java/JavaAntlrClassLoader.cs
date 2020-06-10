@@ -1,6 +1,7 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using JavaToCSharpConverter.Helper;
+using JavaToCSharpConverter.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,49 +97,8 @@ namespace JavaToCSharpConverter.Model.Java
 
                     if (tmpContext.typeParameters() != null)
                     {
-                        TypeContainer tmpCurrentGenericType = null;
-                        foreach (var tmpGenericClassDeclarationChild in tmpContext.typeParameters().GetChildren())
-                        {
-                            if (tmpGenericClassDeclarationChild is TypeParameterContext)
-                            {
-                                var tmpParam = tmpGenericClassDeclarationChild as TypeParameterContext;
-                                tmpCurrentGenericType = (TypeContainer)tmpParam.IDENTIFIER().GetText();
-                                tmpClass.Type.GenericTypes.Add(tmpCurrentGenericType);
-                                if (tmpParam.annotation().Length > 0 || tmpParam.EXTENDS() != null)
-                                {
-                                    throw new NotImplementedException("TypeParametersContext Extenmsion und Annotiations sind nicht Implementiert");
-                                }
-                            }
-                            else if (tmpGenericClassDeclarationChild is ErrorNodeImpl)
-                            {
-                                if (tmpCurrentGenericType != null)
-                                {
-                                    if (tmpGenericClassDeclarationChild.GetText() == "[" || tmpGenericClassDeclarationChild.GetText() == "]")
-                                    {
-                                        tmpCurrentGenericType.IsArray = true;
-                                    }
-                                    else if (tmpGenericClassDeclarationChild.GetText() == ">")
-                                    {
-                                        //TO Nothing
-                                    }
-                                    else
-                                    {
-                                        throw new NotImplementedException($"Unknown Type inside Generic Class Header as Class {tmpClass.Name}");
-                                    }
-                                }
-                            }
-                            else if (tmpGenericClassDeclarationChild is TerminalNodeImpl)
-                            {
-                                if (tmpGenericClassDeclarationChild.GetText() == ",")
-                                {
-                                    tmpCurrentGenericType = null;
-                                }
-                            }
-                            else
-                            {
-                                throw new NotImplementedException($"Unknown Type inside tmpGenericClassDeclarationChild of Class {tmpClass.Name}");
-                            }
-                        }
+                        var tmpClassGenericTypes = GetGenericTypesFromGenericArgumentsChildren(tmpClass, tmpContext.typeParameters().GetChildren());
+                        tmpClass.Type.GenericTypes.AddRange(tmpClassGenericTypes);
                         var tmpExtends = tmpContext.EXTENDS()?.GetText();
                         if (tmpExtends != null)
                         {
@@ -191,6 +151,69 @@ namespace JavaToCSharpConverter.Model.Java
             }
         }
 
+        private static List<TypeContainer> GetGenericTypesFromGenericArgumentsChildren(ClassContainer tmpClass, IEnumerable<IParseTree> inGenericTypeChildren)
+        {
+            TypeContainer tmpCurrentGenericType = null;
+            var tmpReturnTypes = new List<TypeContainer>();
+            foreach (var tmpGenericClassDeclarationChild in inGenericTypeChildren)
+            {
+                if (tmpGenericClassDeclarationChild is TypeParameterContext)
+                {
+                    var tmpParam = tmpGenericClassDeclarationChild as TypeParameterContext;
+                    tmpCurrentGenericType = (TypeContainer)tmpParam.IDENTIFIER().GetText();
+                    tmpReturnTypes.Add(tmpCurrentGenericType);
+                    if (tmpParam.annotation().Length > 0 || tmpParam.EXTENDS() != null)
+                    {
+                        throw new NotImplementedException("TypeParametersContext Extenmsion und Annotiations sind nicht Implementiert");
+                    }
+                }
+                else if (tmpGenericClassDeclarationChild is ErrorNodeImpl)
+                {
+                    if (tmpCurrentGenericType != null)
+                    {
+                        var tmpGEnericText = tmpGenericClassDeclarationChild.GetText();
+                        if (tmpGEnericText == "[" || tmpGEnericText == "]")
+                        {
+                            tmpCurrentGenericType.IsArray = true;
+                        }
+                        else if (tmpGEnericText == ">")
+                        {
+                            //TODO Handling of Stacked Generics
+                        }
+                        else if (tmpGEnericText == "<")
+                        {
+                            //TODO Handling of Stacked Generics
+                        }
+                        else if (tmpGEnericText == ",")
+                        {
+                            tmpCurrentGenericType = null;
+                        }
+                        else
+                        {
+                            throw new NotImplementedException($"Unknown Type inside Generic Class Header as Class {tmpClass.Name}");
+                        }
+                    }
+                    else if(!TypeNonNumberChars.Contains(tmpGenericClassDeclarationChild.GetText()))
+                    {
+                        tmpCurrentGenericType = tmpGenericClassDeclarationChild.GetText();
+                        tmpReturnTypes.Add(tmpCurrentGenericType);
+                    }
+                }
+                else if (tmpGenericClassDeclarationChild is TerminalNodeImpl)
+                {
+                    if (tmpGenericClassDeclarationChild.GetText() == ",")
+                    {
+                        tmpCurrentGenericType = null;
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException($"Unknown Type inside tmpGenericClassDeclarationChild of Class {tmpClass.Name}");
+                }
+            }
+            return tmpReturnTypes;
+        }
+        private static List<string> TypeNonNumberChars = new List<string>() { "[", "]", "<", ">" };
         /// <summary>
         /// Resolve an Interface Declaration
         /// </summary>
@@ -290,8 +313,10 @@ namespace JavaToCSharpConverter.Model.Java
             inClass.AttributeList.Add("class");
             var tmpComment = "";
 
-            foreach (var tmpItem in inClassContext.classBody().GetChildren())
+            var tmpChildList = inClassContext.classBody().GetChildren().ToList();
+            for (var tmpI = 0; tmpI < tmpChildList.Count(); tmpI++)
             {
+                var tmpItem = tmpChildList[tmpI];
                 var tmpType = tmpItem.GetType().Name;
                 if (tmpItem is ClassBodyDeclarationContext)
                 {
@@ -316,7 +341,33 @@ namespace JavaToCSharpConverter.Model.Java
 
                     if (tmpDeclaration.methodDeclaration() != null)
                     {
-                        AddMethodeDeclaration(inClass, tmpDeclaration.methodDeclaration(), tmpModifierList);
+                        var tmpMethodeContainer = AddMethodeDeclaration(inClass, tmpDeclaration.methodDeclaration(), tmpModifierList);
+                        //In this case, we have a Generic methode Constructor
+                        if (tmpI > 0 && tmpChildList[tmpI - 1].GetText().EndsWith(">"))
+                        {
+                            var tmpDataList = new List<IParseTree>();
+                            var tmpDepth = 0;
+                            var tmpNegativeI = 0;
+                            while (tmpDepth != 0 || tmpNegativeI == 0)
+                            {
+                                tmpNegativeI++;
+                                var tmpPreviiousCHild = tmpChildList[tmpI - tmpNegativeI];
+                                foreach (var tmpChildOfChildOfPrechild in tmpPreviiousCHild.GetChildren().Reverse().SelectMany(inItem => inItem.GetChildren().Reverse()))
+                                {
+                                    tmpDataList.Insert(0, tmpChildOfChildOfPrechild);
+                                    if (tmpChildOfChildOfPrechild.GetText() == ">")
+                                    {
+                                        tmpDepth++;
+                                    }
+                                    else if (tmpChildOfChildOfPrechild.GetText() == "<")
+                                    {
+                                        tmpDepth--;
+                                    }
+                                }
+                            }
+                            var tmpGenericListForMethode = GetGenericTypesFromGenericArgumentsChildren(inClass, tmpDataList);
+                            tmpMethodeContainer.GenericTypes.AddRange(tmpGenericListForMethode);
+                        }
                     }
                     else if (tmpDeclaration.fieldDeclaration() != null)
                     {
@@ -368,10 +419,11 @@ namespace JavaToCSharpConverter.Model.Java
                         var tmpMethodeDeclaration = tmpDeclaration.genericMethodDeclaration();
 
                         var tmpMethodeContainer = AddMethodeDeclaration(inClass, tmpMethodeDeclaration.methodDeclaration(), tmpModifierList);
+                        var tmpGenericListForMethode = GetGenericTypesFromGenericArgumentsChildren(inClass, tmpMethodeDeclaration.typeParameters().GetChildren());
+                        tmpMethodeContainer.GenericTypes.AddRange(tmpGenericListForMethode);
                     }
                     else
                     {
-
                     }
 
                 }

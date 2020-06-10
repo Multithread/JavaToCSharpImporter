@@ -22,21 +22,21 @@ namespace JavaToCSharpConverter.Model.Java
                 .FillClasses(tmpClassList);
             //Add Mapped Methodes to Class List (So we don't need String oä as a Class List
             var tmpAdditionalClasses = new List<ClassContainer>
-                {
-                    //new ClassContainer
-                    //{
-                    //    Type="int",
-                    //    Namespace=""
-                    //},new ClassContainer
-                    //{
-                    //    Type="String",
-                    //    Namespace=""
-                    //},new ClassContainer
-                    //{
-                    //    Type="File",
-                    //    Namespace="java.io"
-                    //}
-                };
+            {
+                //new ClassContainer
+                //{
+                //    Type="int",
+                //    Namespace=""
+                //},new ClassContainer
+                //{
+                //    Type="String",
+                //    Namespace=""
+                //},new ClassContainer
+                //{
+                //    Type="File",
+                //    Namespace="java.io"
+                //}
+            };
 
             //Load all Classes, with Methodes we might need
             foreach (var tmpMap in inConfiguration["Methode"])
@@ -65,6 +65,15 @@ namespace JavaToCSharpConverter.Model.Java
                     tmpNewMethode.Name = tmpMethodeName;
                     tmpNewMethode.ModifierList = new List<string> { "public" };
                     tmpMethode.MethodeList.Add(tmpNewMethode);
+                }
+            }
+
+            IResolveMethodeContentToIL tmpCodeHandler = new JavaMethodeCodeResolver();
+            foreach (var tmpClass in tmpClassList)
+            {
+                foreach (var tmpMethode in tmpClass.MethodeList)
+                {
+                    tmpCodeHandler.Resolve(tmpMethode);
                 }
             }
 

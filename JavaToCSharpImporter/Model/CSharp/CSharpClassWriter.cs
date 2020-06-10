@@ -99,7 +99,7 @@ namespace JavaToCSharpConverter.Model.CSharp
             //Set Methodes
             foreach (var tmpMethode in inClass.MethodeList)
             {
-                var tmpNewReturnType = string.IsNullOrEmpty(tmpMethode.ReturnType) ? "void" : inConverter.DoTypeMap(tmpMethode.ReturnType, inClass, tmpRequiredUsings);
+                var tmpNewReturnType = string.IsNullOrEmpty(tmpMethode.ReturnType.ToString()) ? "void" : inConverter.DoTypeMap(tmpMethode.ReturnType.ToString(), inClass, tmpRequiredUsings);
                 if (tmpMethode.IsConstructor)
                 {
                     tmpNewReturnType = "";
@@ -180,18 +180,18 @@ namespace JavaToCSharpConverter.Model.CSharp
                     //Parse Antlr Function Code to Java
                     RewriteAntlrFunctionCode(tmpStringBuilder, tmpMethode.AntlrCode, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
                 }
-                else if (!string.IsNullOrEmpty(tmpMethode.Code))
-                {
-                    tmpStringBuilder.AppendLine($"{{");
+                //else if (!string.IsNullOrEmpty(tmpMethode.Code))
+                //{
+                //    tmpStringBuilder.AppendLine($"{{");
 
-                    //Rewrite the Linear Code
-                    RewriteFunctionCode(tmpStringBuilder, tmpMethode, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
+                //    //Rewrite the Linear Code
+                //    RewriteFunctionCode(tmpStringBuilder, tmpMethode, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
 
-                    if (!tmpMethode.Code.EndsWith("}"))
-                    {
-                        tmpStringBuilder.AppendLine($"}}");
-                    }
-                }
+                //    if (!tmpMethode.Code.EndsWith("}"))
+                //    {
+                //        tmpStringBuilder.AppendLine($"}}");
+                //    }
+                //}
                 else
                 {
                     tmpStringBuilder.Append($";");
@@ -993,7 +993,7 @@ namespace JavaToCSharpConverter.Model.CSharp
                 inCodeState.AddVariable(tmpParam.Type.Name, tmpParam.Name, false);
             }
 
-            var tmpCodeParts = CodeSplitter.FileDataSplitter(inMethode.Code, new CodeLineSplitter());
+            var tmpCodeParts = CodeSplitter.FileDataSplitter(""/*inMethode.Code*/, new CodeLineSplitter());
             foreach (var tmpCodePart in tmpCodeParts)
             {
                 var tmpInfo = (CodeLineResultType?)tmpCodePart.Item1;

@@ -1,4 +1,5 @@
 ﻿using Antlr4.Runtime.Tree;
+using JavaToCSharpConverter.Model.OOP;
 using System.Collections.Generic;
 
 namespace JavaToCSharpConverter.Model
@@ -16,7 +17,12 @@ namespace JavaToCSharpConverter.Model
         /// <summary>
         /// Returntype. Might be void
         /// </summary>
-        public string ReturnType { get; set; }
+        public TypeContainer ReturnType { get; set; }
+
+        /// <summary>
+        /// List of Generic Sub-Types
+        /// </summary>
+        public List<TypeContainer> GenericTypes { get; set; } = new List<TypeContainer>();
 
         /// <summary>
         /// A List of the Methode Params
@@ -36,7 +42,7 @@ namespace JavaToCSharpConverter.Model
         /// <summary>
         /// Code, from Inside the Methode
         /// </summary>
-        public string Code { get; set; } = "";
+        public CodeBlock Code { get; set; }
 
         /// <summary>
         /// Code, from Inside the Methode
