@@ -116,7 +116,10 @@
     <Compile Include="Model\Java\JavaLoader.cs" />
     <Compile Include="Model\Java\JavaMethodeCodeResolver.cs" />
     <Compile Include="Model\OOP\CodeState.cs" />
+    <Compile Include="Model\OOP\Enum\StatementTypeEnum.cs" />
     <Compile Include="Model\OOP\Methode\CodeBlock.cs" />
+    <Compile Include="Model\OOP\Methode\ConstantValue.cs" />
+    <Compile Include="Model\OOP\Methode\StatementCode.cs" />
     <Compile Include="Model\OOP\Methode\VariableDeclaration.cs" />
     <Compile Include="Model\OOP\MissingFunctionInformation.cs" />
     <Compile Include="Model\OOP\TypeContainer.cs" />

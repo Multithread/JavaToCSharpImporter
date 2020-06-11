@@ -85,25 +85,29 @@ namespace JavaToCSharpConverter.Model.Java
                             Name = tmpVariableDeclaration.variableDeclaratorId().GetText(),
                         };
                         inCodeBlock.CodeEntries.Add(tmpVarDec);
-
-                        HandleArrayInizializer(inCodeBlock, tmpVariableDeclaration.variableInitializer().arrayInitializer());
-                        HandleExpressionContext(inCodeBlock, tmpVariableDeclaration.variableInitializer().expression());
+                        if (tmpVariableDeclaration.variableInitializer() != null)
+                        {
+                            HandleArrayInizializer(inCodeBlock, tmpVariableDeclaration.variableInitializer().arrayInitializer(), tmpVarDec);
+                            HandleExpressionContext(inCodeBlock, tmpVariableDeclaration.variableInitializer().expression(), tmpVarDec);
+                        }
                     }
                 }
-                if (tmpVar.variableModifier() != null)
+                if (tmpVar.variableModifier().Length > 0)
                 {
 
+                    throw new NotImplementedException("Not done yet");
                 }
             }
             var tmpType = inBlockStatement.localTypeDeclaration();
             if (tmpType != null)
             {
 
+                throw new NotImplementedException("Not done yet");
             }
             var tmpStatement = inBlockStatement.statement();
             if (tmpStatement != null)
             {
-
+                HandleBlockStatementStatement(inCodeBlock, inBlockStatement.statement());
             }
 
         }
@@ -114,12 +118,51 @@ namespace JavaToCSharpConverter.Model.Java
         /// </summary>
         /// <param name="inCodeBlock"></param>
         /// <param name="inBlockStatement"></param>
-        private void HandleArrayInizializer(CodeBlock inCodeBlock, ArrayInitializerContext inBlockStatement)
+        private void HandleArrayInizializer(CodeBlock inCodeBlock, ArrayInitializerContext inBlockStatement, VariableDeclaration inVariable)
         {
             if (inBlockStatement == null)
             {
                 return;
             }
+            var b = 0;
+            throw new NotImplementedException("Not done yet");
+        }
+
+
+        /// <summary>
+        /// Handling an Array Inizializer block
+        /// I'm unsure why this is not an ExpressionCOntext, but whatever
+        /// </summary>
+        /// <param name="inCodeBlock"></param>
+        /// <param name="inBlockStatement"></param>
+        private void HandleBlockStatementStatement(CodeBlock inParentCodeBlock, StatementContext inStatement)
+        {
+            var tmpStatement = new StatementCode();
+            if (inStatement.IF() != null)
+            {
+                tmpStatement.StatementType = StatementTypeEnum.If;
+            }
+            else
+            {
+
+                throw new NotImplementedException("Not done yet");
+            }
+
+            if (inStatement.block() != null)
+            {
+                throw new NotImplementedException("Not done yet");
+            }
+            //Expression of i.e. IF decision
+            else if (inStatement.parExpression() != null)
+            {
+                tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { new CodeBlock() };
+                HandleExpressionContext(tmpStatement.StatementCodeBlocks[0], inStatement.parExpression().expression(), null);
+            }
+            else
+            {
+                throw new NotImplementedException("Not done yet");
+            }
+            inParentCodeBlock.CodeEntries.Add(tmpStatement);
         }
 
         /// <summary>
@@ -127,11 +170,33 @@ namespace JavaToCSharpConverter.Model.Java
         /// </summary>
         /// <param name="inCodeBlock"></param>
         /// <param name="inBlockStatement"></param>
-        private void HandleExpressionContext(CodeBlock inCodeBlock, ExpressionContext inBlockStatement)
+        private void HandleExpressionContext(CodeBlock inCodeBlock, ExpressionContext inBlockStatement, VariableDeclaration inVariable)
         {
             if (inBlockStatement == null)
             {
                 return;
+            }
+            if (inBlockStatement.primary() != null)
+            {
+                //Primary Value analyse type
+                var tmpPrimary = inBlockStatement.primary();
+                var tmpPrimaryAsText = tmpPrimary.GetText();
+                inCodeBlock.CodeEntries.Add(new ConstantValue { Value = tmpPrimaryAsText });
+                //if (tmpPrimaryAsText.StartsWith("\""))
+                //{
+
+                //}
+            }
+            else if (inBlockStatement.expression() != null)
+            {
+                foreach (var tmpElement in inBlockStatement.expression())
+                {
+                    var tmptype = tmpElement.GetType().Name;
+                }
+            }
+            else
+            {
+                throw new NotImplementedException("Not done yet");
             }
         }
     }
