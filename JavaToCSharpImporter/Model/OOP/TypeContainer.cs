@@ -1,5 +1,5 @@
 ﻿using JavaToCSharpConverter.Helper;
-using JavaToCSharpConverter.Model.Splitter;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -55,11 +55,7 @@ namespace JavaToCSharpConverter.Model
             {
                 tmpContainer.Name = inType.Substring(0, inType.IndexOf("<"));
                 var tmpInnerData = inType.Substring(inType.IndexOf("<") + 1, inType.Length - inType.IndexOf("<") - 2);
-                var tmpSplitted = CodeSplitter.FileDataSplitter(tmpInnerData, new ClassInterfaceSplitter()).ToList();
-                foreach (var tmpSplit in tmpSplitted)
-                {
-                    tmpContainer.GenericTypes.Add(tmpSplit.Item2);
-                }
+                throw new Exception("Nope");
             }
             else
             {

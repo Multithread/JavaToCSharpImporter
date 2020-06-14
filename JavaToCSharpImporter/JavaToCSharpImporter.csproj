@@ -89,7 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\AntlrHelper.cs" />
-    <Compile Include="Helper\CodeSplitter.cs" />
     <Compile Include="Helper\ConverterHelper.cs" />
     <Compile Include="Helper\DataHelper.cs" />
     <Compile Include="Helper\CTSExtensions.cs" />
@@ -100,7 +99,6 @@
     <Compile Include="Interface\IMissingTypes.cs" />
     <Compile Include="Interface\INameConverter.cs" />
     <Compile Include="Interface\IResolveMethodeContentToIL.cs" />
-    <Compile Include="Model\CSharp\CSharpCodePrettyfier.cs" />
     <Compile Include="Model\CSharp\JavaToCSharpNameConverter.cs" />
     <Compile Include="Model\Java\antlr\IFormalParameterContext.cs" />
     <Compile Include="Model\Java\antlr\IJavaParserListener.cs" />
@@ -129,24 +127,13 @@
     <Compile Include="Model\OOP\MissingFunctionInformation.cs" />
     <Compile Include="Model\OOP\TypeContainer.cs" />
     <Compile Include="Model\OOP\ObjectInformation.cs" />
-    <Compile Include="Interface\CodeSplitterEvents.cs" />
     <Compile Include="Model\CSharp\CSharpClassWriter.cs" />
-    <Compile Include="Model\Java\JavaClassLoader.cs" />
     <Compile Include="Model\OOP\ClassContainer.cs" />
     <Compile Include="Model\OOP\MethodeContainer.cs" />
     <Compile Include="Model\OOP\FieldContainer.cs" />
     <Compile Include="Model\ReplaceInFile.cs" />
     <Compile Include="Model\ReplaceJob.cs" />
     <Compile Include="Model\SearchAndReplacePattern.cs" />
-    <Compile Include="Model\Splitter\ClassInterfaceSplitter.cs" />
-    <Compile Include="Model\Splitter\Code\CodeFormatSplitter.cs" />
-    <Compile Include="Model\Splitter\Code\CodeLineSplitter.cs" />
-    <Compile Include="Model\Splitter\FullFlatSplitter.cs" />
-    <Compile Include="Model\Splitter\EndCharSplitter.cs" />
-    <Compile Include="Model\Splitter\CommentSplitter.cs" />
-    <Compile Include="Model\Splitter\DefinitionSplitter.cs" />
-    <Compile Include="Model\Splitter\HeaderDefinitionSplitter.cs" />
-    <Compile Include="Model\Splitter\PreClassSplitter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\SearchInFile.cs" />

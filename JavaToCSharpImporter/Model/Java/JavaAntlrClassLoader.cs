@@ -160,11 +160,44 @@ namespace JavaToCSharpConverter.Model.Java
                 if (tmpGenericClassDeclarationChild is TypeParameterContext)
                 {
                     var tmpParam = tmpGenericClassDeclarationChild as TypeParameterContext;
-                    tmpCurrentGenericType = (TypeContainer)tmpParam.IDENTIFIER().GetText();
+                    tmpCurrentGenericType = new TypeContainer { Name = tmpParam.IDENTIFIER().GetText() };
                     tmpReturnTypes.Add(tmpCurrentGenericType);
                     if (tmpParam.annotation().Length > 0 || tmpParam.EXTENDS() != null)
                     {
                         throw new NotImplementedException("TypeParametersContext Extenmsion und Annotiations sind nicht Implementiert");
+                    }
+                }
+                else if (tmpGenericClassDeclarationChild is TypeTypeOrVoidContext)
+                {
+                    var tmpTypeOrVoid = tmpGenericClassDeclarationChild as TypeTypeOrVoidContext;
+                    tmpCurrentGenericType = new TypeContainer();
+                    tmpReturnTypes.Add(tmpCurrentGenericType);
+                    if (tmpTypeOrVoid.typeType() != null)
+                    {
+                        if (tmpTypeOrVoid.typeType().classOrInterfaceType() != null)
+                        {
+                            var tmpType = tmpTypeOrVoid.typeType().classOrInterfaceType();
+                            if (tmpType.IDENTIFIER().Length > 1)
+                            {
+                                throw new NotImplementedException($"Identifier to Long at {tmpClass.Name}");
+                            }
+                            tmpCurrentGenericType.Name = tmpType.IDENTIFIER(0).GetText();
+                            foreach (var tmpTypeArgument in tmpType.typeArguments().SelectMany(inItem => inItem.typeArgument()))
+                            {
+                                var tmpGenericInnerType = new TypeContainer();
+                                tmpGenericInnerType.Name = tmpTypeArgument.GetText();
+                                tmpCurrentGenericType.GenericTypes.Add(tmpGenericInnerType);
+                                //TODO Handling of Stacked Generics
+                            }
+                        }
+                        else
+                        {
+                            throw new NotImplementedException($"Unknown Type inside tmpGenericClassDeclarationChild of Class {tmpClass.Name}");
+                        }
+                    }
+                    else
+                    {
+                        tmpCurrentGenericType.Name = tmpTypeOrVoid.GetText();
                     }
                 }
                 else if (tmpGenericClassDeclarationChild is ErrorNodeImpl)
@@ -193,7 +226,7 @@ namespace JavaToCSharpConverter.Model.Java
                             throw new NotImplementedException($"Unknown Type inside Generic Class Header as Class {tmpClass.Name}");
                         }
                     }
-                    else if(!TypeNonNumberChars.Contains(tmpGenericClassDeclarationChild.GetText()))
+                    else if (!TypeNonNumberChars.Contains(tmpGenericClassDeclarationChild.GetText()))
                     {
                         tmpCurrentGenericType = tmpGenericClassDeclarationChild.GetText();
                         tmpReturnTypes.Add(tmpCurrentGenericType);
@@ -478,6 +511,42 @@ namespace JavaToCSharpConverter.Model.Java
             tmpMethode.Parameter.Add(tmpNewMethode);
         }
 
+        public static TypeContainer CreateTypeContainerFromType(TypeTypeOrVoidContext inTypeOrVoid)
+        {
+            var inType = inTypeOrVoid.GetText();
+            var tmpTypes = GetGenericTypesFromGenericArgumentsChildren(new ClassContainer(), new List<IParseTree> { inTypeOrVoid });
+            return tmpTypes.First();
+            //var tmpContainer = new TypeContainer();
+            //if (inType.EndsWith("[]"))
+            //{
+            //    tmpContainer.IsArray = true;
+            //    inType = inType.Substring(0, inType.Length - 2);
+            //}
+            //if (inType.Contains("extends"))
+            //{
+            //    tmpContainer.Name = inType.Split(' ')[0];
+            //    var tmpExtends = inType.Substring(inType.IndexOf("extends"));
+
+            //    tmpContainer.Extends = tmpExtends.Split(',').Select(inItem => inItem.Trim(' ')).ToList();
+            //}
+            //else if (inType.Contains("<"))
+            //{
+            //    tmpContainer.Name = inType.Substring(0, inType.IndexOf("<"));
+            //    var tmpInnerData = inType.Substring(inType.IndexOf("<") + 1, inType.Length - inType.IndexOf("<") - 2);
+            //    var tmpSplitted = CodeSplitter.FileDataSplitter(tmpInnerData, new ClassInterfaceSplitter()).ToList();
+            //    foreach (var tmpSplit in tmpSplitted)
+            //    {
+            //        tmpContainer.GenericTypes.Add(tmpSplit.Item2);
+            //    }
+            //}
+            //else
+            //{
+            //    tmpContainer.Name = inType;
+            //}
+
+            //return tmpContainer;
+        }
+
         /// <summary>
         /// Add Methode Declaration to Class
         /// </summary>
@@ -491,7 +560,7 @@ namespace JavaToCSharpConverter.Model.Java
             {
                 Name = inMethodeContext.IDENTIFIER().GetText(),
                 AntlrCode = inMethodeContext.methodBody(),
-                ReturnType = inMethodeContext.typeTypeOrVoid().GetText(),
+                ReturnType = CreateTypeContainerFromType(inMethodeContext.typeTypeOrVoid()),
             };
             var tmpParams = inMethodeContext.formalParameters()?.formalParameterList()?.formalParameter();
             if (tmpParams != null)
