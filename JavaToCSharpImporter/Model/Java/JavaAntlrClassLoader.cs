@@ -151,6 +151,12 @@ namespace JavaToCSharpConverter.Model.Java
             }
         }
 
+        /// <summary>
+        /// Create Types from IParseTree Type arguments
+        /// </summary>
+        /// <param name="tmpClass"></param>
+        /// <param name="inGenericTypeChildren"></param>
+        /// <returns></returns>
         private static List<TypeContainer> GetGenericTypesFromGenericArgumentsChildren(ClassContainer tmpClass, IEnumerable<IParseTree> inGenericTypeChildren)
         {
             TypeContainer tmpCurrentGenericType = null;
