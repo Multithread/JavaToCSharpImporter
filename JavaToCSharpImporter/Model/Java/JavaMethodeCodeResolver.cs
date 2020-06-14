@@ -137,26 +137,27 @@ namespace JavaToCSharpConverter.Model.Java
         /// <param name="inBlockStatement"></param>
         private void HandleBlockStatementStatement(CodeBlock inParentCodeBlock, StatementContext inStatement)
         {
+            if (inStatement.expression().Length > 1)
+            {
+                throw new NotImplementedException("Not done yet");
+            }
             var tmpStatement = new StatementCode();
             if (inStatement.IF() != null)
             {
                 tmpStatement.StatementType = StatementTypeEnum.If;
             }
-            else
-            {
-
-                throw new NotImplementedException("Not done yet");
-            }
-
-            if (inStatement.block() != null)
+            else if (inStatement.ASSERT() != null)
             {
                 throw new NotImplementedException("Not done yet");
             }
-            //Expression of i.e. IF decision
-            else if (inStatement.parExpression() != null)
+            else if (inStatement.IDENTIFIER() != null)
+            {
+                throw new NotImplementedException("Not done yet");
+            }
+            else if (inStatement.SEMI() != null)
             {
                 tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { new CodeBlock() };
-                HandleExpressionContext(tmpStatement.StatementCodeBlocks[0], inStatement.parExpression().expression(), null);
+                HandleExpressionContext(tmpStatement.StatementCodeBlocks[0], inStatement.expression()[0], null);
             }
             else
             {
@@ -176,28 +177,85 @@ namespace JavaToCSharpConverter.Model.Java
             {
                 return;
             }
-            if (inBlockStatement.primary() != null)
-            {
-                //Primary Value analyse type
-                var tmpPrimary = inBlockStatement.primary();
-                var tmpPrimaryAsText = tmpPrimary.GetText();
-                inCodeBlock.CodeEntries.Add(new ConstantValue { Value = tmpPrimaryAsText });
-                //if (tmpPrimaryAsText.StartsWith("\""))
-                //{
 
-                //}
-            }
-            else if (inBlockStatement.expression() != null)
-            {
-                foreach (var tmpElement in inBlockStatement.expression())
-                {
-                    var tmptype = tmpElement.GetType().Name;
-                }
-            }
-            else
+            if (inBlockStatement.IDENTIFIER() != null)
             {
                 throw new NotImplementedException("Not done yet");
             }
+            else if (inBlockStatement.THIS() != null)
+            {
+                throw new NotImplementedException("Not done yet");
+            }
+            else if (inBlockStatement.NEW() != null)
+            {
+                throw new NotImplementedException("Not done yet");
+            }
+            else if (inBlockStatement.SUPER() != null)
+            {
+                throw new NotImplementedException("Not done yet");
+            }
+            else if (inBlockStatement.INSTANCEOF() != null)
+            {
+                throw new NotImplementedException("Not done yet");
+            }
+            else
+            {
+                if (inBlockStatement.primary() != null)
+                {
+                    //Primary Value analyse type
+                    var tmpPrimary = inBlockStatement.primary();
+                    var tmpPrimaryAsText = tmpPrimary.GetText();
+                    inCodeBlock.CodeEntries.Add(new ConstantValue { Value = tmpPrimaryAsText });
+                }
+                else
+                {
+                    var tmpChildList = inBlockStatement.children;
+                    if (tmpChildList.Count > 2)
+                    {
+                        var tmpSecondChildText = tmpChildList[1].GetText();
+                        if (tmpSecondChildText == "=")
+                        {
+                            //SetVariable with Value
+                            var tmpVarSetter = new SetFieldWithValue();
+                            HandleExpressionContext(tmpVarSetter.VariableToAccess, tmpChildList[0] as ExpressionContext, inVariable);
+                            HandleExpressionContext(tmpVarSetter.ValueToSet, tmpChildList[2] as ExpressionContext, inVariable);
+                            inCodeBlock.CodeEntries.Add(tmpVarSetter);
+                        }
+                        else if (JavaStaticInfo.MathElements.ContainsKey(tmpSecondChildText))
+                        {
+                            var tmpCodeExpression = new CodeExpression
+                            {
+                                Manipulator = JavaStaticInfo.GetManipulator(tmpSecondChildText)
+                            };
+                            var tmpCodeBlock = new CodeBlock();
+                            HandleExpressionContext(tmpCodeBlock, tmpChildList[0] as ExpressionContext, inVariable);
+                            tmpCodeExpression.SubClauseEntries.Add(tmpCodeBlock);
+                            tmpCodeBlock = new CodeBlock();//Second Code Block
+                            HandleExpressionContext(tmpCodeBlock, tmpChildList[2] as ExpressionContext, inVariable);
+                            tmpCodeExpression.SubClauseEntries.Add(tmpCodeBlock);
+
+                            inCodeBlock.CodeEntries.Add(tmpCodeExpression);
+                        }
+                        else if (JavaStaticInfo.BooleanOperators.ContainsKey(tmpSecondChildText))
+                        {
+                            throw new NotImplementedException("Not done yet");
+                        }
+                        else
+                        {
+                            throw new NotImplementedException("Not done yet");
+                        }
+                        foreach (var tmpEntry in inBlockStatement.children)
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("Not done yet");
+                    }
+                }
+            }
+
         }
     }
 }

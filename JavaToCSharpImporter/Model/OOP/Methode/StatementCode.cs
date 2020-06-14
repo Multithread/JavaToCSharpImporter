@@ -17,5 +17,13 @@ namespace JavaToCSharpConverter.Model.OOP
         /// </summary>
         public List<CodeBlock> StatementCodeBlocks { get; set; }
 
+        /// <summary>
+        /// Override TOString to better debug and Read
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return StatementType.ToString();
+        }
     }
 }
