@@ -2,7 +2,7 @@
 using JavaToCSharpConverter.Helper;
 using JavaToCSharpConverter.Interface;
 using JavaToCSharpConverter.Model.OOP;
-using MoreLinq;
+//using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1045,7 +1045,7 @@ namespace JavaToCSharpConverter.Model.CSharp
 
             var tmpNewType = inConverter.MapType(inOldType, inClass.FullUsingList).Split('.');
 
-            var tmpNewUsing = string.Join(".", tmpNewType.SkipLast(1));
+            var tmpNewUsing = string.Join(".", MoreLinq.Extensions.SkipLastExtension.SkipLast(tmpNewType, 1));
             AddUsingIfRequired(tmpRequiredUsings, tmpNewUsing);
 
             return tmpNewType.Last();

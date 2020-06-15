@@ -9,11 +9,12 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>JavaToCSharpConverter</RootNamespace>
     <AssemblyName>JavaToCSharpConverter</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -93,12 +94,6 @@
     <Compile Include="Helper\DataHelper.cs" />
     <Compile Include="Helper\CTSExtensions.cs" />
     <Compile Include="Helper\StringHelper.cs" />
-    <Compile Include="Interface\CodeResultType.cs" />
-    <Compile Include="Interface\ICodeEntry.cs" />
-    <Compile Include="Interface\ILoadOOPLanguage.cs" />
-    <Compile Include="Interface\IMissingTypes.cs" />
-    <Compile Include="Interface\INameConverter.cs" />
-    <Compile Include="Interface\IResolveMethodeContentToIL.cs" />
     <Compile Include="Model\CSharp\JavaToCSharpNameConverter.cs" />
     <Compile Include="Model\Java\antlr\IFormalParameterContext.cs" />
     <Compile Include="Model\Java\antlr\IJavaParserListener.cs" />
@@ -115,22 +110,7 @@
     <Compile Include="Model\Java\JavaLoader.cs" />
     <Compile Include="Model\Java\JavaMethodeCodeResolver.cs" />
     <Compile Include="Model\Java\JavaStaticInfo.cs" />
-    <Compile Include="Model\OOP\CodeState.cs" />
-    <Compile Include="Model\OOP\Enum\StatementTypeEnum.cs" />
-    <Compile Include="Model\OOP\Enum\VariableManipulatorType.cs" />
-    <Compile Include="Model\OOP\Methode\CodeBlock.cs" />
-    <Compile Include="Model\OOP\Methode\CodeExpression.cs" />
-    <Compile Include="Model\OOP\Methode\ConstantValue.cs" />
-    <Compile Include="Model\OOP\Methode\StatementCode.cs" />
-    <Compile Include="Model\OOP\Methode\SetFieldWithValue.cs" />
-    <Compile Include="Model\OOP\Methode\VariableDeclaration.cs" />
-    <Compile Include="Model\OOP\MissingFunctionInformation.cs" />
-    <Compile Include="Model\OOP\TypeContainer.cs" />
-    <Compile Include="Model\OOP\ObjectInformation.cs" />
     <Compile Include="Model\CSharp\CSharpClassWriter.cs" />
-    <Compile Include="Model\OOP\ClassContainer.cs" />
-    <Compile Include="Model\OOP\MethodeContainer.cs" />
-    <Compile Include="Model\OOP\FieldContainer.cs" />
     <Compile Include="Model\ReplaceInFile.cs" />
     <Compile Include="Model\ReplaceJob.cs" />
     <Compile Include="Model\SearchAndReplacePattern.cs" />
@@ -153,6 +133,23 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="JavaData\Example.java" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CodeConverterCore\CodeConverterCore.csproj">
+      <Project>{d70fe1c1-3cbe-42f1-8361-b05fa406a39c}</Project>
+      <Name>CodeConverterCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeConverterCSharp\CodeConverterCSharp.csproj">
+      <Project>{af3b0441-044a-4ea3-8052-57982e8bfcb5}</Project>
+      <Name>CodeConverterCSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeConverterJava\CodeConverterJava.csproj">
+      <Project>{863f8c69-dd75-4a95-a8a0-8dc3863857b2}</Project>
+      <Name>CodeConverterJava</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\OOP\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -31,7 +31,7 @@ namespace JavaToCSharpConverter.Model
         /// <summary>
         /// List of Methodes, that are Missing
         /// </summary>
-        internal List<MissingFunctionInformation> MissingMethodes { get; set; } = new List<MissingFunctionInformation>();
+        public List<MissingFunctionInformation> MissingMethodes { get; set; } = new List<MissingFunctionInformation>();
 
         /// <summary>
         /// Add Class to InformationList
