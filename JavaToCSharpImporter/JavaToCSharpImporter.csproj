@@ -72,10 +72,6 @@
     <Reference Include="MoreLinq, Version=3.1.0.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.3.1.0\lib\net451\MoreLinq.dll</HintPath>
     </Reference>
-    <Reference Include="Multithreading, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\FindFileCopys\FindFileCopys\bin\x64\Debug\Multithreading.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -93,12 +89,10 @@
     <Compile Include="Model\JavaToCSharpNameConverter.cs" />
     <Compile Include="Model\CSharp\CSharpClassWriter.cs" />
     <Compile Include="Model\ReplaceInFile.cs" />
-    <Compile Include="Model\ReplaceJob.cs" />
     <Compile Include="Model\SearchAndReplacePattern.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\SearchInFile.cs" />
-    <Compile Include="ReplaceHelper.cs" />
     <Compile Include="ResultCache.cs" />
     <Compile Include="TestData.cs" />
   </ItemGroup>
