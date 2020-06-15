@@ -40,8 +40,14 @@
     <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
       <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
     </Reference>
+    <Reference Include="MoreLinq, Version=3.1.0.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.3.1.0\lib\net451\MoreLinq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +61,10 @@
     <Compile Include="Enum\StatementTypeEnum.cs" />
     <Compile Include="Enum\VariableManipulatorType.cs" />
     <Compile Include="FieldContainer.cs" />
+    <Compile Include="Helper\AntlrHelper.cs" />
+    <Compile Include="Helper\CTSExtensions.cs" />
+    <Compile Include="Helper\DataHelper.cs" />
+    <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Interface\CodeResultType.cs" />
     <Compile Include="Interface\ICodeEntry.cs" />
     <Compile Include="Interface\ILoadOOPLanguage.cs" />

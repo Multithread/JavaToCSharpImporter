@@ -89,27 +89,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper\AntlrHelper.cs" />
     <Compile Include="Helper\ConverterHelper.cs" />
-    <Compile Include="Helper\DataHelper.cs" />
-    <Compile Include="Helper\CTSExtensions.cs" />
-    <Compile Include="Helper\StringHelper.cs" />
-    <Compile Include="Model\CSharp\JavaToCSharpNameConverter.cs" />
-    <Compile Include="Model\Java\antlr\IFormalParameterContext.cs" />
-    <Compile Include="Model\Java\antlr\IJavaParserListener.cs" />
-    <Compile Include="Model\Java\antlr\Interfaces.cs" />
-    <Compile Include="Model\Java\antlr\JavaLexer.g4.cs">
-      <DependentUpon>JavaLexer.g4</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Java\antlr\JavaParser.g4.cs">
-      <DependentUpon>JavaParser.g4</DependentUpon>
-    </Compile>
-    <Compile Include="Model\Java\antlr\JavaParserVisitor.cs" />
-    <Compile Include="Model\Java\Dictionary.cs" />
-    <Compile Include="Model\Java\JavaAntlrClassLoader.cs" />
-    <Compile Include="Model\Java\JavaLoader.cs" />
-    <Compile Include="Model\Java\JavaMethodeCodeResolver.cs" />
-    <Compile Include="Model\Java\JavaStaticInfo.cs" />
+    <Compile Include="Model\JavaToCSharpNameConverter.cs" />
     <Compile Include="Model\CSharp\CSharpClassWriter.cs" />
     <Compile Include="Model\ReplaceInFile.cs" />
     <Compile Include="Model\ReplaceJob.cs" />
@@ -148,9 +129,7 @@
       <Name>CodeConverterJava</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\OOP\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
