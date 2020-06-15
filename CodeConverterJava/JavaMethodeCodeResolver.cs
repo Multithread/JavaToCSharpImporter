@@ -1,12 +1,13 @@
 ﻿using Antlr4.Runtime.Tree;
-using JavaToCSharpConverter.Helper;
-using JavaToCSharpConverter.Interface;
-using JavaToCSharpConverter.Model.OOP;
+using CodeConverterCore.Enum;
+using CodeConverterCore.Helper;
+using CodeConverterCore.Interface;
+using CodeConverterCore.Model;
 using System;
 using System.Collections.Generic;
-using static JavaToCSharpConverter.Model.Java.JavaParser;
+using static CodeConverterJava.Model.JavaParser;
 
-namespace JavaToCSharpConverter.Model.Java
+namespace CodeConverterJava.Model
 {
     public class JavaMethodeCodeResolver : IResolveMethodeContentToIL
     {

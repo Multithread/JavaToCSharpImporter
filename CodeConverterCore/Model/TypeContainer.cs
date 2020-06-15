@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace JavaToCSharpConverter.Model
+namespace CodeConverterCore.Model
 {
     /// <summary>
     /// Methodendefinition für eine Klasse

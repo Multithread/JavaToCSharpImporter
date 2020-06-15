@@ -1,7 +1,7 @@
-﻿using JavaToCSharpConverter.Interface;
+﻿using CodeConverterCore.Interface;
 using System.Collections.Generic;
 
-namespace JavaToCSharpConverter.Model.OOP
+namespace CodeConverterCore.Model
 {
     /// <summary>
     /// Current State of the Code

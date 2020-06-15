@@ -1,7 +1,7 @@
-﻿using JavaToCSharpConverter.Interface;
+﻿using CodeConverterCore.Interface;
 using System;
 
-namespace JavaToCSharpConverter.Model.OOP
+namespace CodeConverterCore.Model
 {
     public class ConstantValue:ICodeEntry
     {

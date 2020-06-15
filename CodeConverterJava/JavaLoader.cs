@@ -1,12 +1,10 @@
-﻿using JavaToCSharpConverter.Interface;
+﻿using CodeConverterCore.Interface;
+using CodeConverterCore.Model;
 using MoreLinq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace JavaToCSharpConverter.Model.Java
+namespace CodeConverterJava.Model
 {
     public class JavaLoader : ILoadOOPLanguage
     {

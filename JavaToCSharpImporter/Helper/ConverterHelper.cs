@@ -1,14 +1,15 @@
-﻿using JavaToCSharpConverter.Interface;
+﻿using CodeConverterCore.Helper;
+using CodeConverterCore.Interface;
+using CodeConverterCore.Model;
+using CodeConverterJava.Model;
 using JavaToCSharpConverter.Model;
-using JavaToCSharpConverter.Model.CSharp;
-using JavaToCSharpConverter.Model.Java;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace JavaToCSharpConverter.Helper
+namespace JavaToCSharpConverter
 {
     public static class ConverterHelper
     {

@@ -1,7 +1,7 @@
-﻿using JavaToCSharpConverter.Model.OOP.Enum;
+﻿using CodeConverterCore.Enum;
 using System.Collections.Generic;
 
-namespace JavaToCSharpConverter.Model.Java
+namespace CodeConverterJava.Model
 {
     public static class JavaStaticInfo
     {

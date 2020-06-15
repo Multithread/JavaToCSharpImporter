@@ -1,7 +1,7 @@
-﻿using JavaToCSharpConverter.Model;
+﻿using CodeConverterCore.Model;
 using System.Collections.Generic;
 
-namespace JavaToCSharpConverter.Interface
+namespace CodeConverterCore.Interface
 {
     public interface INameConverter
     {

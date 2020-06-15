@@ -1,13 +1,14 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using JavaToCSharpConverter.Helper;
-using JavaToCSharpConverter.Interface;
+using CodeConverterCore.Helper;
+using CodeConverterCore.Interface;
+using CodeConverterCore.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static JavaToCSharpConverter.Model.Java.JavaParser;
+using static CodeConverterJava.Model.JavaParser;
 
-namespace JavaToCSharpConverter.Model.Java
+namespace CodeConverterJava.Model
 {
     public static class JavaAntlrClassLoader
     {

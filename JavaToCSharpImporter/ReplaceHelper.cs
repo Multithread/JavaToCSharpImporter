@@ -1,4 +1,5 @@
-﻿using JavaToCSharpConverter.Model;
+﻿using CodeConverterCore.Model;
+using JavaToCSharpConverter.Model;
 using Multithreading;
 using System;
 using System.Collections.Generic;

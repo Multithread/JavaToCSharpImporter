@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace JavaToCSharpConverter.Model
+namespace CodeConverterCore.Model
 {
     /// <summary>
     /// Variablendeklaration, Felddeklaration, Methodenparameter,...

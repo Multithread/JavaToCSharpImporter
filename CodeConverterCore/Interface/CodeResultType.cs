@@ -1,4 +1,4 @@
-﻿namespace JavaToCSharpConverter.Interface
+﻿namespace CodeConverterCore.Interface
 {
     public enum CodeResultType
     {

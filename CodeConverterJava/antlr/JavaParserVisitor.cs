@@ -19,7 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace JavaToCSharpConverter.Model.Java
+namespace CodeConverterJava.Model
 {
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;

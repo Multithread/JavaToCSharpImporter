@@ -1,9 +1,9 @@
-﻿using JavaToCSharpConverter.Model;
+﻿using CodeConverterCore.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JavaToCSharpConverter.Helper
+namespace CodeConverterCore.Helper
 {
     public static class CTSExtensions
     {

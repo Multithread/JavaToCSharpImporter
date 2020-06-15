@@ -1,4 +1,4 @@
-﻿namespace JavaToCSharpConverter.Model.OOP.Enum
+﻿namespace CodeConverterCore.Enum
 {
     public enum VariableManipulatorType
     {

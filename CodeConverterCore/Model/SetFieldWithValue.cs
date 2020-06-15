@@ -1,6 +1,6 @@
-﻿using JavaToCSharpConverter.Interface;
+﻿using CodeConverterCore.Interface;
 
-namespace JavaToCSharpConverter.Model.OOP
+namespace CodeConverterCore.Model
 {
     public class SetFieldWithValue : ICodeEntry
     {

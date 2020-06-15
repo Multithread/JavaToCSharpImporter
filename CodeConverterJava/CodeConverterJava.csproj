@@ -62,7 +62,6 @@
     <Compile Include="antlr\JavaLexer.g4.cs" />
     <Compile Include="antlr\JavaParser.g4.cs" />
     <Compile Include="antlr\JavaParserVisitor.cs" />
-    <Compile Include="Dictionary.cs" />
     <Compile Include="JavaAntlrClassLoader.cs" />
     <Compile Include="JavaLoader.cs" />
     <Compile Include="JavaMethodeCodeResolver.cs" />

@@ -1,5 +1,5 @@
-﻿using JavaToCSharpConverter.Helper;
-using JavaToCSharpConverter.Model.Java;
+﻿using CodeConverterCore.Helper;
+using CodeConverterJava.Model;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

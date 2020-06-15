@@ -1,10 +1,11 @@
 ﻿using IniParser.Model;
-using JavaToCSharpConverter.Helper;
-using JavaToCSharpConverter.Interface;
+using CodeConverterCore.Helper;
+using CodeConverterCore.Interface;
 using System.Collections.Generic;
 using System.Linq;
+using CodeConverterCore.Model;
 
-namespace JavaToCSharpConverter.Model.CSharp
+namespace JavaToCSharpConverter.Model
 {
     public class JavaToCSharpNameConverter : INameConverter, IMissingTypes
     {

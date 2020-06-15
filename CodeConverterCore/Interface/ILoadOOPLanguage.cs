@@ -1,11 +1,11 @@
-﻿using JavaToCSharpConverter.Model;
+﻿using CodeConverterCore.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JavaToCSharpConverter.Interface
+namespace CodeConverterCore.Interface
 {
     public interface ILoadOOPLanguage
     {

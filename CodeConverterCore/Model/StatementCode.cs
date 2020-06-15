@@ -1,7 +1,8 @@
-﻿using JavaToCSharpConverter.Interface;
+﻿using CodeConverterCore.Enum;
+using CodeConverterCore.Interface;
 using System.Collections.Generic;
 
-namespace JavaToCSharpConverter.Model.OOP
+namespace CodeConverterCore.Model
 {
     public class StatementCode : ICodeEntry
     {

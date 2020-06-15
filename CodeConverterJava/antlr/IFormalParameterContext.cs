@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static JavaToCSharpConverter.Model.Java.JavaParser;
+﻿using static CodeConverterJava.Model.JavaParser;
 
-namespace JavaToCSharpConverter.Model.Java
+namespace CodeConverterJava.Model
 {
     /// <summary>
     /// FormalParamContext
     /// </summary>
-   public  interface IFormalParameterContext
+    public  interface IFormalParameterContext
     {
          TypeTypeContext typeType();
 

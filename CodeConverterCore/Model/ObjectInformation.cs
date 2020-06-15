@@ -1,9 +1,9 @@
-﻿using JavaToCSharpConverter.Model.OOP;
+﻿using CodeConverterCore.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JavaToCSharpConverter.Model
+namespace CodeConverterCore.Model
 {
     public class ObjectInformation
     {

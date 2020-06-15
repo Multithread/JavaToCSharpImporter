@@ -1,4 +1,4 @@
-﻿namespace JavaToCSharpConverter.Model.OOP
+﻿namespace CodeConverterCore.Enum
 {
     public enum StatementTypeEnum
     {

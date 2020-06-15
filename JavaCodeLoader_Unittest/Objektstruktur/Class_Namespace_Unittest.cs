@@ -1,11 +1,7 @@
-﻿using JavaCodeLoader_Unittest.TextHelpData;
-using JavaToCSharpConverter.Helper;
-using JavaToCSharpConverter.Model;
-using JavaToCSharpConverter.Model.Java;
+﻿using CodeConverterCore.Helper;
+using CodeConverterJava.Model;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace JavaCodeLoader_Unittest.Objektstruktur
 {

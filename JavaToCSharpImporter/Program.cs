@@ -1,4 +1,4 @@
-﻿using JavaToCSharpConverter.Helper;
+﻿using CodeConverterCore.Helper;
 
 namespace JavaToCSharpConverter
 {

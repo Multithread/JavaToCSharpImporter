@@ -1,9 +1,9 @@
-﻿using JavaToCSharpConverter.Interface;
-using JavaToCSharpConverter.Model.OOP.Enum;
+﻿using CodeConverterCore.Interface;
+using CodeConverterCore.Enum;
 using System.Collections.Generic;
 
 
-namespace JavaToCSharpConverter.Model.OOP
+namespace CodeConverterCore.Model
 {
     public class CodeExpression : ICodeEntry
     {

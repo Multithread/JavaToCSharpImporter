@@ -1,8 +1,8 @@
 ﻿using Antlr4.Runtime.Tree;
-using JavaToCSharpConverter.Model.OOP;
+using CodeConverterCore.Model;
 using System.Collections.Generic;
 
-namespace JavaToCSharpConverter.Model
+namespace CodeConverterCore.Model
 {
     /// <summary>
     /// Methodendefinition für eine Klasse

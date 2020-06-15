@@ -1,16 +1,16 @@
 ﻿using Antlr4.Runtime.Tree;
-using JavaToCSharpConverter.Helper;
-using JavaToCSharpConverter.Interface;
-using JavaToCSharpConverter.Model.OOP;
+using CodeConverterCore.Helper;
+using CodeConverterCore.Interface;
+using CodeConverterCore.Model;
 //using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using static JavaToCSharpConverter.Model.Java.JavaParser;
+using static CodeConverterJava.Model.JavaParser;
 
-namespace JavaToCSharpConverter.Model.CSharp
+namespace JavaToCSharpConverter.Model
 {
     public static class CSharpClassWriter
     {

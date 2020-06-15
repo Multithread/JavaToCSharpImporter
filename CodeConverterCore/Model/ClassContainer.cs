@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace JavaToCSharpConverter.Model
+namespace CodeConverterCore.Model
 {
     /// <summary>
     /// Definition einer Klasse

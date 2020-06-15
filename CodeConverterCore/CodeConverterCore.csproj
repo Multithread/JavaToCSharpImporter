@@ -56,11 +56,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassContainer.cs" />
-    <Compile Include="CodeState.cs" />
+    <Compile Include="Model\ClassContainer.cs" />
+    <Compile Include="Model\CodeState.cs" />
     <Compile Include="Enum\StatementTypeEnum.cs" />
     <Compile Include="Enum\VariableManipulatorType.cs" />
-    <Compile Include="FieldContainer.cs" />
+    <Compile Include="Model\FieldContainer.cs" />
     <Compile Include="Helper\AntlrHelper.cs" />
     <Compile Include="Helper\CTSExtensions.cs" />
     <Compile Include="Helper\DataHelper.cs" />
@@ -71,17 +71,17 @@
     <Compile Include="Interface\IMissingTypes.cs" />
     <Compile Include="Interface\INameConverter.cs" />
     <Compile Include="Interface\IResolveMethodeContentToIL.cs" />
-    <Compile Include="MethodeContainer.cs" />
-    <Compile Include="Methode\CodeBlock.cs" />
-    <Compile Include="Methode\CodeExpression.cs" />
-    <Compile Include="Methode\ConstantValue.cs" />
-    <Compile Include="Methode\SetFieldWithValue.cs" />
-    <Compile Include="Methode\StatementCode.cs" />
-    <Compile Include="Methode\VariableDeclaration.cs" />
-    <Compile Include="MissingFunctionInformation.cs" />
-    <Compile Include="ObjectInformation.cs" />
+    <Compile Include="Model\MethodeContainer.cs" />
+    <Compile Include="Model\CodeBlock.cs" />
+    <Compile Include="Model\CodeExpression.cs" />
+    <Compile Include="Model\ConstantValue.cs" />
+    <Compile Include="Model\SetFieldWithValue.cs" />
+    <Compile Include="Model\StatementCode.cs" />
+    <Compile Include="Model\VariableDeclaration.cs" />
+    <Compile Include="Model\MissingFunctionInformation.cs" />
+    <Compile Include="Model\ObjectInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TypeContainer.cs" />
+    <Compile Include="Model\TypeContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

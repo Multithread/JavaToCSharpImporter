@@ -2,9 +2,8 @@
 using IniParser.Model;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
-namespace JavaToCSharpConverter.Helper
+namespace CodeConverterCore.Helper
 {
     public static class DataHelper
     {

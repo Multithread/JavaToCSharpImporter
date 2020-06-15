@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace JavaToCSharpConverter.Model.OOP
+namespace CodeConverterCore.Model
 {
     public class MissingFunctionInformation
     {
