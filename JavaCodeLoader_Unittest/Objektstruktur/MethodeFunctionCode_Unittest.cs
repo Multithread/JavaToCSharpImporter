@@ -5,7 +5,7 @@ using CodeConverterCore.Model;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace JavaCodeLoader_Unittest.Objektstruktur
+namespace CodeConverterJava_Unittest.Objektstruktur
 {
     public class MethodeFunctionCode_Unittest
     {

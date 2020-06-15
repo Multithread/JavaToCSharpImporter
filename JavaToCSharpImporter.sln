@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaToCSharpImporter", "JavaToCSharpImporter\JavaToCSharpImporter.csproj", "{74ED4AF5-38DF-4589-927B-0A391C4D0AD0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JavaCodeLoader_Unittest", "JavaCodeLoader_Unittest\JavaCodeLoader_Unittest.csproj", "{77061A3C-4037-4F05-99E7-009FA70EA016}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeConverterJava_Unittest", "JavaCodeLoader_Unittest\CodeConverterJava_Unittest.csproj", "{77061A3C-4037-4F05-99E7-009FA70EA016}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeConverterCore", "CodeConverterCore\CodeConverterCore.csproj", "{D70FE1C1-3CBE-42F1-8361-B05FA406A39C}"
 EndProject

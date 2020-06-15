@@ -3,7 +3,7 @@ using CodeConverterJava.Model;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace JavaCodeLoader_Unittest.Objektstruktur
+namespace CodeConverterJava_Unittest.Objektstruktur
 {
     public class Class_Namespace_Unittest
     {

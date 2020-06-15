@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace JavaCodeLoader_Unittest.Objektstruktur
+namespace CodeConverterJava_Unittest.Objektstruktur
 {
     public class MethodeDefinition_Unittest
     {

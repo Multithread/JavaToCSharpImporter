@@ -4,7 +4,7 @@ using CodeConverterCore.Model;
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace JavaCodeLoader_Unittest.Objektstruktur
+namespace CodeConverterJava_Unittest.Objektstruktur
 {
     public class Calculation_Unittest
     {
@@ -24,6 +24,23 @@ inResult=4*6;
             var tmpVarSetter = (tmpMethodeContent as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as SetFieldWithValue;
             Assert.AreEqual("inResult", tmpVarSetter.VariableToAccess.CodeEntries[0].ToString());
             Assert.AreEqual("(4 Multiplication 6)", tmpVarSetter.ValueToSet.ToString());
+        }
+        [Test]
+        public void SetVariableWithTrippleMultiplyCalculation()
+        {
+            var tmpClass = @"
+package org;
+public class Class1 {
+public void Run(int inResult){
+inResult=4*6*8;
+}}";
+            var tmpIniData = DataHelper.LoadIni("");
+            var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
+
+            var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0].Code.CodeEntries[0];
+            var tmpVarSetter = (tmpMethodeContent as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as SetFieldWithValue;
+            Assert.AreEqual("inResult", tmpVarSetter.VariableToAccess.CodeEntries[0].ToString());
+            Assert.AreEqual("((4 Multiplication 6) Multiplication 8)", tmpVarSetter.ValueToSet.ToString());
         }
 
         [Test]

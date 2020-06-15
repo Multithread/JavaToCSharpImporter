@@ -5,28 +5,29 @@ namespace CodeConverterJava.Model
 {
     public static class JavaStaticInfo
     {
-        public static Dictionary<string, VariableManipulatorType> MathElements = new Dictionary<string, VariableManipulatorType>
+        public static Dictionary<string, VariableOperatorType> VariableOperators = new Dictionary<string, VariableOperatorType>
         {
-           {"+", VariableManipulatorType.Addition},
-           {"-", VariableManipulatorType.Substraction},
-           {"*", VariableManipulatorType.Multiplication},
-           {"/", VariableManipulatorType.Division},
-           {"^", VariableManipulatorType.PowerOf},
+           //Math Operators
+           {"+", VariableOperatorType.Addition},
+           {"-", VariableOperatorType.Substraction},
+           {"*", VariableOperatorType.Multiplication},
+           {"/", VariableOperatorType.Division},
+           {"^", VariableOperatorType.PowerOf},
+
+           //Boolean Operators
+           {"==", VariableOperatorType.Equals},
+           {"!=", VariableOperatorType.NotEquals},
+           {"&&", VariableOperatorType.And},
+           {"||", VariableOperatorType.Or},
+           {"<", VariableOperatorType.LessThan},
+           {">", VariableOperatorType.MoreThan},
+           {"<=", VariableOperatorType.LessOrEquals},
+           {">=", VariableOperatorType.MoreOrEquals},
         };
 
-        public static Dictionary<string, VariableManipulatorType> BooleanOperators = new Dictionary<string, VariableManipulatorType>
+        public static VariableOperatorType GetManipulator(string inOperatorAssString)
         {
-           {"==", VariableManipulatorType.Addition},
-           {"!=", VariableManipulatorType.Substraction},
-           {"&&", VariableManipulatorType.Substraction},
-           {"||", VariableManipulatorType.Substraction},
-           {"|", VariableManipulatorType.Substraction},
-           {"&", VariableManipulatorType.Substraction},
-        };
-
-        public static VariableManipulatorType GetManipulator(string inOperatorAssString)
-        {
-            return MathElements[inOperatorAssString];
+            return VariableOperators[inOperatorAssString];
         }
     }
 }

@@ -146,6 +146,8 @@ namespace CodeConverterJava.Model
             if (inStatement.IF() != null)
             {
                 tmpStatement.StatementType = StatementTypeEnum.If;
+                tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { new CodeBlock() };
+                HandleExpressionContext(tmpStatement.StatementCodeBlocks[0], inStatement.parExpression().expression(), null);
             }
             else if (inStatement.ASSERT() != null)
             {
@@ -222,7 +224,7 @@ namespace CodeConverterJava.Model
                             HandleExpressionContext(tmpVarSetter.ValueToSet, tmpChildList[2] as ExpressionContext, inVariable);
                             inCodeBlock.CodeEntries.Add(tmpVarSetter);
                         }
-                        else if (JavaStaticInfo.MathElements.ContainsKey(tmpSecondChildText))
+                        else if (JavaStaticInfo.VariableOperators.ContainsKey(tmpSecondChildText))
                         {
                             var tmpCodeExpression = new CodeExpression
                             {
@@ -236,10 +238,6 @@ namespace CodeConverterJava.Model
                             tmpCodeExpression.SubClauseEntries.Add(tmpCodeBlock);
 
                             inCodeBlock.CodeEntries.Add(tmpCodeExpression);
-                        }
-                        else if (JavaStaticInfo.BooleanOperators.ContainsKey(tmpSecondChildText))
-                        {
-                            throw new NotImplementedException("Not done yet");
                         }
                         else
                         {

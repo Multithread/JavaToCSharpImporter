@@ -10,7 +10,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// What sort of Manipulation is done?
         /// </summary>
-        public VariableManipulatorType Manipulator { get; set; }
+        public VariableOperatorType Manipulator { get; set; }
 
         public List<CodeBlock> SubClauseEntries { get; set; } = new List<CodeBlock>();
 
