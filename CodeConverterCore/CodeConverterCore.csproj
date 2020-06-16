@@ -59,6 +59,7 @@
     <Compile Include="Analyzer\AnalyzerCore.cs" />
     <Compile Include="Analyzer\AnalyzerSettings.cs" />
     <Compile Include="Analyzer\DictionaryHelper.cs" />
+    <Compile Include="Analyzer\UnknownTypeClass.cs" />
     <Compile Include="Enum\ClayyTypeEnum.cs" />
     <Compile Include="Model\BaseType.cs" />
     <Compile Include="Model\ClassContainer.cs" />
