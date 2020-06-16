@@ -12,7 +12,6 @@ namespace CodeConverterJava.Model
            {"-", VariableOperatorType.Substraction},
            {"*", VariableOperatorType.Multiplication},
            {"/", VariableOperatorType.Division},
-           {"^", VariableOperatorType.PowerOf},
 
            //Boolean Operators
            {"==", VariableOperatorType.Equals},
@@ -23,6 +22,7 @@ namespace CodeConverterJava.Model
            {">", VariableOperatorType.MoreThan},
            {"<=", VariableOperatorType.LessOrEquals},
            {">=", VariableOperatorType.MoreOrEquals},
+           {"^", VariableOperatorType.XOR},
         };
 
         public static VariableOperatorType GetManipulator(string inOperatorAssString)
