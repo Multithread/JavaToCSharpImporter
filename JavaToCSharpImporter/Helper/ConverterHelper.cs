@@ -22,7 +22,7 @@ namespace JavaToCSharpConverter
             LuceneReplacerPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\LuceneReplacer.ini";
 
             var tmpIniData = DataHelper.LoadIniByPath(JavaMapperPath);
-            ObjectInformation tmpObjectInformation = LoadFilesByPath(inSourcePath, tmpIniData, new JavaLoader());
+            ProjectInformation tmpObjectInformation = LoadFilesByPath(inSourcePath, tmpIniData, new JavaLoader());
 
             Directory.CreateDirectory(inOutPath);
 
@@ -45,7 +45,7 @@ namespace JavaToCSharpConverter
         /// <param name="tmpIniData"></param>
         /// <param name="tmpObjectInformation"></param>
         /// <param name="tmpReplacer"></param>
-        private static void WriteCSharpCode(string inOutPath, IniParser.Model.IniData tmpIniData, ObjectInformation tmpObjectInformation, IniParser.Model.IniData tmpReplacer)
+        private static void WriteCSharpCode(string inOutPath, IniParser.Model.IniData tmpIniData, ProjectInformation tmpObjectInformation, IniParser.Model.IniData tmpReplacer)
         {
             foreach (var tmpClass in tmpObjectInformation.ClassList)
             {
@@ -69,7 +69,7 @@ namespace JavaToCSharpConverter
             }
         }
 
-        private static ObjectInformation LoadFilesByPath(string inSourcePath, IniParser.Model.IniData inConfiguration, ILoadOOPLanguage inLanguageLoader)
+        private static ProjectInformation LoadFilesByPath(string inSourcePath, IniParser.Model.IniData inConfiguration, ILoadOOPLanguage inLanguageLoader)
         {
             var tmpFileList = Directory.EnumerateFiles(inSourcePath, "*", SearchOption.TopDirectoryOnly).ToList();
             for (var tmpI = 0; tmpI < tmpFileList.Count; tmpI++)
@@ -90,7 +90,7 @@ namespace JavaToCSharpConverter
         /// <param name="tmpClassList"></param>
         /// <param name="tmpObjectInformation"></param>
         /// <param name="tmpIniData"></param>
-        private static void CreateCSharpSLNFile(ObjectInformation tmpObjectInformation, IniParser.Model.IniData tmpIniData)
+        private static void CreateCSharpSLNFile(ProjectInformation tmpObjectInformation, IniParser.Model.IniData tmpIniData)
         {
             var tmpPathConverter = new JavaToCSharpNameConverter(tmpObjectInformation, tmpIniData);
 

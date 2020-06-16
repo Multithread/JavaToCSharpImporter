@@ -243,10 +243,6 @@ namespace CodeConverterJava.Model
                         {
                             throw new NotImplementedException("Not done yet");
                         }
-                        foreach (var tmpEntry in inBlockStatement.children)
-                        {
-
-                        }
                     }
                     else
                     {

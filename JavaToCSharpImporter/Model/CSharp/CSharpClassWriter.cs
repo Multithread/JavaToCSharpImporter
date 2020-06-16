@@ -41,7 +41,7 @@ namespace JavaToCSharpConverter.Model
             {
                 //Interface Type Mapping
                 tmpStringBuilder.Append(" : " + string.Join(" ", inClass.InterfaceList.Select(inItem
-                    => inConverter.DoTypeMap(inItem, inClass, tmpRequiredUsings))));
+                    => inConverter.DoTypeMap(inItem.Name, inClass, tmpRequiredUsings))));
             }
 
             var tmpClassExtends = new List<Tuple<string, string>>();
@@ -986,12 +986,12 @@ namespace JavaToCSharpConverter.Model
             bool? tmpOverridenFromInterface = null;
             foreach (var tmpClass in inClass.InterfaceList)
             {
-                if (!inConverter.MapFunction(tmpMethode.Name, tmpClass, inClass.FullUsingList)
+                if (!inConverter.MapFunction(tmpMethode.Name, tmpClass.Name, inClass.FullUsingList)
                     .Contains("."))
                 {
                     continue;
                 }
-                var tmpInterface = inConverter.GetClassForType(tmpClass, inClass.FullUsingList);
+                var tmpInterface = inConverter.GetClassForType(tmpClass.Name, inClass.FullUsingList);
                 if (tmpInterface == null)
                 {
                     continue;
@@ -1015,7 +1015,7 @@ namespace JavaToCSharpConverter.Model
             {
                 foreach (var tmpClass in inClass.InterfaceList)
                 {
-                    var tmpInterface = inConverter.GetClassForType(tmpClass, inClass.FullUsingList);
+                    var tmpInterface = inConverter.GetClassForType(tmpClass.Name, inClass.FullUsingList);
                     if (tmpInterface == null)
                     {
                         continue;

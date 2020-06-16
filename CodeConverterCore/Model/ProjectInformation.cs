@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace CodeConverterCore.Model
 {
-    public class ObjectInformation
+    public class ProjectInformation
     {
-        public ObjectInformation FillClasses(List<ClassContainer> inClasses)
+        public ProjectInformation FillClasses(List<ClassContainer> inClasses)
         {
             ClassList.AddRange(inClasses);
             foreach (var tmpClass in inClasses)
@@ -17,7 +17,12 @@ namespace CodeConverterCore.Model
             return this;
         }
 
-        public List<ClassContainer> ClassList= new List<ClassContainer>();
+        public List<ClassContainer> ClassList = new List<ClassContainer>();
+
+        /// <summary>
+        /// All Known Types(Interface, Class) with the spezific Namespace they are in
+        /// </summary>
+        public Dictionary<string, List<BaseType>>  KnownTypeDictionary = new Dictionary<string, List<BaseType>>();
 
         /// <summary>
         /// ObjectName, Namespaces
@@ -37,7 +42,7 @@ namespace CodeConverterCore.Model
         /// Add Class to InformationList
         /// </summary>
         /// <param name="inClass"></param>
-        public void AddClass(ClassContainer inClass)
+        private void AddClass(ClassContainer inClass)
         {
             AddToDictList(ClassDict, inClass, inItem => inItem.Name, inItem => inItem);
         }

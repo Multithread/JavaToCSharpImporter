@@ -9,7 +9,7 @@ namespace JavaToCSharpConverter.Model
 {
     public class JavaToCSharpNameConverter : INameConverter, IMissingTypes
     {
-        public JavaToCSharpNameConverter(ObjectInformation inOjectInformation, IniData inData)
+        public JavaToCSharpNameConverter(ProjectInformation inOjectInformation, IniData inData)
         {
             _objectInformation = inOjectInformation;
             _iniData = inData;
@@ -17,7 +17,7 @@ namespace JavaToCSharpConverter.Model
 
         private IniData _iniData;
 
-        private ObjectInformation _objectInformation;
+        private ProjectInformation _objectInformation;
 
         /// <summary>
         /// Change the Name of a Methode

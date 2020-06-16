@@ -17,6 +17,11 @@ namespace CodeConverterCore.Model
         public string Name { get; set; }
 
         /// <summary>
+        /// Global Type of this TypeContainer, can be checkt via Equals (ie. for Interfaces, BaseTypes, Generics)
+        /// </summary>
+        public BaseType Type { get; set; }
+
+        /// <summary>
         /// List of Generic Sub-Types
         /// </summary>
         public List<TypeContainer> GenericTypes { get; set; } = new List<TypeContainer>();

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeConverterJava", "CodeCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeConverterCSharp", "CodeConverterCSharp\CodeConverterCSharp.csproj", "{AF3B0441-044A-4EA3-8052-57982E8BFCB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeConverterCore_Unittest", "CodeConverterCore_Unittest\CodeConverterCore_Unittest.csproj", "{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,18 @@ Global
 		{AF3B0441-044A-4EA3-8052-57982E8BFCB5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF3B0441-044A-4EA3-8052-57982E8BFCB5}.Release|x64.ActiveCfg = Release|Any CPU
 		{AF3B0441-044A-4EA3-8052-57982E8BFCB5}.Release|x64.Build.0 = Release|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Debug|x64.Build.0 = Debug|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Debug64|Any CPU.ActiveCfg = Debug|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Debug64|Any CPU.Build.0 = Debug|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Debug64|x64.ActiveCfg = Debug|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Debug64|x64.Build.0 = Debug|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Release|x64.ActiveCfg = Release|Any CPU
+		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

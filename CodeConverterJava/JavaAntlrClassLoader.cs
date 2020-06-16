@@ -103,7 +103,7 @@ namespace CodeConverterJava.Model
                         var tmpExtends = tmpContext.EXTENDS()?.GetText();
                         if (tmpExtends != null)
                         {
-                            tmpClass.InterfaceList.Add(tmpExtends);
+                            tmpClass.InterfaceList.Add(new BaseType(tmpExtends,""));
                         }
                     }
                 }
@@ -349,7 +349,7 @@ namespace CodeConverterJava.Model
         /// <param name="inClassContext"></param>
         private static void FillClassContext(ClassContainer inClass, ClassDeclarationContext inClassContext)
         {
-            inClass.InterfaceList.AddRange(inClassContext.typeList().GetChildren().Select(inItem => inItem.GetText()));
+            inClass.InterfaceList.AddRange(inClassContext.typeList().GetChildren().Select(inItem => new BaseType(inItem.GetText(),"")));
             inClass.AttributeList.Add("class");
             var tmpComment = "";
 

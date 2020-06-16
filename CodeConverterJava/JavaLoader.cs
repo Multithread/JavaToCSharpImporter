@@ -8,7 +8,7 @@ namespace CodeConverterJava.Model
 {
     public class JavaLoader : ILoadOOPLanguage
     {
-        public ObjectInformation CreateObjectInformation(List<string> inFileContents, IniParser.Model.IniData inConfiguration)
+        public ProjectInformation CreateObjectInformation(List<string> inFileContents, IniParser.Model.IniData inConfiguration)
         {
             var tmpClassList = new List<ClassContainer>();
             foreach (var tmpFile in inFileContents)
@@ -16,7 +16,7 @@ namespace CodeConverterJava.Model
                 //tmpClassList.AddRange(JavaClassLoader.LoadFile(tmpFile));
                 tmpClassList.AddRange(JavaAntlrClassLoader.LoaderOptimization(tmpFile));
             }
-            var tmpObjectInformation = new ObjectInformation()
+            var tmpObjectInformation = new ProjectInformation()
                 .FillClasses(tmpClassList);
             //Add Mapped Methodes to Class List (So we don't need String oä as a Class List
             var tmpAdditionalClasses = new List<ClassContainer>

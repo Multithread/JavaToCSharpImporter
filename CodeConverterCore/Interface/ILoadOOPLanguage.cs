@@ -9,6 +9,6 @@ namespace CodeConverterCore.Interface
 {
     public interface ILoadOOPLanguage
     {
-        ObjectInformation CreateObjectInformation(List<string> inFileContents, IniParser.Model.IniData inConfiguration);
+        ProjectInformation CreateObjectInformation(List<string> inFileContents, IniParser.Model.IniData inConfiguration);
     }
 }

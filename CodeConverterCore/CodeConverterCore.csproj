@@ -56,6 +56,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyzer\AnalyzerCore.cs" />
+    <Compile Include="Analyzer\AnalyzerSettings.cs" />
+    <Compile Include="Analyzer\DictionaryHelper.cs" />
+    <Compile Include="Enum\ClayyTypeEnum.cs" />
+    <Compile Include="Model\BaseType.cs" />
     <Compile Include="Model\ClassContainer.cs" />
     <Compile Include="Model\CodeState.cs" />
     <Compile Include="Enum\StatementTypeEnum.cs" />
@@ -79,7 +84,7 @@
     <Compile Include="Model\StatementCode.cs" />
     <Compile Include="Model\VariableDeclaration.cs" />
     <Compile Include="Model\MissingFunctionInformation.cs" />
-    <Compile Include="Model\ObjectInformation.cs" />
+    <Compile Include="Model\ProjectInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\TypeContainer.cs" />
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CodeConverterCore.Enum;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -32,7 +33,7 @@ namespace CodeConverterCore.Model
         public string Namespace { get; set; }
 
         /// <summary>
-        /// Comment in the Namespace iof the Class
+        /// Comment in the Namespace of the Class
         /// </summary>
         public string NamespaceComment { get; set; }
 
@@ -49,7 +50,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Parent and a List of Implemented Interfaces
         /// </summary>
-        public List<string> InterfaceList { get; set; } = new List<string>();
+        public List<BaseType> InterfaceList { get; set; } = new List<BaseType>();
 
         /// <summary>
         /// Klassenattribute (sealed, Abstract, ....)
@@ -70,6 +71,12 @@ namespace CodeConverterCore.Model
         /// List of inner Classes
         /// </summary>
         public List<ClassContainer> InnerClasses { get; set; } = new List<ClassContainer>();
+
+        /// <summary>
+        /// System Classes do not need to be put into the Output
+        /// Loaded and Unknown Classes do net to be put into Output
+        /// </summary>
+        public ClassTypeEnum ClassType { get; set; } = ClassTypeEnum.Normal;
 
         /// <summary>
         /// CHeck for Empty
