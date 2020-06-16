@@ -16,11 +16,11 @@ namespace CodeConverterCore_Unittest
             tmpProject.FillClasses(new List<ClassContainer>
             {
                 Class_TestX(),
-                Class_TestY(inItem=> inItem.InterfaceList.Add(new BaseType(Class_TestX().Name))),
+                Class_TestY(inItem=> inItem.InterfaceList.Add(new TypeContainer{Name=Class_TestX().Name })),
             });
             new AnalyzerCore().LinkProjectInformation(tmpProject);
 
-            Assert.AreEqual(tmpProject.ClassList[0].Type.Type, tmpProject.ClassList[1].InterfaceList[0]);
+            Assert.AreEqual(tmpProject.ClassList[0].Type.Type, tmpProject.ClassList[1].InterfaceList[0].Type);
         }
 
         private ClassContainer Class_TestX(Action<ClassContainer> inChanges = null)

@@ -44,7 +44,7 @@ namespace CodeConverterCore.Analyzer
                     var tmpInterface = tmpClass.InterfaceList[tmpI];
                     if (tmpTypeDictionary.TryGetValue(tmpInterface.Name, inItem => tmpClass.FullUsingList.Contains(inItem.Namespace), out var tmpResult))
                     {
-                        tmpClass.InterfaceList[tmpI] = tmpResult;
+                        tmpClass.InterfaceList[tmpI].Type = tmpResult;
                     }
                     else
                     {

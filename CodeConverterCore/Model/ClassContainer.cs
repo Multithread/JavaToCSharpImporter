@@ -50,7 +50,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Parent and a List of Implemented Interfaces
         /// </summary>
-        public List<BaseType> InterfaceList { get; set; } = new List<BaseType>();
+        public List<TypeContainer> InterfaceList { get; set; } = new List<TypeContainer>();
 
         /// <summary>
         /// Klassenattribute (sealed, Abstract, ....)
