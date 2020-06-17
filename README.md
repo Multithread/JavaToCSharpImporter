@@ -6,105 +6,52 @@ The main target is to port Lucene 7.6 or 8 to C#, since IKVM might be dead.
 
 > The whole Importer is written with the help of ANTLR 4
 
-**Current Work Parts**
+**Current Work Items**
 
-- Support for Gerrics in Function Return-Type
-- Support if/for/foreach to be checked correctly
+- Java: loading of if/for/foreach methode functions
+- Java: loading of methode calls inside function code 
+- Core: type cleaning inside of methode code
+- C#: Writing of Function Headers
+- C#: Writing of Class Field Definitions
 - Convert <T extends RollingBuffer.Resettable> into C# where T:RollingBuffer.Resettable
-- A lot of other stuff
-- Parent Object Type Function Recognition.
-
+- Even better Support for Generics in all the places
+ 
 
 **Working Parts so far**
 
-- Convert an Interface from Java to C#
-- Convert simple classes from Java to C#
-- Support for Generics in Class-Fields
-- Support for Gerrics in Function Propertiesn 
-- Recognition for Array Type Definitions
+- Convert an empty Interface from Java to C#
+- Convert an empty classes from Java to C#
+- Loading Java Class definitions into IL Structure
+- IL for Generic Classes and methods
 
 
 **Current State of Conversion (2019.02.10)**
 
-```java
-/**
- * Licence Comment
- */
+```Java
 package org.apache.lucene.util;
 
 import java.util.Collections;
 
-/**
- * Description of Class
- */
-public final class GenericMethode<C, D extends C> {
-
-  private final Class<C> baseClass;
-  private final Class<?>[] parameters;
-  //string from Constructor
-  private final String method;
-  
-  /**
-  * Constructor information
-  */
-  public GenericMethode(string method){
-	this.method = method;
-  }
-  
-  /** Generic Testmethode
-  */
-  int methode1(final Class<? extends D> subclazz, Class<C> dataClazz) {
-    if (!baseClass.isAssignableFrom(subclazz))
-      throw new IllegalArgumentException(subclazz.getName() + " is not a subclass of " + baseClass.getName());
-    boolean overridden = false;
-    int distance = 0;
-	
-      // increment distance if overridden
-      if (overridden) distance++;
-    return distance;
-  }
-  
-  /** Normal Testmethode
-  */
-  public boolean methodCompare(String method) {
-    return this.method==method;
- }}
-
+public class Class1 {
+private string Value;
+public Class1 CreateInstance(){
+return null;
+}
+public void SetValue(string inValue){
+Value=inValue;
+}
+}}
 ```
 gets converted to:
 
 ```C#
-/// <summary>
-/// Licence Comment
-/// </summary>
-using LuceNET.Util;
-using System;
-namespace LuceNET.Util
+using java.util.Collections;
+
+namespace org.apache.lucene.util
 {
-    /// <summary>
-    /// Description of Class
-    /// </summary>
-    public sealed class GenericMethode<C, D>
+    public class Class1
     {
-        private readonly C baseClass;
-        private readonly object[] parameters;
-        private readonly string method;
-        public  GenericMethode(string inMethod)   
-        {
-            this._method = inMethod;            
-        }
-        Int32 Methode1<OtherType>(OtherType inSubclazz, C inDataClazz)where OtherType : D    
-        {
-            if (!_baseClass.isAssignableFrom(inSubclazz))throw new IllegalArgumentException(subclazz.getName() + " is not a subclass of " + baseClass.getName());
-            bool overridden = false;
-            Int32 distance = 0;
-            if (overridden)distance ++;
-            return distance;            
-        }
-        public bool MethodCompare(string inMethod)   
-        {
-            return this._method == inMethod;            
-        }
+
     }
 }
 ```
