@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JavaToCSharpImporter\JavaToCSharpImporter.csproj" />
+    <ProjectReference Include="..\JavaToCSharpImporter\CodeConverterJavaToCSharp.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaToCSharpImporter", "JavaToCSharpImporter\JavaToCSharpImporter.csproj", "{74ED4AF5-38DF-4589-927B-0A391C4D0AD0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeConverterJavaToCSharp", "JavaToCSharpImporter\CodeConverterJavaToCSharp.csproj", "{74ED4AF5-38DF-4589-927B-0A391C4D0AD0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeConverterJava_Unittest", "JavaCodeLoader_Unittest\CodeConverterJava_Unittest.csproj", "{77061A3C-4037-4F05-99E7-009FA70EA016}"
 EndProject
@@ -13,7 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeConverterJava", "CodeCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeConverterCSharp", "CodeConverterCSharp\CodeConverterCSharp.csproj", "{AF3B0441-044A-4EA3-8052-57982E8BFCB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeConverterCore_Unittest", "CodeConverterCore_Unittest\CodeConverterCore_Unittest.csproj", "{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeConverterCore_Unittest", "CodeConverterCore_Unittest\CodeConverterCore_Unittest.csproj", "{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeConverterCSharp_Unittest", "CodeConverterCSharp_Unittest\CodeConverterCSharp_Unittest.csproj", "{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeConverterJavaToCSharp_Unittest", "CodeConverterJavaToCSharp_Unittest\CodeConverterJavaToCSharp_Unittest.csproj", "{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +101,30 @@ Global
 		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Release|Any CPU.Build.0 = Release|Any CPU
 		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Release|x64.ActiveCfg = Release|Any CPU
 		{156C5FF3-71EC-4ABE-A560-53B0FC1DBF18}.Release|x64.Build.0 = Release|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Debug|x64.Build.0 = Debug|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Debug64|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Debug64|Any CPU.Build.0 = Debug|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Debug64|x64.ActiveCfg = Debug|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Debug64|x64.Build.0 = Debug|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Release|x64.ActiveCfg = Release|Any CPU
+		{64CC36DB-9FA8-4B1B-99E3-56D44A0B6C63}.Release|x64.Build.0 = Release|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Debug|x64.Build.0 = Debug|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Debug64|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Debug64|Any CPU.Build.0 = Debug|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Debug64|x64.ActiveCfg = Debug|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Debug64|x64.Build.0 = Debug|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Release|x64.ActiveCfg = Release|Any CPU
+		{9D7D6A3B-6617-4187-84DC-9C7EBBA06C3B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -92,6 +92,11 @@ namespace CodeConverterCore.Model
         }
 
         /// <summary>
+        /// Has this Class been Corectly Converted into the IL language?
+        /// </summary>
+        public bool IsConverted { get; internal set; }
+
+        /// <summary>
         /// Ist it an Interface?
         /// </summary>
         /// <returns></returns>

@@ -102,7 +102,6 @@ namespace CodeConverterJava.Model
             var tmpType = inBlockStatement.localTypeDeclaration();
             if (tmpType != null)
             {
-
                 throw new NotImplementedException("Not done yet");
             }
             var tmpStatement = inBlockStatement.statement();

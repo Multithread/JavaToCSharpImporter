@@ -75,6 +75,13 @@ namespace CodeConverterCore.Analyzer
                 {
                 }
             }
+
+
+            //Last thing to do: set Classes as loaded Corectly
+            foreach (var tmpClass in inLoadedProject.ClassList)
+            {
+                tmpClass.IsConverted = true;
+            }
         }
 
         /// <summary>
