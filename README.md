@@ -11,7 +11,6 @@ The main target is to port Lucene 7.6 or 8 to C#, since IKVM might be dead.
 - Java: loading of if/for/foreach methode functions
 - Java: loading of methode calls inside function code 
 - Core: type cleaning inside of methode code
-- C#: Writing of Function Headers
 - C#: Writing of Class Field Definitions
 - Convert <T extends RollingBuffer.Resettable> into C# where T:RollingBuffer.Resettable
 - Even better Support for Generics in all the places
@@ -19,10 +18,12 @@ The main target is to port Lucene 7.6 or 8 to C#, since IKVM might be dead.
 
 **Working Parts so far**
 
-- Convert an empty Interface from Java to C#
-- Convert an empty classes from Java to C#
-- Loading Java Class definitions into IL Structure
+- Java: Loading of Code files with ANTLR
+- Java: Loading of Class definition information into IL
+- Java: Loading of Methode header information into IL
 - IL for Generic Classes and methods
+- C#: Writing of Function Headers
+- C#: Writing of Class headers
 
 
 **Current State of Conversion (2019.02.10)**
@@ -34,7 +35,7 @@ import java.util.Collections;
 
 public class Class1 {
 private string Value;
-public Class1 CreateInstance(){
+public Class1<int> CreateInstance(){
 return null;
 }
 public void SetValue(string inValue){
@@ -51,7 +52,15 @@ namespace org.apache.lucene.util
 {
     public class Class1
     {
+        private string Value;
 
+        public Class1<int> CreateInstance()
+        {
+        }
+
+        public void SetValue(string inValue)
+        {
+        }
     }
 }
 ```
