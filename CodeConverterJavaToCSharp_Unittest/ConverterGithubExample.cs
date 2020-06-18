@@ -31,7 +31,7 @@ import java.util.Collections;
 
 public class Class1 {
 private string Value;
-public Class1 CreateInstance(){
+public Class1<int> CreateInstance(){
 return null;
 }
 public void SetValue(string inValue){
@@ -45,7 +45,15 @@ namespace org.apache.lucene.util
 {
     public class Class1
     {
+        private string Value;
 
+        public Class1<int> CreateInstance()
+        {
+        }
+
+        public void SetValue(string inValue)
+        {
+        }
     }
 }
 ";
