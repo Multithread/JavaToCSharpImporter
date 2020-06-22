@@ -61,6 +61,7 @@
     <Compile Include="Analyzer\DictionaryHelper.cs" />
     <Compile Include="Analyzer\UnknownTypeClass.cs" />
     <Compile Include="Enum\ClayyTypeEnum.cs" />
+    <Compile Include="Helper\Create.cs" />
     <Compile Include="Model\BaseType.cs" />
     <Compile Include="Model\ClassContainer.cs" />
     <Compile Include="Model\CodeState.cs" />
