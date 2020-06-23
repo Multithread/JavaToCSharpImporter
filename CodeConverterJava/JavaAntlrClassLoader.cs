@@ -292,7 +292,7 @@ namespace CodeConverterJava.Model
                         tmpMethode.Parameter.Add(tmpFieldContainer);
                     }
                 }
-                tmpClass.MethodeList.Add(tmpMethode);
+                tmpClass.AddMethode(tmpMethode);
             }
             else if (tmpBodyPart.constDeclaration() != null)
             {
@@ -452,7 +452,7 @@ namespace CodeConverterJava.Model
                             }
                         }
                         tmpMethode.ModifierList = tmpModifierList;
-                        inClass.MethodeList.Add(tmpMethode);
+                        inClass.AddMethode(tmpMethode);
                     }
                     else if (tmpDeclaration.genericMethodDeclaration() != null)
                     {
@@ -627,7 +627,7 @@ namespace CodeConverterJava.Model
                 }
             }
             tmpMethode.ModifierList = tmpModifierList;
-            inClass.MethodeList.Add(tmpMethode);
+            inClass.AddMethode(tmpMethode);
             return tmpMethode;
         }
     }

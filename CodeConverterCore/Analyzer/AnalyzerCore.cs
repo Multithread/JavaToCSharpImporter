@@ -12,6 +12,8 @@ namespace CodeConverterCore.Analyzer
 
         private List<UnknownTypeClass> UnknownTypes = new List<UnknownTypeClass>();
 
+        private ProjectInformation ProjectInformation;
+
         /// <summary>
         /// Links the classes and Types inside the Project
         /// </summary>
@@ -19,6 +21,7 @@ namespace CodeConverterCore.Analyzer
         /// <param name="inSettings"></param>
         public void LinkProjectInformation(ProjectInformation inLoadedProject, AnalyzerSettings inSettings = null)
         {
+            ProjectInformation = inLoadedProject;
             inSettings = inSettings ?? new AnalyzerSettings();
 
             var tmpTypeDictionary = inLoadedProject.KnownTypeDictionary;
@@ -73,6 +76,7 @@ namespace CodeConverterCore.Analyzer
             {
                 for (var tmpI = 0; tmpI < tmpClass.MethodeList.Count; tmpI++)
                 {
+                    ManageCodeBlockOfMethode(tmpClass.MethodeList[tmpI]);
                 }
             }
 
@@ -81,6 +85,22 @@ namespace CodeConverterCore.Analyzer
             foreach (var tmpClass in inLoadedProject.ClassList)
             {
                 tmpClass.IsConverted = true;
+            }
+        }
+
+        private void ManageCodeBlockOfMethode(MethodeContainer inMethodeContainer)
+        {
+            var tmpVariableList = new List<VariableDeclaration>();
+            tmpVariableList.AddRange(inMethodeContainer.Parameter);
+            foreach (var tmpCodeBlock in inMethodeContainer.Code.CodeEntries)
+            {
+                //Add Variable to VariableList
+                if(tmpCodeBlock is VariableDeclaration)
+                {
+                    tmpVariableList.Add(tmpCodeBlock as VariableDeclaration);
+                    continue;
+                }
+
             }
         }
 

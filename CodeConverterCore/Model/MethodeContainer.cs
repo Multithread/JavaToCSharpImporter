@@ -54,6 +54,11 @@ namespace CodeConverterCore.Model
         /// </summary>
         public MethodeContainer Constructorinfo { get; set; }
 
+        /// <summary>
+        /// Methode Parent
+        /// </summary>
+        public ClassContainer Parent { get; set; }
+
         public bool IsConstructor { get; set; }
     }
 }

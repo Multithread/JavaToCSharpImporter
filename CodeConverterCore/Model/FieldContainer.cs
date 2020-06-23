@@ -5,21 +5,12 @@ using System.Diagnostics;
 namespace CodeConverterCore.Model
 {
     /// <summary>
-    /// Variablendeklaration, Felddeklaration, Methodenparameter,...
+    /// Felddeklaration, Methodenparameter,...
+    /// Every Field Container is also a Variable Declarion for Code Usage
     /// </summary>
     [DebuggerDisplay("{Type}: {Name}")]
-    public class FieldContainer
+    public class FieldContainer: VariableDeclaration
     {
-        /// <summary>
-        /// Name des Feldes
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Name des Feldes
-        /// </summary>
-        public TypeContainer Type { get; set; }
-
         /// <summary>
         /// Attributes (private, public, abstract, override,...)
         /// </summary>

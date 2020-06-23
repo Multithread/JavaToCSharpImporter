@@ -65,7 +65,13 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Liste der Methoden
         /// </summary>
-        public List<MethodeContainer> MethodeList { get; set; } = new List<MethodeContainer>();
+        public List<MethodeContainer> MethodeList { get; } = new List<MethodeContainer>();
+
+        public void AddMethode(MethodeContainer inNewMethode)
+        {
+            MethodeList.Add(inNewMethode);
+            inNewMethode.Parent = this;
+        }
 
         /// <summary>
         /// List of inner Classes
@@ -77,7 +83,7 @@ namespace CodeConverterCore.Model
         /// Loaded and Unknown Classes do net to be put into Output
         /// </summary>
         public ClassTypeEnum ClassType { get; set; } = ClassTypeEnum.Normal;
-
+                
         /// <summary>
         /// CHeck for Empty
         /// </summary>

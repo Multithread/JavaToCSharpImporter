@@ -24,12 +24,16 @@ namespace CodeConverterCore.Model
         /// Name des Typs
         /// </summary>
         public string Name { get; set; }
-        
+
         /// <summary>
         /// Typen Namespace
         /// </summary>
         public string Namespace { get; set; }
 
+        /// <summary>
+        /// Void BaseType
+        /// </summary>
+        public static BaseType Void = new BaseType("void");
 
         public override bool Equals(object obj)
         {
