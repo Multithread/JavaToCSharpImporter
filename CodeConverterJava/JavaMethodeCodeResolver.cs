@@ -243,6 +243,22 @@ namespace CodeConverterJava.Model
                             throw new NotImplementedException("Not done yet");
                         }
                     }
+                    else if (tmpChildList.Count == 1)
+                    {
+                        var tmpValue = tmpChildList[0] as MethodCallContext;
+                        var tmpMethodeCall = new MethodeCall()
+                        {
+                            Name= tmpValue.IDENTIFIER().GetText()
+                        };
+                        if (tmpValue.expressionList() != null)
+                        {
+                            foreach (var tmpExpression in tmpValue.expressionList().expression())
+                            {
+                                throw new NotImplementedException("Not done yet");
+                            }
+                        }
+                        inCodeBlock.CodeEntries.Add(tmpMethodeCall);
+                    }
                     else
                     {
                         throw new NotImplementedException("Not done yet");

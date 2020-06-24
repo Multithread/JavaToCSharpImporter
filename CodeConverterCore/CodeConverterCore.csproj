@@ -67,6 +67,7 @@
     <Compile Include="Model\CodeState.cs" />
     <Compile Include="Enum\StatementTypeEnum.cs" />
     <Compile Include="Enum\VariableManipulatorType.cs" />
+    <Compile Include="Model\MethodeCall.cs" />
     <Compile Include="Model\FieldContainer.cs" />
     <Compile Include="Helper\AntlrHelper.cs" />
     <Compile Include="Helper\CTSExtensions.cs" />
