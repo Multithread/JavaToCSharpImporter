@@ -47,7 +47,9 @@ namespace CodeConverterCore_Unittest
             {
                 Type = new TypeContainer { Name = "TestX" },
                 Namespace = "Base",
-                MethodeList = new List<MethodeContainer>
+               
+            };
+            tmpClass.MethodeList.AddRange(new List<MethodeContainer>
                 {
                     new MethodeContainer
                     {
@@ -62,8 +64,7 @@ namespace CodeConverterCore_Unittest
                             }
                         },
                     }
-                }
-            };
+                });
             inChanges?.Invoke(tmpClass);
             return tmpClass;
         }
@@ -74,15 +75,15 @@ namespace CodeConverterCore_Unittest
             {
                 Type = new TypeContainer { Name = "TestY" },
                 Namespace = "Base",
-                MethodeList = new List<MethodeContainer>
+            };
+            tmpClass.MethodeList.AddRange(new List<MethodeContainer>
                 {
                     new MethodeContainer
                     {
                         Name ="TestXFunc",
                         ReturnType ="TestX",
                     }
-                }
-            };
+                });
             inChanges?.Invoke(tmpClass);
             return tmpClass;
         }

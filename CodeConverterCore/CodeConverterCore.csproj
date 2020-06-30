@@ -85,6 +85,7 @@
     <Compile Include="Model\ConstantValue.cs" />
     <Compile Include="Model\SetFieldWithValue.cs" />
     <Compile Include="Model\StatementCode.cs" />
+    <Compile Include="Model\VariableAccess.cs" />
     <Compile Include="Model\VariableDeclaration.cs" />
     <Compile Include="Model\MissingFunctionInformation.cs" />
     <Compile Include="Model\ProjectInformation.cs" />

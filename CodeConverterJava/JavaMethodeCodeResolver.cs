@@ -238,6 +238,40 @@ namespace CodeConverterJava.Model
 
                             inCodeBlock.CodeEntries.Add(tmpCodeExpression);
                         }
+                        //Multi Part Property Access
+                        else if (tmpSecondChildText == ".")
+                        {
+                            VariableAccess tmpParent = null;
+                            for (var tmpI = 0; tmpI < tmpChildList.Count; tmpI += 2)
+                            {
+                                var tmpChild = tmpChildList[tmpI];
+                                var tmpAccess = new VariableAccess();
+                                if (tmpChild is ExpressionContext)
+                                {
+                                    var tmpCodeBlock = new CodeBlock();
+                                    HandleExpressionContext(tmpCodeBlock, tmpChild as ExpressionContext, null);
+                                    tmpAccess.Access = tmpCodeBlock.CodeEntries[0];
+                                }
+                                else if (tmpChild is MethodCallContext)
+                                {
+                                    var tmpResult = HandleMethodeCall(tmpChild as MethodCallContext);
+                                    tmpAccess.Access = tmpResult;
+                                }
+                                else
+                                {
+                                    throw new NotImplementedException("Not done yet");
+                                }
+                                if (tmpParent != null)
+                                {
+                                    tmpParent.Child = tmpAccess;
+                                }
+                                else
+                                {
+                                    inCodeBlock.CodeEntries.Add(tmpAccess);
+                                }
+                                tmpParent = tmpAccess;
+                            }
+                        }
                         else
                         {
                             throw new NotImplementedException("Not done yet");
@@ -246,17 +280,7 @@ namespace CodeConverterJava.Model
                     else if (tmpChildList.Count == 1)
                     {
                         var tmpValue = tmpChildList[0] as MethodCallContext;
-                        var tmpMethodeCall = new MethodeCall()
-                        {
-                            Name= tmpValue.IDENTIFIER().GetText()
-                        };
-                        if (tmpValue.expressionList() != null)
-                        {
-                            foreach (var tmpExpression in tmpValue.expressionList().expression())
-                            {
-                                throw new NotImplementedException("Not done yet");
-                            }
-                        }
+                        MethodeCall tmpMethodeCall = HandleMethodeCall(tmpValue);
                         inCodeBlock.CodeEntries.Add(tmpMethodeCall);
                     }
                     else
@@ -266,6 +290,26 @@ namespace CodeConverterJava.Model
                 }
             }
 
+        }
+
+        private MethodeCall HandleMethodeCall(MethodCallContext inMethodeCallContext)
+        {
+            var tmpMethodeCall = new MethodeCall()
+            {
+                Name = inMethodeCallContext.IDENTIFIER().GetText()
+            };
+            if (inMethodeCallContext.expressionList() != null)
+            {
+                foreach (ExpressionContext tmpExpression in inMethodeCallContext.expressionList().expression())
+                {
+                    //Handle expression Context for Methode Call Parameter
+                    var tmpCodeParam = new CodeBlock();
+                    HandleExpressionContext(tmpCodeParam, tmpExpression, null);
+                    tmpMethodeCall.Parameter.Add(tmpCodeParam);
+                }
+            }
+
+            return tmpMethodeCall;
         }
     }
 }

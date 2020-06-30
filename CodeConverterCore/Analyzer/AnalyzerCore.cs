@@ -92,15 +92,16 @@ namespace CodeConverterCore.Analyzer
         {
             var tmpVariableList = new List<VariableDeclaration>();
             tmpVariableList.AddRange(inMethodeContainer.Parameter);
-            foreach (var tmpCodeBlock in inMethodeContainer.Code.CodeEntries)
-            {
-                //Add Variable to VariableList
-                if(tmpCodeBlock is VariableDeclaration)
+            if(inMethodeContainer.Code != null) {
+                foreach (var tmpCodeBlock in inMethodeContainer.Code.CodeEntries)
                 {
-                    tmpVariableList.Add(tmpCodeBlock as VariableDeclaration);
-                    continue;
+                    //Add Variable to VariableList
+                    if (tmpCodeBlock is VariableDeclaration)
+                    {
+                        tmpVariableList.Add(tmpCodeBlock as VariableDeclaration);
+                        continue;
+                    }
                 }
-
             }
         }
 

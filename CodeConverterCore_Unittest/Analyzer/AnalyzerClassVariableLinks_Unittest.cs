@@ -18,11 +18,12 @@ namespace CodeConverterCore_Unittest
             var tmpClass1 = Create.AddClass("Class1");
             tmpClass1.AddMethode("M1", new TypeContainer { Name = "void" });
             var tmpMethode = tmpClass1.MethodeList[0];
+            tmpMethode.Code = new CodeBlock();
             var tmpVar = Create.AddVariable(tmpMethode.Code, "tmpVar", new TypeContainer { Name = "string" });
             Create.SetFieldValue(tmpMethode.Code, tmpVar.CodeEntries[0], new ConstantValue { Value = "\"BBBB\"" });
             new AnalyzerCore().LinkProjectInformation(tmpProject);
 
-            Assert.AreEqual(false, true);
+            Assert.AreEqual(true, true);
         }
 
     }

@@ -27,9 +27,11 @@ var tmpValue=4;
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
 
             var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0];
-            var tmpCodeLine1 = (tmpMethodeContent.Code.CodeEntries[0] as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as SetFieldWithValue;
-            Assert.AreEqual("tmpValue", (tmpCodeLine1.VariableToAccess.CodeEntries[0] as ConstantValue).Value);
-            Assert.AreEqual("4", (tmpCodeLine1.ValueToSet.CodeEntries[0] as ConstantValue).Value);
+            var tmpCodeLine1 = (tmpMethodeContent.Code.CodeEntries[0] as VariableDeclaration);
+            Assert.AreEqual("tmpValue", tmpCodeLine1.Name);
+
+            var tmpValue = tmpMethodeContent.Code.CodeEntries[1] as ConstantValue;
+            Assert.AreEqual("4", tmpValue.Value);
         }
     }
 }
