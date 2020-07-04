@@ -52,7 +52,10 @@ namespace CodeConverterJava.Model
                     }
                     else
                     {
-                        tmpClassComments.Add(tmpChild);
+                        if (tmpChild.GetText() != "}")
+                        {
+                            tmpClassComments.Add(tmpChild);
+                        }
                     }
                 }
                 else
@@ -196,6 +199,11 @@ namespace CodeConverterJava.Model
                                 tmpCurrentGenericType.GenericTypes.Add(tmpGenericInnerType);
                                 //TODO Handling of Stacked Generics
                             }
+                        }
+                        else if (tmpTypeOrVoid.typeType().primitiveType() != null)
+                        {
+                            var tmpPrimitveType = tmpTypeOrVoid.typeType().primitiveType();
+                            tmpCurrentGenericType.Name = tmpPrimitveType.GetText();
                         }
                         else
                         {

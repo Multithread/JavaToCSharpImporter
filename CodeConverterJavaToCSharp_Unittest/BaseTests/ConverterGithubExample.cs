@@ -2,6 +2,7 @@
 using CodeConverterCore.Helper;
 using CodeConverterCSharp;
 using CodeConverterJava.Model;
+using JavaToCSharpConverter.Model;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace CodeConverterJavaToCSharp_Unittest
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { JavaClass }, tmpIniData);
             new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
 
-            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation).ToList();
+            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterJavaToCSharp()).ToList();
             Assert.AreEqual(1, tmpResult.Count);
             Assert.AreEqual("Class1", tmpResult[0].FullName);
             Assert.AreEqual(CSharpResult1, tmpResult[0].Content);

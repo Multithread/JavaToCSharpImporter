@@ -60,6 +60,8 @@
     <Compile Include="Analyzer\AnalyzerSettings.cs" />
     <Compile Include="Analyzer\DictionaryHelper.cs" />
     <Compile Include="Analyzer\UnknownTypeClass.cs" />
+    <Compile Include="Converter\ConverterBase.cs" />
+    <Compile Include="Converter\IConverter.cs" />
     <Compile Include="Enum\ClayyTypeEnum.cs" />
     <Compile Include="Helper\Create.cs" />
     <Compile Include="Model\BaseType.cs" />

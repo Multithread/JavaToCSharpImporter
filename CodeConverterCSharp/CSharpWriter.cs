@@ -1,10 +1,8 @@
-﻿using CodeConverterCore.Model;
+﻿using CodeConverterCore.Converter;
+using CodeConverterCore.Model;
 using CodeConverterCSharp.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeConverterCSharp
 {
@@ -15,11 +13,12 @@ namespace CodeConverterCSharp
         /// </summary>
         /// <param name="inObjectInformation"></param>
         /// <returns></returns>
-        public static IEnumerable<FileWriteInfo> CreateClassesFromObjectInformation(ProjectInformation inObjectInformation)
+        public static IEnumerable<FileWriteInfo> CreateClassesFromObjectInformation(ProjectInformation inObjectInformation, IConverter inConverter)
         {
-            foreach(var tmpClass in inObjectInformation.ClassList)
+            var tmpWriter = new CSharpClassWriter(inConverter);
+            foreach (var tmpClass in inObjectInformation.ClassList)
             {
-                yield return CSharpClassWriter.CreateClassFile(tmpClass);
+                yield return tmpWriter.CreateClassFile(tmpClass);
             }
         }
     }
