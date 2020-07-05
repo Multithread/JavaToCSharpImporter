@@ -43,6 +43,15 @@ namespace CodeConverterCSharp
             tmpStringBuilder.AppendLine("{");
             var tmpIndentDepth = 1;
 
+            AddClassContainerString(inClass, tmpStringBuilder, tmpIndentDepth);
+
+            tmpStringBuilder.AppendLine("}");
+            tmpInfo.Content = tmpStringBuilder.ToString();
+            return tmpInfo;
+        }
+
+        private void AddClassContainerString(ClassContainer inClass, StringBuilder tmpStringBuilder, int tmpIndentDepth)
+        {
             //Create Class Header
             AddComment(tmpStringBuilder, inClass.Comment, 1, true);
             tmpStringBuilder.AppendLine(CreateIndent(tmpIndentDepth) + CreateClassDefinition(inClass)); ;
@@ -65,11 +74,13 @@ namespace CodeConverterCSharp
                 }
             }
 
+            for (var tmpI = 0; tmpI < inClass.InnerClasses.Count; tmpI++)
+            {
+                AddClassContainerString(inClass.InnerClasses[tmpI], tmpStringBuilder, tmpIndentDepth + 1);
+            }
+
             //Create Class end and return FileWriteInfo
             tmpStringBuilder.AppendLine(CreateIndent(tmpIndentDepth) + "}");
-            tmpStringBuilder.AppendLine("}");
-            tmpInfo.Content = tmpStringBuilder.ToString();
-            return tmpInfo;
         }
 
         private void AddFieldtoString(StringBuilder inOutput, FieldContainer inField, int inIndentDepth)
@@ -102,6 +113,10 @@ namespace CodeConverterCSharp
         /// <returns></returns>
         private string CreateStringFromType(TypeContainer inType)
         {
+            if (inType == null)
+            {
+                return "void";
+            }
             if (inType.GenericTypes.Count > 0)
             {
                 return $"{inType.Type?.Name ?? inType.Name}<{string.Join(" ,", inType.GenericTypes.Select(inItem => CreateStringFromType(inItem)))}>{(inType.IsArray ? "[]" : "")}";
@@ -147,7 +162,28 @@ namespace CodeConverterCSharp
         /// <returns></returns>
         private string CreateClassDefinition(ClassContainer inClass)
         {
-            return $"{ReturnModifiersOrdered(inClass.AttributeList)} {inClass.Type.Type.Name}";
+            return $"{ReturnModifiersOrdered(inClass.ModifierList)} {inClass.Type.Type.Name}{CreateClassInterfaceData(inClass)}";
+        }
+        /// <summary>
+        /// Create the usings at top of the class
+        /// </summary>
+        /// <param name="inClass"></param>
+        /// <returns></returns>
+        private string CreateClassInterfaceData(ClassContainer inClass)
+        {
+            if (inClass.InterfaceList.Count == 0)
+            {
+                return "";
+            }
+            var tmpTypes = string.Join(", ", inClass.InterfaceList.Select(inItem => CreateStringFromType(inItem)));
+            var tmpExtendsList = inClass.InterfaceList.Where(inItem => inItem.Extends.Count > 0);
+            var tmpExtends = string.Join(", ", tmpExtendsList);
+            if (tmpExtends.Length > 0)
+            {
+                tmpExtends = " where " + tmpExtends;
+                throw new NotImplementedException("Interfaces with Generics with Extends not Implemented yet");
+            }
+            return $": {tmpTypes} {tmpExtends}";
         }
 
         private static string ReturnModifiersOrdered(List<string> inModifierList)
@@ -167,9 +203,13 @@ namespace CodeConverterCSharp
                    case "abstract":
                        return 20;
                    case "override":
-                       return 25;
+                       return 55;
+                   case "readonly":
+                       return 60;
+                   case "sealed":
+                       return 65;
                    case "static":
-                       return 33;
+                       return 80;
                    case "class":
                        return 100;
                    case "interface":

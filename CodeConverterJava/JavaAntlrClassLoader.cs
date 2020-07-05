@@ -113,11 +113,11 @@ namespace CodeConverterJava.Model
                 if (tmpChild is ClassOrInterfaceModifierContext)
                 {
                     //var tmpContext = tmpChild as ClassOrInterfaceModifierContext;
-                    tmpClass.AttributeList.AddRange(tmpChild.GetChildren().Select(inItem => inItem.GetText()));
+                    tmpClass.ModifierList.AddRange(tmpChild.GetChildren().Select(inItem => inItem.GetText()));
                 }
                 else if (tmpChild is InterfaceDeclarationContext)
                 {
-                    tmpClass.AttributeList.Add("interface");
+                    tmpClass.ModifierList.Add("interface");
                     var tmpContext = tmpChild as InterfaceDeclarationContext;
 
                     var tmpComment = "";
@@ -358,7 +358,7 @@ namespace CodeConverterJava.Model
         private static void FillClassContext(ClassContainer inClass, ClassDeclarationContext inClassContext)
         {
             inClass.InterfaceList.AddRange(inClassContext.typeList().GetChildren().Select(inItem => new TypeContainer { Name = inItem.GetText() }));
-            inClass.AttributeList.Add("class");
+            inClass.ModifierList.Add("class");
             var tmpComment = "";
 
             var tmpChildList = inClassContext.classBody().GetChildren().ToList();

@@ -55,7 +55,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Klassenattribute (sealed, Abstract, ....)
         /// </summary>
-        public List<string> AttributeList { get; set; } = new List<string>();
+        public List<string> ModifierList { get; set; } = new List<string>();
 
         /// <summary>
         /// Liste der Felder (Field, ggf. Property)
@@ -108,7 +108,7 @@ namespace CodeConverterCore.Model
         /// <returns></returns>
         public bool IsInterface()
         {
-            return AttributeList.Contains("interface");
+            return ModifierList.Contains("interface");
         }
 
         public List<string> FullUsingList

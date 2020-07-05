@@ -33,7 +33,7 @@ namespace JavaToCSharpConverter.Model
                 tmpStringBuilder.AppendLine(inClass.Comment);
             }
 
-            tmpStringBuilder.Append(string.Join(" ", inConverter.MapAndSortAttributes(inClass.AttributeList)));
+            tmpStringBuilder.Append(string.Join(" ", inConverter.MapAndSortAttributes(inClass.ModifierList)));
 
             //Resolve Type to String
             tmpStringBuilder.Append($" {TypeToString(inClass, inConverter, tmpRequiredUsings, inClass.Type)}");

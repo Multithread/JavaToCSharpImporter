@@ -40,6 +40,27 @@ namespace CodeConverterCore.Analyzer
                 }
             }
 
+            //Load all Types of Inner Classes
+            foreach (var tmpClass in inLoadedProject.ClassList)
+            {
+                for (var tmpI = 0; tmpI < tmpClass.InnerClasses.Count; tmpI++)
+                {
+                    tmpTypeDictionary.Add(tmpClass.InnerClasses[tmpI].Name, new BaseType(tmpClass.InnerClasses[tmpI].Type.Name, tmpClass.Namespace));
+                    if (tmpTypeDictionary.TryGetValue(tmpClass.InnerClasses[tmpI].Name, inItem => inItem.Namespace == tmpClass.Namespace, out var tmpResult))
+                    {
+                        tmpClass.InnerClasses[tmpI].Type.Type = tmpResult;
+                    }
+                    else
+                    {
+                        throw new Exception("Added Type cannot be found when searching for it.");
+                    }
+                    if (tmpClass.InnerClasses[tmpI].InnerClasses.Count > 0)
+                    {
+                        throw new NotImplementedException("Inner Class for Inner Class is not implemented");
+                    }
+                }
+            }
+
             //Link Generic Types and Base-Types
             //Load all Types of Classes
             foreach (var tmpClass in inLoadedProject.ClassList)
@@ -48,6 +69,15 @@ namespace CodeConverterCore.Analyzer
                 {
                     var tmpInterface = tmpClass.InterfaceList[tmpI];
                     ManageTypeContainer(tmpTypeDictionary, tmpInterface, tmpClass);
+                }
+                //Inner Class Handling
+                for (var tmpInnerClassId = 0; tmpInnerClassId < tmpClass.InnerClasses.Count; tmpInnerClassId++)
+                {
+                    for (var tmpI = 0; tmpI < tmpClass.InnerClasses[tmpInnerClassId].InterfaceList.Count; tmpI++)
+                    {
+                        var tmpInterface = tmpClass.InnerClasses[tmpInnerClassId].InterfaceList[tmpI];
+                        ManageTypeContainer(tmpTypeDictionary, tmpInterface, tmpClass.InnerClasses[tmpInnerClassId]);
+                    }
                 }
             }
 
@@ -92,7 +122,8 @@ namespace CodeConverterCore.Analyzer
         {
             var tmpVariableList = new List<VariableDeclaration>();
             tmpVariableList.AddRange(inMethodeContainer.Parameter);
-            if(inMethodeContainer.Code != null) {
+            if (inMethodeContainer.Code != null)
+            {
                 foreach (var tmpCodeBlock in inMethodeContainer.Code.CodeEntries)
                 {
                     //Add Variable to VariableList

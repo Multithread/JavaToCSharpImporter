@@ -62,6 +62,7 @@
     <Compile Include="Analyzer\UnknownTypeClass.cs" />
     <Compile Include="Converter\ConverterBase.cs" />
     <Compile Include="Converter\IConverter.cs" />
+    <Compile Include="Converter\NamingConvertionHelper.cs" />
     <Compile Include="Enum\ClayyTypeEnum.cs" />
     <Compile Include="Helper\Create.cs" />
     <Compile Include="Model\BaseType.cs" />
@@ -74,7 +75,6 @@
     <Compile Include="Helper\AntlrHelper.cs" />
     <Compile Include="Helper\CTSExtensions.cs" />
     <Compile Include="Helper\DataHelper.cs" />
-    <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Interface\CodeResultType.cs" />
     <Compile Include="Interface\ICodeEntry.cs" />
     <Compile Include="Interface\ILoadOOPLanguage.cs" />

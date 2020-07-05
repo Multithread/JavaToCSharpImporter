@@ -43,5 +43,19 @@ namespace JavaToCSharpConverter.Model
                 }
             }
         }
+
+        /// <summary>
+        /// Change Modifier from Java to C# (ie. final)
+        /// </summary>
+        /// <param name="inOldmodifier"></param>
+        /// <returns></returns>
+        public override string Modifier(string inOldmodifier)
+        {
+            if (inOldmodifier == "final")
+            {
+                return "readonly";
+            }
+            return base.Modifier(inOldmodifier);
+        }
     }
 }
