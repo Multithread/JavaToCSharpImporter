@@ -34,6 +34,21 @@ namespace CodeConverterCore.Converter
             {
                 ConvertField(tmpField);
             }
+
+            foreach (var tmpMethode in inClass.MethodeList)
+            {
+                foreach (var tmpField in tmpMethode.Parameter)
+                {
+                    ConvertField(tmpField);
+                    tmpField.Name = Converter.MethodeInParameter(tmpField);
+                }
+            }
+
+            inClass.Namespace = Converter.Namespace(inClass.Namespace);
+            for(var tmpI = 0; tmpI < inClass.UsingList.Count; tmpI++)
+            {
+                inClass.UsingList[tmpI] = Converter.Namespace(inClass.UsingList[tmpI]);
+            }
         }
 
         private void ConvertField(FieldContainer inField)

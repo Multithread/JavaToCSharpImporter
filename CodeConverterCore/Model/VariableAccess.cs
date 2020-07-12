@@ -21,5 +21,10 @@ namespace CodeConverterCore.Model
         /// filled during code-analysis
         /// </summary>
         public ICodeEntry BaseDataSource { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Access} {BaseDataSource} {Child}";
+        }
     }
 }

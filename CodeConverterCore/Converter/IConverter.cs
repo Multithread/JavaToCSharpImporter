@@ -28,5 +28,12 @@ namespace CodeConverterCore.Converter
         /// MethodeParameter Handling
         /// </summary>
         string MethodeInParameter(FieldContainer inMethodeParameter);
+
+        /// <summary>
+        /// Namespace Renaming
+        /// </summary>
+        /// <param name="inNamespace"></param>
+        /// <returns></returns>
+        string Namespace(string inNamespace);
     }
 }

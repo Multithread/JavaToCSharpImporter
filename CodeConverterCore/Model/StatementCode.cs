@@ -6,6 +6,11 @@ namespace CodeConverterCore.Model
 {
     public class StatementCode : ICodeEntry
     {
+        public StatementCode()
+        {
+
+        }
+
         /// <summary>
         /// Type of Statement
         /// </summary>

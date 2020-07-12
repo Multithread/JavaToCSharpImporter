@@ -34,6 +34,14 @@ namespace CodeConverterCore.Converter
         }
 
         /// <summary>
+        /// Class Name handling
+        /// </summary>
+        public virtual string Namespace(string inNamespace)
+        {
+            return inNamespace;
+        }
+
+        /// <summary>
         /// MethodeParameter Handling
         /// </summary>
         public virtual string MethodeInParameter(FieldContainer inMethodeParameter)

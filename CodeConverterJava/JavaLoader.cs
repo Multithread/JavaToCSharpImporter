@@ -75,6 +75,17 @@ namespace CodeConverterJava.Model
                 }
             }
 
+            foreach (var tmpClassouter in tmpClassList)
+            {
+                foreach (var tmpClass in tmpClassouter.InnerClasses)
+                {
+                    foreach (var tmpMethode in tmpClass.MethodeList)
+                    {
+                        tmpCodeHandler.Resolve(tmpMethode);
+                    }
+                }
+            }
+
             //Fill them into the object Information
             tmpObjectInformation.FillClasses(tmpAdditionalClasses);
             return tmpObjectInformation;

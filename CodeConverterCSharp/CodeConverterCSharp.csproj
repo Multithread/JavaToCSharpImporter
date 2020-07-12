@@ -50,9 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConverterJavaToCSharp.cs" />
+    <Compile Include="Model\ConverterJavaToCSharp.cs" />
     <Compile Include="CSharpClassWriter.cs" />
     <Compile Include="CSharpWriter.cs" />
+    <Compile Include="Lucenene\ConverterLucene.cs" />
     <Compile Include="Model\FileWriteInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

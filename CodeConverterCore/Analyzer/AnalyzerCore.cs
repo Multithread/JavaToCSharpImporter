@@ -1,18 +1,19 @@
-﻿using CodeConverterCore.Model;
+﻿using CodeConverterCore.Helper;
+using CodeConverterCore.Interface;
+using CodeConverterCore.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CodeConverterCore.Analyzer
 {
     public class AnalyzerCore
     {
-
         private List<UnknownTypeClass> UnknownTypes = new List<UnknownTypeClass>();
 
         private ProjectInformation ProjectInformation;
+
+        private AnalyzerSettings Settings;
 
         /// <summary>
         /// Links the classes and Types inside the Project
@@ -22,7 +23,7 @@ namespace CodeConverterCore.Analyzer
         public void LinkProjectInformation(ProjectInformation inLoadedProject, AnalyzerSettings inSettings = null)
         {
             ProjectInformation = inLoadedProject;
-            inSettings = inSettings ?? new AnalyzerSettings();
+            Settings = inSettings ?? new AnalyzerSettings();
 
             var tmpTypeDictionary = inLoadedProject.KnownTypeDictionary;
 
@@ -99,40 +100,174 @@ namespace CodeConverterCore.Analyzer
                         ManageTypeContainer(tmpTypeDictionary, tmpGenericType, tmpClass);
                     }
                 }
-            }//);
+            }
+            //);
 
-            //Run over all Methode Code to set Variable Types inside the Methode Code
+            //Run over all Methode Code to set Variable Types and Access inside the Methode Code 
+            //Parallel.ForEach(inLoadedProject.ClassList, new ParallelOptions { MaxDegreeOfParallelism = inSettings.MaxAmountOfParallelism },
+            //    tmpClass =>
             foreach (var tmpClass in inLoadedProject.ClassList)
             {
                 for (var tmpI = 0; tmpI < tmpClass.MethodeList.Count; tmpI++)
                 {
-                    ManageCodeBlockOfMethode(tmpClass.MethodeList[tmpI]);
+                    ManageCodeBlockOfMethode(tmpClass.MethodeList[tmpI], tmpClass);
+                }
+                foreach (var tmpInnerClass in tmpClass.InnerClasses)
+                {
+                    for (var tmpI = 0; tmpI < tmpInnerClass.MethodeList.Count; tmpI++)
+                    {
+                        ManageCodeBlockOfMethode(tmpInnerClass.MethodeList[tmpI], tmpInnerClass);
+                    }
                 }
             }
-
+            //);
 
             //Last thing to do: set Classes as loaded Corectly
             foreach (var tmpClass in inLoadedProject.ClassList)
             {
-                tmpClass.IsConverted = true;
+                tmpClass.IsAnalyzed = true;
             }
         }
 
-        private void ManageCodeBlockOfMethode(MethodeContainer inMethodeContainer)
+        /// <summary>
+        /// Manage Code inside Methode 
+        /// </summary>
+        /// <param name="inMethodeContainer"></param>
+        /// <param name="inClass"></param>
+        private void ManageCodeBlockOfMethode(MethodeContainer inMethodeContainer, ClassContainer inClass)
         {
             var tmpVariableList = new List<VariableDeclaration>();
             tmpVariableList.AddRange(inMethodeContainer.Parameter);
             if (inMethodeContainer.Code != null)
             {
-                foreach (var tmpCodeBlock in inMethodeContainer.Code.CodeEntries)
+                for (var tmpI = 0; tmpI < inMethodeContainer.Code.CodeEntries.Count; tmpI++)
                 {
-                    //Add Variable to VariableList
-                    if (tmpCodeBlock is VariableDeclaration)
+                    var tmpCodeBlock = inMethodeContainer.Code.CodeEntries[tmpI];
+                    CodeEntryHandling(tmpCodeBlock, new FieldNameFinder(inClass) { VariableList = tmpVariableList });
+                }
+            }
+        }
+
+        /// <summary>
+        /// Write Code-Entry into C# Code
+        /// </summary>
+        /// <param name="inOutput"></param>
+        /// <param name="inCodeEntry"></param>
+        private void CodeEntryHandling(ICodeEntry inCodeEntry, FieldNameFinder inNameFinder)
+        {
+            if (inCodeEntry == null) { return; }
+            if (inCodeEntry is VariableDeclaration)
+            {
+                inNameFinder.VariableList.Add(inCodeEntry as VariableDeclaration);
+            }
+            else if (inCodeEntry is ConstantValue)
+            {
+                var tmpConstant = (inCodeEntry as ConstantValue);
+                var tmpVal = tmpConstant.Value?.ToString();
+                if (tmpVal.EndsWith("\""))
+                {
+                    //Nichts zu Tun
+                    throw new NotImplementedException("CodeEntryHandling: Text Handling missing");
+                }
+                else if (RegexHelper.NumberCheck.IsMatch(tmpVal))
+                {
+                    //It's a number, nothing to do
+                    throw new NotImplementedException("CodeEntryHandling: Number Handling not done yet");
+                }
+                else
+                {
+                    //Access to Variable, Field, Param or static Class, so we need to do a lot here for Code-link
+                    if (tmpVal == "this")
                     {
-                        tmpVariableList.Add(tmpCodeBlock as VariableDeclaration);
-                        continue;
+                        inNameFinder.VariableList = null;
+                    }
+                    else if (tmpVal == "base")
+                    {
+                        inNameFinder.Class = inNameFinder.Class.InterfaceList
+                            .Select(inItem => ProjectInformation.GetClassForType(inItem.Type.Name, new List<string> { inItem.Type.Namespace }))
+                            .FirstOrDefault(inItem => !inItem.IsInterface());
+                        inNameFinder.VariableList = null;
+                    }
+                    else
+                    {
+                        //TODO Check for basic Types
+
+                        //Check for in Variable List
+                        var tmpVar = inNameFinder.VariableList?.FirstOrDefault(inItem => inItem.Name == tmpVal);
+                        if (tmpVar != null)
+                        {
+                            tmpConstant.Value = tmpVar.Type.Type;
+                            tmpConstant.Type = tmpVar.Type;
+                        }
+                        else
+                        {
+                            //TODO Check for Parent CLass FieldList
+                            var tmpField = inNameFinder.Class.FieldList?.FirstOrDefault(inItem => inItem.Name == tmpVal);
+                            if (tmpField != null)
+                            {
+                                tmpConstant.Value = tmpField.Type.Type;
+                                tmpConstant.Type = tmpField.Type;
+                            }
+                            else
+                            {
+                                //TODO Check for Static Class and Namespaces with Class
+                                //throw new NotImplementedException("CodeEntryHandling: ConstantValue Handling not Implemented");
+
+                                //Check for other Unknown Type
+                                var tmpUnknown = UnknownTypes.FirstOrDefault(inItem => inItem.Type.Name == tmpVal);
+                                if (tmpUnknown == null)
+                                {
+                                    tmpUnknown = new UnknownTypeClass(tmpVal)
+                                    {
+                                        PossibleNamespace = inNameFinder.Class.FullUsingList
+                                    };
+                                    Settings.InvokeUnknownTypeAdded(tmpUnknown);
+                                }
+                                tmpConstant.Value = tmpUnknown.Type;
+                            }
+                        }
                     }
                 }
+            }
+            else if (inCodeEntry is StatementCode)
+            {
+                throw new NotImplementedException("CodeEntryHandling: StatementCode Handling not Implemented");
+            }
+            else if (inCodeEntry is SetFieldWithValue)
+            {
+                var tmpFieldVal = inCodeEntry as SetFieldWithValue;
+                foreach (var tmpEntry in tmpFieldVal.VariableToAccess.CodeEntries)
+                {
+                    CodeEntryHandling(tmpEntry, inNameFinder);
+                }
+                foreach (var tmpEntry in tmpFieldVal.ValueToSet.CodeEntries)
+                {
+                    CodeEntryHandling(tmpEntry, inNameFinder);
+                }
+            }
+            else if (inCodeEntry is VariableAccess)
+            {
+                var tmpVarAccess = inCodeEntry as VariableAccess;
+                CodeEntryHandling(tmpVarAccess.Access, inNameFinder);
+                if (tmpVarAccess.Child != null)
+                {
+                    CodeEntryHandling(tmpVarAccess.Child, inNameFinder);
+                }
+                else
+                {
+                    CodeEntryHandling(tmpVarAccess.BaseDataSource, inNameFinder);
+                }
+            }
+            else if (inCodeEntry is ReturnCodeEntry)
+            {
+                foreach(var tmpEntry in (inCodeEntry as ReturnCodeEntry).CodeEntries)
+                {
+                    CodeEntryHandling(tmpEntry, inNameFinder);
+                }
+            }
+            else
+            {
+                throw new NotImplementedException("Code Entry Type not Implement");
             }
         }
 

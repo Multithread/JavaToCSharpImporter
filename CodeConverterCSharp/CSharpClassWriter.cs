@@ -1,4 +1,5 @@
 ﻿using CodeConverterCore.Converter;
+using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
 using CodeConverterCSharp.Model;
 using System;
@@ -24,7 +25,7 @@ namespace CodeConverterCSharp
         /// <returns></returns>
         public FileWriteInfo CreateClassFile(ClassContainer inClass)
         {
-            if (!inClass.IsConverted)
+            if (!inClass.IsAnalyzed)
             {
                 throw new Exception("Cannot create String from a Class that has not been typecleaned");
             }
@@ -98,11 +99,109 @@ namespace CodeConverterCSharp
             tmpMethodeString += string.Join("", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)} {inItem.Name}{(inItem.HasDefaultValue ? " = " + inItem.DefaultValue : "")}")) + ")";
             inOutput.AppendLine(CreateIndent(inIndentDepth) + tmpMethodeString);
 
-            inOutput.AppendLine(CreateIndent(inIndentDepth) + "{");
+            if (inMethode.Code == null)
+            {
+                inOutput.AppendLine(";");
+            }
+            else
+            {
+                inOutput.AppendLine(CreateIndent(inIndentDepth) + "{");
+                AddCodeBlockToString(inOutput, inMethode.Code, inIndentDepth + 1);
+                inOutput.AppendLine(CreateIndent(inIndentDepth) + "}");
+            }
+        }
+
+        private void AddCodeBlockToString(StringBuilder inOutput, CodeBlock inCode, int inIndentDepth)
+        {
+            foreach (var tmpEntry in inCode.CodeEntries)
+            {
+                inOutput.Append(CreateIndent(inIndentDepth));
+                AddCodeEntryToString(inOutput, tmpEntry);
+                inOutput.AppendLine(";");
+            }
+        }
+
+        /// <summary>
+        /// Write Code-Entry into C# Code
+        /// </summary>
+        /// <param name="inOutput"></param>
+        /// <param name="inCodeEntry"></param>
+        private void AddCodeEntryToString(StringBuilder inOutput, ICodeEntry inCodeEntry)
+        {
+            if (inCodeEntry == null) { return; }
+            if (inCodeEntry is VariableDeclaration)
+            {
+                var tmpVar = inCodeEntry as VariableDeclaration;
+                inOutput.Append($"{tmpVar.Type.Name} {tmpVar.Name}");
+            }
+            else if (inCodeEntry is ConstantValue)
+            {
+                var tmpConstant = inCodeEntry as ConstantValue;
+                if (tmpConstant.Value is BaseType)
+                {
+                    inOutput.Append($"{(tmpConstant.Value as BaseType).Name}");
+                }
+                else
+                {
+                    inOutput.Append($"{tmpConstant.Value}");
+                }
+            }
+            else if (inCodeEntry is StatementCode)
+            {
+                AddStatementToString(inCodeEntry as StatementCode);
+            }
+            else if (inCodeEntry is SetFieldWithValue)
+            {
+                var tmpFieldVal = inCodeEntry as SetFieldWithValue;
+
+                foreach (var tmpEntry in tmpFieldVal.VariableToAccess.CodeEntries)
+                {
+                    AddCodeEntryToString(inOutput, tmpEntry);
+                }
+                foreach (var tmpEntry in tmpFieldVal.ValueToSet.CodeEntries)
+                {
+                    AddCodeEntryToString(inOutput, tmpEntry);
+                }
+            }
+            else if (inCodeEntry is VariableAccess)
+            {
+                var tmpVarAccess = inCodeEntry as VariableAccess;
+                AddCodeEntryToString(inOutput, tmpVarAccess.Access);
+                if (tmpVarAccess.Child != null)
+                {
+                    inOutput.Append(".");
+                    AddCodeEntryToString(inOutput, tmpVarAccess.Child);
+                }
+                else
+                {
+                    inOutput.Append(" = ");
+                    AddCodeEntryToString(inOutput, tmpVarAccess.BaseDataSource);
+                }
+            }
+            else if (inCodeEntry is ReturnCodeEntry)
+            {
+                var tmpReturn = inCodeEntry as ReturnCodeEntry;
+                inOutput.Append($"{(tmpReturn.IsYield ? "yield " : "")}return ");
+                foreach (var tmpEntry in tmpReturn.CodeEntries)
+                {
+                    AddCodeEntryToString(inOutput, tmpEntry);
+                }
+            }
+            else
+            {
+                throw new Exception("Code Entry Type not Implement");
+            }
+        }
 
 
-
-            inOutput.AppendLine(CreateIndent(inIndentDepth) + "}");
+        private void AddStatementToString(StatementCode inStatement)
+        {
+            switch (inStatement.StatementType)
+            {
+                default:
+                    throw new Exception("Unhandlet Statement Type");
+                    break;
+            }
         }
 
         /// <summary>

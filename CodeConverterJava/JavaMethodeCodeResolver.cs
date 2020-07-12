@@ -59,6 +59,19 @@ namespace CodeConverterJava.Model
                         }
                     }
                 }
+                else if (tmpElement is BlockStatementContext)
+                {
+                    if (tmpCurrentCodeBlock == null)
+                    {
+                        tmpCurrentCodeBlock = new CodeBlock();
+                        tmpCodeBlockStack.Push(tmpCurrentCodeBlock);
+                        inMethodeContainer.Code = tmpCurrentCodeBlock;
+                    }
+                    HandloBlockStatementContent(tmpCurrentCodeBlock, tmpElement as BlockStatementContext);
+                }
+                else if (tmpElement is TerminalNodeImpl)
+                {
+                }
                 else
                 {
                     throw new NotImplementedException("Not done yet");
@@ -156,10 +169,24 @@ namespace CodeConverterJava.Model
             {
                 throw new NotImplementedException("Not done yet");
             }
+            else if (inStatement.RETURN() != null)
+            {
+                var tmpReturnCodeEntry = new ReturnCodeEntry();
+                HandleExpressionContext(tmpReturnCodeEntry, inStatement.expression()[0], null);
+                inParentCodeBlock.CodeEntries.Add(tmpReturnCodeEntry);
+                return;
+            }
             else if (inStatement.SEMI() != null)
             {
-                tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { new CodeBlock() };
-                HandleExpressionContext(tmpStatement.StatementCodeBlocks[0], inStatement.expression()[0], null);
+                //Semicolon, so it is a simple Statement
+                //tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { new CodeBlock() };
+                if (inStatement.expression()[0].GetText() + ";" != inStatement.GetText())
+                {
+                    throw new NotImplementedException("Unhandlet Statement in Semi");
+                }
+
+                HandleExpressionContext(inParentCodeBlock, inStatement.expression()[0], null);
+                return;
             }
             else
             {
@@ -180,27 +207,27 @@ namespace CodeConverterJava.Model
                 return;
             }
 
-            if (inBlockStatement.IDENTIFIER() != null)
-            {
-                throw new NotImplementedException("Not done yet");
-            }
-            else if (inBlockStatement.THIS() != null)
-            {
-                throw new NotImplementedException("Not done yet");
-            }
-            else if (inBlockStatement.NEW() != null)
-            {
-                throw new NotImplementedException("Not done yet");
-            }
-            else if (inBlockStatement.SUPER() != null)
-            {
-                throw new NotImplementedException("Not done yet");
-            }
-            else if (inBlockStatement.INSTANCEOF() != null)
-            {
-                throw new NotImplementedException("Not done yet");
-            }
-            else
+            //if (inBlockStatement.IDENTIFIER() != null)
+            //{
+            //    inCodeBlock.CodeEntries.Add(new ConstantValue { Value = inBlockStatement.IDENTIFIER().GetText() });
+            //}
+            //else if (inBlockStatement.THIS() != null)
+            //{
+            //    throw new NotImplementedException("Not done yet");
+            //}
+            //else if (inBlockStatement.NEW() != null)
+            //{
+            //    throw new NotImplementedException("Not done yet");
+            //}
+            //else if (inBlockStatement.SUPER() != null)
+            //{
+            //    throw new NotImplementedException("Not done yet");
+            //}
+            //else if (inBlockStatement.INSTANCEOF() != null)
+            //{
+            //    throw new NotImplementedException("Not done yet");
+            //}
+            //else
             {
                 if (inBlockStatement.primary() != null)
                 {
@@ -256,6 +283,19 @@ namespace CodeConverterJava.Model
                                 {
                                     var tmpResult = HandleMethodeCall(tmpChild as MethodCallContext);
                                     tmpAccess.Access = tmpResult;
+                                }
+                                else if (tmpChild is TerminalNodeImpl)
+                                {
+                                    var tmpChildText = tmpChild.GetText();
+                                    if (tmpChildText == ".") { }
+                                    else if (RegexHelper.WordCheck.IsMatch(tmpChildText))
+                                    {
+                                        tmpAccess.Access = new ConstantValue(tmpChildText);
+                                    }
+                                    else
+                                    {
+                                        throw new NotImplementedException("Not done yet");
+                                    }
                                 }
                                 else
                                 {

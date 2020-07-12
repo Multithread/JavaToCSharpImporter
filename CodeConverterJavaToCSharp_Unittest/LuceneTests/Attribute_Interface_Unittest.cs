@@ -1,6 +1,7 @@
 ﻿using CodeConverterCore.Analyzer;
 using CodeConverterCore.Helper;
 using CodeConverterCSharp;
+using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;
 using JavaToCSharpConverter.Model;
 using NUnit.Framework;
@@ -19,7 +20,7 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { JavaBits }, tmpIniData);
             new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
 
-            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterJavaToCSharp()).ToList();
+            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList();
             Assert.AreEqual(1, tmpResult.Count);
             Assert.AreEqual("Attribute", tmpResult[0].FullName);
             //Check for no double Comments

@@ -65,11 +65,13 @@
     <Compile Include="Converter\NamingConvertionHelper.cs" />
     <Compile Include="Enum\ClayyTypeEnum.cs" />
     <Compile Include="Helper\Create.cs" />
+    <Compile Include="Helper\RegexHelper.cs" />
     <Compile Include="Model\BaseType.cs" />
     <Compile Include="Model\ClassContainer.cs" />
     <Compile Include="Model\CodeState.cs" />
     <Compile Include="Enum\StatementTypeEnum.cs" />
     <Compile Include="Enum\VariableManipulatorType.cs" />
+    <Compile Include="Model\FieldNameFinder.cs" />
     <Compile Include="Model\MethodeCall.cs" />
     <Compile Include="Model\FieldContainer.cs" />
     <Compile Include="Helper\AntlrHelper.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Model\CodeBlock.cs" />
     <Compile Include="Model\CodeExpression.cs" />
     <Compile Include="Model\ConstantValue.cs" />
+    <Compile Include="Model\ReturnCodeEntry.cs" />
     <Compile Include="Model\SetFieldWithValue.cs" />
     <Compile Include="Model\StatementCode.cs" />
     <Compile Include="Model\VariableAccess.cs" />

@@ -50,10 +50,12 @@ namespace org.apache.lucene.util
 
         public Class1<int> CreateInstance()
         {
+            return null;
         }
 
         public void SetValue(string inValue)
         {
+            ;
         }
     }
 }

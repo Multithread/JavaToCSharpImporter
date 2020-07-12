@@ -1,4 +1,6 @@
 ﻿using CodeConverterCore.Converter;
+using CodeConverterCore.Helper;
+using CodeConverterCore.Model;
 using System;
 using System.Text.RegularExpressions;
 
@@ -56,6 +58,36 @@ namespace JavaToCSharpConverter.Model
                 return "readonly";
             }
             return base.Modifier(inOldmodifier);
+        }
+
+        /// <summary>
+        /// MethodeParameter Handling (normal starting with "in", out param starting wit "out")
+        /// </summary>
+        public override string MethodeInParameter(FieldContainer inMethodeParameter)
+        {
+            var tmpName = inMethodeParameter.Name;
+            if (RegexHelper.NameStartsWith_In.IsMatch(tmpName))
+            {
+                tmpName = tmpName.Substring(2);
+            }
+            else if (RegexHelper.NameStartsWith_Out.IsMatch(tmpName))
+            {
+                tmpName = tmpName.Substring(3);
+            }
+            else if (RegexHelper.NameStartsWith_Tmp.IsMatch(tmpName))
+            {
+                tmpName = tmpName.Substring(3);
+            }
+            if (!RegexHelper.IsFirstCharUpper(tmpName))
+            {
+                tmpName = tmpName[0].ToString().ToUpper() + tmpName.Substring(1);
+            }
+
+            if (inMethodeParameter.ModifierList.Contains("out"))
+            {
+                return "out" + tmpName;
+            }
+            return "in" + tmpName;
         }
     }
 }

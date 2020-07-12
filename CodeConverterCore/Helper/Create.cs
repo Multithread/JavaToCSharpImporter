@@ -23,15 +23,16 @@ namespace CodeConverterCore.Helper
         /// <summary>
         /// Add Field to Class
         /// </summary>
-        public static ClassContainer AddField(this ClassContainer inClass, string inFieldName, BaseType inType, string inDefaultValue = null, params FieldAttributes[] inAttributes)
+        public static FieldContainer AddField(this ClassContainer inClass, string inFieldName, BaseType inType, string inDefaultValue = null, params FieldAttributes[] inAttributes)
         {
-            inClass.FieldList.Add(new FieldContainer()
+            var tmpFieldContainer=new FieldContainer()
             {
                 Name = inFieldName,
                 DefaultValue = inDefaultValue,
                 Type = new TypeContainer { Type = inType, Name = inType.Name }
-            });
-            return inClass;
+            };
+            inClass.FieldList.Add(tmpFieldContainer);
+            return tmpFieldContainer;
         }
 
         /// <summary>

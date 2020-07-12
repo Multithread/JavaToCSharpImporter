@@ -1,8 +1,10 @@
 ﻿using CodeConverterCore.Model;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace CodeConverterCore.Analyzer
 {
+    [DebuggerDisplay("{Type}")]
     public class UnknownTypeClass
     {
         public UnknownTypeClass(string inName)

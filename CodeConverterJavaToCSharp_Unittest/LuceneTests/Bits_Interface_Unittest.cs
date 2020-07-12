@@ -2,6 +2,7 @@
 using CodeConverterCore.Converter;
 using CodeConverterCore.Helper;
 using CodeConverterCSharp;
+using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;
 using JavaToCSharpConverter.Model;
 using NUnit.Framework;
@@ -19,12 +20,14 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { JavaBits }, tmpIniData);
             new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
 
-            new NamingConvertionHelper(new ConverterJavaToCSharp()).ConvertProject(tmpObjectInformation);
-            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterJavaToCSharp()).ToList();
+            new NamingConvertionHelper(new ConverterLucene()).ConvertProject(tmpObjectInformation);
+            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList();
             Assert.AreEqual(1, tmpResult.Count);
             Assert.AreEqual("Bits", tmpResult[0].FullName);
             //Check for inner classes existing
             Assert.AreEqual(true, tmpResult[0].Content.Contains("MatchAllBits"));
+
+            Assert.AreEqual(true, tmpResult[0].Content.Contains("this.len = inLen;"));
         }
 
         private string JavaBits = @"/*
