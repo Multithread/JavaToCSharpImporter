@@ -21,7 +21,7 @@ inResult=4*6;
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
 
             var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0].Code.CodeEntries[0];
-            var tmpVarSetter = (tmpMethodeContent as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as SetFieldWithValue;
+            var tmpVarSetter = (tmpMethodeContent) as SetFieldWithValue;
             Assert.AreEqual("inResult", tmpVarSetter.VariableToAccess.CodeEntries[0].ToString());
             Assert.AreEqual("(4 Multiplication 6)", tmpVarSetter.ValueToSet.ToString());
         }
@@ -38,7 +38,7 @@ inResult=4*6*8;
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
 
             var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0].Code.CodeEntries[0];
-            var tmpVarSetter = (tmpMethodeContent as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as SetFieldWithValue;
+            var tmpVarSetter = (tmpMethodeContent) as SetFieldWithValue;
             Assert.AreEqual("inResult", tmpVarSetter.VariableToAccess.CodeEntries[0].ToString());
             Assert.AreEqual("((4 Multiplication 6) Multiplication 8)", tmpVarSetter.ValueToSet.ToString());
         }
@@ -56,7 +56,7 @@ inResult=4*6;
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
 
             var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0].Code.CodeEntries[0];
-            var tmpVarSetter = (tmpMethodeContent as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as SetFieldWithValue;
+            var tmpVarSetter = (tmpMethodeContent) as SetFieldWithValue;
             Assert.AreEqual("inResult", (tmpVarSetter.VariableToAccess.CodeEntries[0] as ConstantValue).Value);
             Assert.AreEqual(2, (tmpVarSetter.ValueToSet.CodeEntries[0] as CodeExpression).SubClauseEntries.Count);
         }
@@ -74,7 +74,7 @@ inResult=4*6+6-3*2;
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
 
             var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0].Code.CodeEntries[0];
-            var tmpVarSetter = (tmpMethodeContent as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as SetFieldWithValue;
+            var tmpVarSetter = (tmpMethodeContent) as SetFieldWithValue;
             Assert.AreEqual("inResult", tmpVarSetter.VariableToAccess.CodeEntries[0].ToString());
             Assert.AreEqual("(((4 Multiplication 6) Addition 6) Substraction (3 Multiplication 2))", tmpVarSetter.ValueToSet.ToString());
         }

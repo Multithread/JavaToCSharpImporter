@@ -28,7 +28,7 @@ Value=4;
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
 
             var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0];
-            var tmpCodeLine1 = (tmpMethodeContent.Code.CodeEntries[0] as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as SetFieldWithValue;
+            var tmpCodeLine1 = (tmpMethodeContent.Code.CodeEntries[0]) as SetFieldWithValue;
             Assert.AreEqual("Value", (tmpCodeLine1.VariableToAccess.CodeEntries[0] as ConstantValue).Value);
             Assert.AreEqual("4", (tmpCodeLine1.ValueToSet.CodeEntries[0] as ConstantValue).Value);
         }

@@ -55,7 +55,7 @@ namespace org.apache.lucene.util
 
         public void SetValue(string inValue)
         {
-            ;
+            ValueinValue;
         }
     }
 }

@@ -27,7 +27,7 @@ Run();
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
 
             var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0];
-            var tmpCodeLine1 = (tmpMethodeContent.Code.CodeEntries[0] as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as MethodeCall;
+            var tmpCodeLine1 = (tmpMethodeContent.Code.CodeEntries[0]) as MethodeCall;
             Assert.AreEqual("Run", tmpCodeLine1.Name);
         }
 
@@ -46,7 +46,7 @@ Run(inData);
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
 
             var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0];
-            var tmpCodeLine1 = (tmpMethodeContent.Code.CodeEntries[0] as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as MethodeCall;
+            var tmpCodeLine1 = (tmpMethodeContent.Code.CodeEntries[0] as MethodeCall);
             Assert.AreEqual("Run", tmpCodeLine1.Name);
             var tmpEntry = tmpCodeLine1.Parameter[0].CodeEntries[0] as ConstantValue;
             Assert.AreEqual("inData", tmpEntry.Value);
@@ -67,7 +67,7 @@ this.Run();
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
 
             var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0];
-            var tmpVarAccess = (tmpMethodeContent.Code.CodeEntries[0] as StatementCode).StatementCodeBlocks[0].CodeEntries[0] as VariableAccess;
+            var tmpVarAccess = (tmpMethodeContent.Code.CodeEntries[0]) as VariableAccess;
             Assert.AreEqual("this", (tmpVarAccess.Access as ConstantValue).Value);
             var tmpMethode = (tmpVarAccess.Child as VariableAccess).Access as MethodeCall;
             Assert.AreEqual("Run", tmpMethode.Name);
