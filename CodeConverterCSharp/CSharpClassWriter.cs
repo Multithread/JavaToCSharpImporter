@@ -162,6 +162,7 @@ namespace CodeConverterCSharp
                 {
                     AddCodeEntryToString(inOutput, tmpEntry);
                 }
+                inOutput.Append(" = ");
                 foreach (var tmpEntry in tmpFieldVal.ValueToSet.CodeEntries)
                 {
                     AddCodeEntryToString(inOutput, tmpEntry);
@@ -176,7 +177,7 @@ namespace CodeConverterCSharp
                     inOutput.Append(".");
                     AddCodeEntryToString(inOutput, tmpVarAccess.Child);
                 }
-                else
+                else if (tmpVarAccess.BaseDataSource != null)
                 {
                     inOutput.Append(" = ");
                     AddCodeEntryToString(inOutput, tmpVarAccess.BaseDataSource);
