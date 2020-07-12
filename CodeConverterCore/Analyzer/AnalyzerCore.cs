@@ -100,6 +100,22 @@ namespace CodeConverterCore.Analyzer
                         ManageTypeContainer(tmpTypeDictionary, tmpGenericType, tmpClass);
                     }
                 }
+                foreach (var tmpInnerClass in tmpClass.InnerClasses)
+                {
+                    for (var tmpI = 0; tmpI < tmpInnerClass.MethodeList.Count; tmpI++)
+                    {
+                        var tmpMethode = tmpInnerClass.MethodeList[tmpI];
+                        ManageTypeContainer(tmpTypeDictionary, tmpMethode.ReturnType, tmpInnerClass);
+                        foreach (var tmpParamType in tmpMethode.Parameter)
+                        {
+                            ManageTypeContainer(tmpTypeDictionary, tmpParamType.Type, tmpInnerClass);
+                        }
+                        foreach (var tmpGenericType in tmpMethode.GenericTypes)
+                        {
+                            ManageTypeContainer(tmpTypeDictionary, tmpGenericType, tmpInnerClass);
+                        }
+                    }
+                }
             }
             //);
 
@@ -196,7 +212,7 @@ namespace CodeConverterCore.Analyzer
                         var tmpVar = inNameFinder.VariableList?.FirstOrDefault(inItem => inItem.Name == tmpVal);
                         if (tmpVar != null)
                         {
-                            tmpConstant.Value = tmpVar.Type.Type;
+                            tmpConstant.Value = tmpVar;
                             tmpConstant.Type = tmpVar.Type;
                         }
                         else
@@ -205,7 +221,7 @@ namespace CodeConverterCore.Analyzer
                             var tmpField = inNameFinder.Class.FieldList?.FirstOrDefault(inItem => inItem.Name == tmpVal);
                             if (tmpField != null)
                             {
-                                tmpConstant.Value = tmpField.Type.Type;
+                                tmpConstant.Value = tmpField;
                                 tmpConstant.Type = tmpField.Type;
                             }
                             else
@@ -238,11 +254,11 @@ namespace CodeConverterCore.Analyzer
                 var tmpFieldVal = inCodeEntry as SetFieldWithValue;
                 foreach (var tmpEntry in tmpFieldVal.VariableToAccess.CodeEntries)
                 {
-                    CodeEntryHandling(tmpEntry, inNameFinder);
+                    CodeEntryHandling(tmpEntry, new FieldNameFinder(inNameFinder));
                 }
                 foreach (var tmpEntry in tmpFieldVal.ValueToSet.CodeEntries)
                 {
-                    CodeEntryHandling(tmpEntry, inNameFinder);
+                    CodeEntryHandling(tmpEntry, new FieldNameFinder(inNameFinder));
                 }
             }
             else if (inCodeEntry is VariableAccess)
@@ -253,14 +269,14 @@ namespace CodeConverterCore.Analyzer
                 {
                     CodeEntryHandling(tmpVarAccess.Child, inNameFinder);
                 }
-                else
+                else if (tmpVarAccess.BaseDataSource != null)
                 {
                     CodeEntryHandling(tmpVarAccess.BaseDataSource, inNameFinder);
                 }
             }
             else if (inCodeEntry is ReturnCodeEntry)
             {
-                foreach(var tmpEntry in (inCodeEntry as ReturnCodeEntry).CodeEntries)
+                foreach (var tmpEntry in (inCodeEntry as ReturnCodeEntry).CodeEntries)
                 {
                     CodeEntryHandling(tmpEntry, inNameFinder);
                 }
@@ -279,6 +295,10 @@ namespace CodeConverterCore.Analyzer
         /// <param name="inClass"></param>
         private void ManageTypeContainer(Dictionary<string, List<BaseType>> inDictionary, TypeContainer inTypeContainer, ClassContainer inClass)
         {
+            if (inTypeContainer == null)
+            {
+                return;
+            }
             if (inDictionary.TryGetValue(inTypeContainer.Name, inItem => inClass.FullUsingList.Contains(inItem.Namespace), out var tmpResult))
             {
                 inTypeContainer.Type = tmpResult;
@@ -286,11 +306,16 @@ namespace CodeConverterCore.Analyzer
             else
             {
                 //TODO checke if Unknown Type is used elsewhere with matching Namespaces
-
-                //Create new Unknown Type
-                var tmpUnknownType = new UnknownTypeClass(inTypeContainer.Name);
-                tmpUnknownType.PossibleNamespace.AddRange(inClass.FullUsingList);
-                UnknownTypes.Add(tmpUnknownType);
+                var tmpUnknownType = UnknownTypes.FirstOrDefault(
+                    inItem=> inItem.Type.Name== inTypeContainer.Name);
+                if (tmpUnknownType == null)
+                {
+                    //Create new Unknown Type
+                    tmpUnknownType = new UnknownTypeClass(inTypeContainer.Name);
+                    tmpUnknownType.PossibleNamespace.AddRange(inClass.FullUsingList);
+                    UnknownTypes.Add(tmpUnknownType);
+                }
+                inTypeContainer.Type = tmpUnknownType.Type;
                 //TODO? Run Warning Event to Settings?
             }
             //Generic sub-Types handling

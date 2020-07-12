@@ -66,6 +66,7 @@
     <Compile Include="Enum\ClayyTypeEnum.cs" />
     <Compile Include="Helper\Create.cs" />
     <Compile Include="Helper\RegexHelper.cs" />
+    <Compile Include="Interface\IName.cs" />
     <Compile Include="Model\BaseType.cs" />
     <Compile Include="Model\ClassContainer.cs" />
     <Compile Include="Model\CodeState.cs" />

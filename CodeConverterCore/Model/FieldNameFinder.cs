@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CodeConverterCore.Model
 {
@@ -13,6 +9,12 @@ namespace CodeConverterCore.Model
         public FieldNameFinder(ClassContainer inClass)
         {
             Class = inClass;
+        }
+
+        public FieldNameFinder(FieldNameFinder inParentFinder)
+        {
+            Class = inParentFinder.Class;
+            VariableList = inParentFinder.VariableList;
         }
 
         public ClassContainer Class { get; set; }

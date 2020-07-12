@@ -2,7 +2,7 @@
 
 namespace CodeConverterCore.Model
 {
-    public class VariableDeclaration : ICodeEntry
+    public class VariableDeclaration : ICodeEntry, IName
     {
         /// <summary>
         /// Type of the Declaring Variable

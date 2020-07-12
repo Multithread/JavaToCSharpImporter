@@ -141,6 +141,10 @@ namespace CodeConverterCSharp
                 {
                     inOutput.Append($"{(tmpConstant.Value as BaseType).Name}");
                 }
+                else if (tmpConstant.Value is IName)
+                {
+                    inOutput.Append($"{(tmpConstant.Value as IName).Name}");
+                }
                 else
                 {
                     inOutput.Append($"{tmpConstant.Value}");
