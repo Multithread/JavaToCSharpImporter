@@ -18,13 +18,20 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
         {
             var tmpIniData = DataHelper.LoadIni("");
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { JavaBits }, tmpIniData);
-            new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
+            var tmpAnalyerSettings = new AnalyzerSettings();
+            var tmpUnknownTypeCounter = 0;
+            tmpAnalyerSettings.UnknownTypeAdded += (UnknownTypeClass inItem) => { tmpUnknownTypeCounter++; };
+            new AnalyzerCore().LinkProjectInformation(tmpObjectInformation, tmpAnalyerSettings);
 
             new NamingConvertionHelper(new ConverterLucene()).ConvertProject(tmpObjectInformation);
             var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList();
             Assert.AreEqual(1, tmpResult.Count);
             Assert.AreEqual("Bits", tmpResult[0].FullName);
             //Check for inner classes existing
+
+            //Expecting four unknown Types: true, false, int and boolean, two which I have not yet added a Pre-Runtime class
+            Assert.AreEqual(4, tmpUnknownTypeCounter);
+
             Assert.AreEqual(true, tmpResult[0].Content.Contains("MatchAllBits"));
 
             Assert.AreEqual(true, tmpResult[0].Content.Contains("this.len = inLen;"));

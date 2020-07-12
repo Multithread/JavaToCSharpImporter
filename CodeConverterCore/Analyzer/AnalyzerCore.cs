@@ -314,6 +314,7 @@ namespace CodeConverterCore.Analyzer
                     tmpUnknownType = new UnknownTypeClass(inTypeContainer.Name);
                     tmpUnknownType.PossibleNamespace.AddRange(inClass.FullUsingList);
                     UnknownTypes.Add(tmpUnknownType);
+                    Settings.InvokeUnknownTypeAdded(tmpUnknownType);
                 }
                 inTypeContainer.Type = tmpUnknownType.Type;
                 //TODO? Run Warning Event to Settings?

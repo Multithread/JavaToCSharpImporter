@@ -1,7 +1,8 @@
-﻿using System;
+﻿using System.Diagnostics;
 
 namespace CodeConverterCore.Model
 {
+    [DebuggerDisplay("{Namespace}.{Name}")]
     public class BaseType
     {
         public BaseType(string inName, string inNamespace)
