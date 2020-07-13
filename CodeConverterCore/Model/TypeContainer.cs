@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeConverterCore.Interface;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -35,6 +36,11 @@ namespace CodeConverterCore.Model
         /// Is it an Array
         /// </summary>
         public bool IsArray { get; set; }
+
+        /// <summary>
+        /// Inizialising Array Data
+        /// </summary>
+        public ICodeEntry ArrayInizialiser { get; set; }
 
         /// <summary>
         /// Convert String inTo usefull Type

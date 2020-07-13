@@ -28,7 +28,6 @@ namespace CodeConverterCore.Helper
             var tmpFieldContainer=new FieldContainer()
             {
                 Name = inFieldName,
-                DefaultValue = inDefaultValue,
                 Type = new TypeContainer { Type = inType, Name = inType.Name }
             };
             inClass.FieldList.Add(tmpFieldContainer);

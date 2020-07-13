@@ -200,7 +200,7 @@ namespace CodeConverterJava.Model
         /// </summary>
         /// <param name="inCodeBlock"></param>
         /// <param name="inBlockStatement"></param>
-        private void HandleExpressionContext(CodeBlock inCodeBlock, ExpressionContext inBlockStatement, VariableDeclaration inVariable)
+        public void HandleExpressionContext(CodeBlock inCodeBlock, ExpressionContext inBlockStatement, VariableDeclaration inVariable = null)
         {
             if (inBlockStatement == null)
             {
@@ -323,6 +323,14 @@ namespace CodeConverterJava.Model
                         MethodeCall tmpMethodeCall = HandleMethodeCall(tmpValue);
                         inCodeBlock.CodeEntries.Add(tmpMethodeCall);
                     }
+                    else if (tmpChildList.Count == 2)
+                    {
+                        if (tmpChildList[0].GetText() != "new")
+                        {
+                            throw new NotImplementedException("Not done yet");
+                        }
+                        inCodeBlock.CodeEntries.Add(HandleCreatorContext(tmpChildList[1] as CreatorContext));
+                    }
                     else
                     {
                         throw new NotImplementedException("Not done yet");
@@ -330,6 +338,35 @@ namespace CodeConverterJava.Model
                 }
             }
 
+        }
+
+        private NewObjectDeclaration HandleCreatorContext(CreatorContext inContext)
+        {
+            var tmpEntry = new NewObjectDeclaration();
+            ConstantValue tmpValue = null;
+            if (inContext.createdName() != null)
+            {
+                tmpValue = new ConstantValue();
+                tmpValue.Type = new TypeContainer() { Name = inContext.createdName().GetText() };
+                tmpEntry.InnerCode = tmpValue;
+            }
+            if (inContext.nonWildcardTypeArguments() != null)
+            {
+                throw new NotImplementedException("Not done yet");
+            }
+            if (inContext.classCreatorRest() != null)
+            {
+                throw new NotImplementedException("Not done yet");
+            }
+            if (inContext.arrayCreatorRest() != null)
+            {
+                tmpValue.Type.IsArray = true;
+                var tmpBlock = new CodeBlock();
+                HandleExpressionContext(tmpBlock, inContext.arrayCreatorRest().expression()[0]);
+                var tmpArrayInizialiser = tmpBlock.CodeEntries[0];
+                tmpValue.Type.ArrayInizialiser = tmpArrayInizialiser;
+            }
+            return tmpEntry;
         }
 
         private MethodeCall HandleMethodeCall(MethodCallContext inMethodeCallContext)

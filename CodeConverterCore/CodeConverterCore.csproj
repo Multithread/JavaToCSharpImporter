@@ -88,6 +88,7 @@
     <Compile Include="Model\CodeBlock.cs" />
     <Compile Include="Model\CodeExpression.cs" />
     <Compile Include="Model\ConstantValue.cs" />
+    <Compile Include="Model\NewObjectDeclaration.cs" />
     <Compile Include="Model\ReturnCodeEntry.cs" />
     <Compile Include="Model\SetFieldWithValue.cs" />
     <Compile Include="Model\StatementCode.cs" />

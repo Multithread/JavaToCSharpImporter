@@ -1,5 +1,4 @@
-﻿using Antlr4.Runtime.Tree;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace CodeConverterCore.Model
@@ -24,16 +23,6 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Default Wert
         /// </summary>
-        public string DefaultValue { get; set; }
-        
-        /// <summary>
-        /// Default Wert
-        /// </summary>
-        public IParseTree AntlrDefaultValue { get; set; }
-
-        /// <summary>
-        /// Existiert ein Default wert?
-        /// </summary>
-        public bool HasDefaultValue { get; set; }
+        public CodeBlock DefaultValue { get; set; }
     }
 }

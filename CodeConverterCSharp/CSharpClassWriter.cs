@@ -87,7 +87,14 @@ namespace CodeConverterCSharp
         private void AddFieldtoString(StringBuilder inOutput, FieldContainer inField, int inIndentDepth)
         {
             AddComment(inOutput, inField.Comment, inIndentDepth, true);
-            var tmpFieldString = $"{ReturnModifiersOrdered(inField.ModifierList)} {CreateStringFromType(inField.Type)} {inField.Name};";
+            var tmpFieldString = $"{ReturnModifiersOrdered(inField.ModifierList)} {CreateStringFromType(inField.Type)} {inField.Name}";
+            if (inField.DefaultValue != null)
+            {
+                var tmpSb = new StringBuilder();
+                AddCodeBlockToString(tmpSb, inField.DefaultValue, 0);
+                tmpFieldString = $"{tmpFieldString} = {tmpSb}";
+            }
+            tmpFieldString += ";";
 
             inOutput.AppendLine(CreateIndent(inIndentDepth) + tmpFieldString);
         }
@@ -96,7 +103,10 @@ namespace CodeConverterCSharp
         {
             AddComment(inOutput, inMethode.Comment, inIndentDepth, true);
             var tmpMethodeString = $"{ReturnModifiersOrdered(inMethode.ModifierList)} {CreateStringFromType(inMethode.ReturnType)} {inMethode.Name}(";
-            tmpMethodeString += string.Join("", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)} {inItem.Name}{(inItem.HasDefaultValue ? " = " + inItem.DefaultValue : "")}")) + ")";
+
+            throw new NotImplementedException("Methode toString error");
+            //tmpMethodeString += string.Join("", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)} {inItem.Name}{(inItem.HasDefaultValue ? " = " + inItem.DefaultValue : "")}")) + ")";
+
             inOutput.AppendLine(CreateIndent(inIndentDepth) + tmpMethodeString);
 
             if (inMethode.Code == null)
@@ -191,6 +201,12 @@ namespace CodeConverterCSharp
                 {
                     AddCodeEntryToString(inOutput, tmpEntry);
                 }
+            }
+            else if (inCodeEntry is NewObjectDeclaration)
+            {
+                var tmpReturn = inCodeEntry as NewObjectDeclaration;
+                inOutput.Append(" new ");
+                AddCodeEntryToString(inOutput, tmpReturn.InnerCode);
             }
             else
             {

@@ -72,20 +72,14 @@ namespace JavaToCSharpConverter.Model
                 var tmpTypeString = TypeToString(inClass, inConverter, tmpRequiredUsings, tmpType);
 
                 tmpStringBuilder.Append($"{string.Join(" ", inConverter.MapAndSortAttributes(tmpField.ModifierList, true))} {tmpTypeString} {tmpField.Name}");
-                if (tmpField.HasDefaultValue)
+                if (tmpField.DefaultValue != null)
                 {
-                    if (string.IsNullOrEmpty(tmpField.DefaultValue))
-                    {
-                        //TODO Methode runner for ANTLR
-                        tmpStringBuilder.Append($" = ");
+                    throw new NotImplementedException("Field Default Vlaue");
+                    //TODO Methode runner for ANTLR
+                    tmpStringBuilder.Append($" = ");
 
-                        RewriteAntlrFunctionCode(tmpStringBuilder, tmpField.AntlrDefaultValue, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
-                        tmpStringBuilder.Append(";");
-                    }
-                    else
-                    {
-                        tmpStringBuilder.Append($" = {tmpField.DefaultValue}");
-                    }
+                    RewriteAntlrFunctionCode(tmpStringBuilder, null, inClass, inConverter, tmpRequiredUsings, tmpCodeState);
+                    tmpStringBuilder.Append(";");
                 }
                 else
                 {

@@ -281,6 +281,10 @@ namespace CodeConverterCore.Analyzer
                     CodeEntryHandling(tmpEntry, inNameFinder);
                 }
             }
+            else if (inCodeEntry is NewObjectDeclaration)
+            {
+                CodeEntryHandling((inCodeEntry as NewObjectDeclaration).InnerCode, inNameFinder);
+            }
             else
             {
                 throw new NotImplementedException("Code Entry Type not Implement");

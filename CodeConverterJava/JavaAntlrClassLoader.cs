@@ -312,11 +312,11 @@ namespace CodeConverterJava.Model
                     Name = tmpDeclarator.IDENTIFIER().GetText(),
                     Type = tmpConstDef.typeType().GetText(),
                     Comment = tmpComment,
-                    AntlrDefaultValue = tmpDeclarator.variableInitializer(),
                 };
-                tmpFieldContainer.HasDefaultValue = tmpFieldContainer.AntlrDefaultValue != null;
-                tmpClass.FieldList.Add(tmpFieldContainer);
+                var tmpInizialiser = tmpDeclarator.variableInitializer();
+                tmpFieldContainer.DefaultValue = CreateBlockFromMethodeInizialiser(tmpInizialiser);
 
+                tmpClass.FieldList.Add(tmpFieldContainer);
             }
             else if (tmpBodyPart.classDeclaration() != null)
             {
@@ -348,6 +348,24 @@ namespace CodeConverterJava.Model
             {
 
             }
+        }
+
+        private static CodeBlock CreateBlockFromMethodeInizialiser(VariableInitializerContext tmpInizialiser)
+        {
+            if (tmpInizialiser != null)
+            {
+                var tmpBlock = new CodeBlock();
+                if (tmpInizialiser.arrayInitializer() != null)
+                {
+                    throw new NotImplementedException("Array Inizialiser not implemented");
+                }
+                else
+                {
+                    new JavaMethodeCodeResolver().HandleExpressionContext(tmpBlock, tmpInizialiser.expression(), null);
+                }
+                return tmpBlock;
+            }
+            return null;
         }
 
         /// <summary>
@@ -430,8 +448,7 @@ namespace CodeConverterJava.Model
                         tmpComment = "";
                         if (tmpModifier.variableDeclarators().variableDeclarator().Length > 0)
                         {
-                            tmpFieldContainer.AntlrDefaultValue = tmpModifier.variableDeclarators().variableDeclarator()[0].variableInitializer();
-                            tmpFieldContainer.HasDefaultValue = tmpFieldContainer.AntlrDefaultValue != null;
+                            tmpFieldContainer.DefaultValue = CreateBlockFromMethodeInizialiser(tmpModifier.variableDeclarators().variableDeclarator()[0].variableInitializer());
                         }
                         tmpFieldContainer.ModifierList = tmpModifierList;
                         inClass.FieldList.Add(tmpFieldContainer);
