@@ -35,6 +35,8 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
             Assert.AreEqual(true, tmpResult[0].Content.Contains("MatchAllBits"));
 
             Assert.AreEqual(true, tmpResult[0].Content.Contains("this.len = inLen;"));
+
+            Assert.AreEqual(true, tmpResult[0].Content.Contains("Bits[] EMPTY_ARRAY =  new Bits[0];"));
         }
 
         private string JavaBits = @"/*

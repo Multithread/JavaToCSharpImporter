@@ -93,10 +93,13 @@ namespace CodeConverterCSharp
                 var tmpSb = new StringBuilder();
                 AddCodeBlockToString(tmpSb, inField.DefaultValue, 0);
                 tmpFieldString = $"{tmpFieldString} = {tmpSb}";
+                inOutput.Append(CreateIndent(inIndentDepth) + tmpFieldString);
             }
-            tmpFieldString += ";";
-
-            inOutput.AppendLine(CreateIndent(inIndentDepth) + tmpFieldString);
+            else
+            {
+                tmpFieldString += ";";
+                inOutput.AppendLine(CreateIndent(inIndentDepth) + tmpFieldString);
+            }
         }
 
         private void AddMethodeToString(StringBuilder inOutput, MethodeContainer inMethode, int inIndentDepth)
@@ -104,8 +107,7 @@ namespace CodeConverterCSharp
             AddComment(inOutput, inMethode.Comment, inIndentDepth, true);
             var tmpMethodeString = $"{ReturnModifiersOrdered(inMethode.ModifierList)} {CreateStringFromType(inMethode.ReturnType)} {inMethode.Name}(";
 
-            throw new NotImplementedException("Methode toString error");
-            //tmpMethodeString += string.Join("", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)} {inItem.Name}{(inItem.HasDefaultValue ? " = " + inItem.DefaultValue : "")}")) + ")";
+            tmpMethodeString += string.Join("", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)} {inItem.Name}{(inItem.DefaultValue != null ? " = " + inItem.DefaultValue : "")}")) + ")";
 
             inOutput.AppendLine(CreateIndent(inIndentDepth) + tmpMethodeString);
 
@@ -154,6 +156,21 @@ namespace CodeConverterCSharp
                 else if (tmpConstant.Value is IName)
                 {
                     inOutput.Append($"{(tmpConstant.Value as IName).Name}");
+                }
+                else if (tmpConstant.Value is ClassContainer)
+                {
+                    inOutput.Append($"{tmpConstant.Type.Type.Name}");
+                    if (tmpConstant.Type.IsArray)
+                    {
+                        inOutput.Append("[");
+                        if (tmpConstant.Type.ArrayInizialiser != null)
+                        {
+                            var tmpSb = new StringBuilder();
+                            AddCodeEntryToString(tmpSb, tmpConstant.Type.ArrayInizialiser);
+                            inOutput.Append(tmpSb.ToString());
+                        }
+                        inOutput.Append("]");
+                    }
                 }
                 else
                 {

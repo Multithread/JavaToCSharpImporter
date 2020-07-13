@@ -4,7 +4,6 @@ using CodeConverterCore.Helper;
 using CodeConverterCSharp;
 using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;
-using JavaToCSharpConverter.Model;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +44,7 @@ namespace LuceNET.util
 {
     public interface Bits
     {
-         Bits[] EMPTY_ARRAY = new Bits[0];
+         Bits[] EMPTY_ARRAY =  new Bits[0];
 
     }
 }

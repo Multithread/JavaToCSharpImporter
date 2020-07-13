@@ -124,6 +124,25 @@ namespace CodeConverterCore.Analyzer
             //    tmpClass =>
             foreach (var tmpClass in inLoadedProject.ClassList)
             {
+                for (var tmpI = 0; tmpI < tmpClass.FieldList.Count; tmpI++)
+                {
+                    ManageField(tmpTypeDictionary, tmpClass.FieldList[tmpI], tmpClass);
+                }
+                foreach (var tmpInnerClass in tmpClass.InnerClasses)
+                {
+                    for (var tmpI = 0; tmpI < tmpInnerClass.FieldList.Count; tmpI++)
+                    {
+                        ManageField(tmpTypeDictionary, tmpInnerClass.FieldList[tmpI], tmpInnerClass);
+                    }
+                }
+            }
+            //);
+
+            //Run over all Methode Code to set Variable Types and Access inside the Methode Code 
+            //Parallel.ForEach(inLoadedProject.ClassList, new ParallelOptions { MaxDegreeOfParallelism = inSettings.MaxAmountOfParallelism },
+            //    tmpClass =>
+            foreach (var tmpClass in inLoadedProject.ClassList)
+            {
                 for (var tmpI = 0; tmpI < tmpClass.MethodeList.Count; tmpI++)
                 {
                     ManageCodeBlockOfMethode(tmpClass.MethodeList[tmpI], tmpClass);
@@ -142,6 +161,19 @@ namespace CodeConverterCore.Analyzer
             foreach (var tmpClass in inLoadedProject.ClassList)
             {
                 tmpClass.IsAnalyzed = true;
+            }
+        }
+        /// <summary>
+        /// Manage Code inside Methode 
+        /// </summary>
+        /// <param name="inMethodeContainer"></param>
+        /// <param name="inClass"></param>
+        private void ManageField(Dictionary<string, List<BaseType>> inDictionary, FieldContainer inMethodeContainer, ClassContainer inClass)
+        {
+            ManageTypeContainer(inDictionary, inMethodeContainer.Type, inClass);
+            if (inMethodeContainer.DefaultValue != null)
+            {
+                CodeEntryHandling(inMethodeContainer.DefaultValue.CodeEntries[0], new FieldNameFinder(inClass));
             }
         }
 
@@ -179,7 +211,7 @@ namespace CodeConverterCore.Analyzer
             else if (inCodeEntry is ConstantValue)
             {
                 var tmpConstant = (inCodeEntry as ConstantValue);
-                var tmpVal = tmpConstant.Value?.ToString();
+                var tmpVal = tmpConstant.Value?.ToString() ?? tmpConstant.Type.Name;
                 if (tmpVal.EndsWith("\""))
                 {
                     //Nichts zu Tun
@@ -226,20 +258,31 @@ namespace CodeConverterCore.Analyzer
                             }
                             else
                             {
-                                //TODO Check for Static Class and Namespaces with Class
-                                //throw new NotImplementedException("CodeEntryHandling: ConstantValue Handling not Implemented");
-
-                                //Check for other Unknown Type
-                                var tmpUnknown = UnknownTypes.FirstOrDefault(inItem => inItem.Type.Name == tmpVal);
-                                if (tmpUnknown == null)
+                                //TODO Check for Parent CLass FieldList
+                                var tmpStaticClass = ProjectInformation.ClassList.FirstOrDefault(inItem => inItem.Name == tmpVal
+                                                && inNameFinder.Class.FullUsingList.Contains(inItem.Namespace));
+                                if (tmpStaticClass != null)
                                 {
-                                    tmpUnknown = new UnknownTypeClass(tmpVal)
-                                    {
-                                        PossibleNamespace = inNameFinder.Class.FullUsingList
-                                    };
-                                    Settings.InvokeUnknownTypeAdded(tmpUnknown);
+                                    tmpConstant.Value = tmpStaticClass;
+                                    tmpConstant.Type.Type = tmpStaticClass.Type.Type;
                                 }
-                                tmpConstant.Value = tmpUnknown.Type;
+                                else
+                                {
+                                    //TODO Check for Static Class and Namespaces with Class
+                                    //throw new NotImplementedException("CodeEntryHandling: ConstantValue Handling not Implemented");
+
+                                    //Check for other Unknown Type
+                                    var tmpUnknown = UnknownTypes.FirstOrDefault(inItem => inItem.Type.Name == tmpVal);
+                                    if (tmpUnknown == null)
+                                    {
+                                        tmpUnknown = new UnknownTypeClass(tmpVal)
+                                        {
+                                            PossibleNamespace = inNameFinder.Class.FullUsingList
+                                        };
+                                        Settings.InvokeUnknownTypeAdded(tmpUnknown);
+                                    }
+                                    tmpConstant.Value = tmpUnknown.Type;
+                                }
                             }
                         }
                     }
@@ -311,7 +354,7 @@ namespace CodeConverterCore.Analyzer
             {
                 //TODO checke if Unknown Type is used elsewhere with matching Namespaces
                 var tmpUnknownType = UnknownTypes.FirstOrDefault(
-                    inItem=> inItem.Type.Name== inTypeContainer.Name);
+                    inItem => inItem.Type.Name == inTypeContainer.Name);
                 if (tmpUnknownType == null)
                 {
                     //Create new Unknown Type

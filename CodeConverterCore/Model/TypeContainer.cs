@@ -85,15 +85,15 @@ namespace CodeConverterCore.Model
             {
                 if (Extends.Count > 0)
                 {
-                    return $"{Name} extends {string.Join(", ", Extends)}{(IsArray ? "[]" : "")}";
+                    return $"{Name} extends {string.Join(", ", Extends)}{(IsArray ? $"[{ArrayInizialiser}]" : "")}";
                 }
-                return $"{Name}{(IsArray ? "[]" : "")}";
+                return $"{Name}{(IsArray ? $"[{ArrayInizialiser}]" : "")}";
             }
             if (Extends.Count > 0)
             {
-                return $"{Name}<{string.Join(", ", GenericTypes)} extends {string.Join(", ", Extends)}>{(IsArray ? "[]" : "")}";
+                return $"{Name}<{string.Join(", ", GenericTypes)} extends {string.Join(", ", Extends)}>{(IsArray ? $"[{ArrayInizialiser}]" : "")}";
             }
-            return $"{Name}<{string.Join(", ", GenericTypes)}>{(IsArray ? "[]" : "")}";
+            return $"{Name}<{string.Join(", ", GenericTypes)}>{(IsArray ? $"[{ArrayInizialiser}]" : "")}";
         }
 
         /// <summary>
