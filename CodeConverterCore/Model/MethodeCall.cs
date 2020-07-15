@@ -1,5 +1,4 @@
 ﻿using CodeConverterCore.Interface;
-using System;
 using System.Collections.Generic;
 
 namespace CodeConverterCore.Model
@@ -18,14 +17,13 @@ namespace CodeConverterCore.Model
         /// </summary>
         public List<CodeBlock> Parameter { get; set; } = new List<CodeBlock>();
 
-
         /// <summary>
         /// Return Constant as Type with Value
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return $" {Name} ()";
+            return $" {Name} ({string.Join(",", Parameter)})";
         }
     }
 }

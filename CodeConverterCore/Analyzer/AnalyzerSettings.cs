@@ -1,4 +1,6 @@
-﻿namespace CodeConverterCore.Analyzer
+﻿using CodeConverterCore.Model;
+
+namespace CodeConverterCore.Analyzer
 {
     public class AnalyzerSettings
     {
@@ -10,10 +12,10 @@
         /// </summary>
         public event UnknownTypeHandler UnknownTypeAdded;
 
-        internal void InvokeUnknownTypeAdded(UnknownTypeClass inUnknownType)
+        internal void InvokeUnknownTypeAdded(ClassContainer inUnknownType)
         {
             UnknownTypeAdded?.Invoke(inUnknownType);
         }
-        public delegate void UnknownTypeHandler(UnknownTypeClass inUnknownType);
+        public delegate void UnknownTypeHandler(ClassContainer inUnknownType);
     }
 }

@@ -59,7 +59,8 @@
     <Compile Include="Analyzer\AnalyzerCore.cs" />
     <Compile Include="Analyzer\AnalyzerSettings.cs" />
     <Compile Include="Analyzer\DictionaryHelper.cs" />
-    <Compile Include="Analyzer\UnknownTypeClass.cs" />
+    <Compile Include="Helper\ProjectInformationHelper.cs" />
+    <Compile Include="Model\UnknownTypeClass.cs" />
     <Compile Include="Converter\ConverterBase.cs" />
     <Compile Include="Converter\IConverter.cs" />
     <Compile Include="Converter\NamingConvertionHelper.cs" />

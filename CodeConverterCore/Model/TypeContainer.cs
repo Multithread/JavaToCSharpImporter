@@ -12,6 +12,16 @@ namespace CodeConverterCore.Model
     [DebuggerDisplay("{ToString()}")]
     public class TypeContainer
     {
+        public TypeContainer() { }
+
+        public TypeContainer(string inName)
+        {
+            if (inName.EndsWith("[]") || inName.Contains("extends") || inName.Contains("<"))
+            {
+                throw new Exception("Name not allowed for TypeContainer Name");
+            }
+            Name = inName;
+        }
         /// <summary>
         /// Typename (mostly another Class)
         /// </summary>
@@ -133,5 +143,7 @@ namespace CodeConverterCore.Model
             }
             return true;
         }
+
+        public static TypeContainer Void = new TypeContainer { Type = BaseType.Void };
     }
 }

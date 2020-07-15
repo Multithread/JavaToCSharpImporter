@@ -201,9 +201,10 @@ namespace CodeConverterCore.Analyzer
         /// </summary>
         /// <param name="inOutput"></param>
         /// <param name="inCodeEntry"></param>
-        private void CodeEntryHandling(ICodeEntry inCodeEntry, FieldNameFinder inNameFinder)
+        private TypeContainer CodeEntryHandling(ICodeEntry inCodeEntry, FieldNameFinder inNameFinder, TypeContainer inReturnType = null)
         {
-            if (inCodeEntry == null) { return; }
+            if (inCodeEntry == null) { return null; }
+            TypeContainer tmpReturnType = null;
             if (inCodeEntry is VariableDeclaration)
             {
                 inNameFinder.VariableList.Add(inCodeEntry as VariableDeclaration);
@@ -246,6 +247,8 @@ namespace CodeConverterCore.Analyzer
                         {
                             tmpConstant.Value = tmpVar;
                             tmpConstant.Type = tmpVar.Type;
+                            //TODO load class for Type
+                            inNameFinder.Class = ProjectInformation.ClassFromBaseType(tmpVar.Type.Type);
                         }
                         else
                         {
@@ -255,34 +258,27 @@ namespace CodeConverterCore.Analyzer
                             {
                                 tmpConstant.Value = tmpField;
                                 tmpConstant.Type = tmpField.Type;
+                                //TODO load class for Type
+                                inNameFinder.Class = ProjectInformation.ClassFromBaseType(tmpField.Type.Type);
+
                             }
                             else
                             {
-                                //TODO Check for Parent CLass FieldList
-                                var tmpStaticClass = ProjectInformation.ClassList.FirstOrDefault(inItem => inItem.Name == tmpVal
-                                                && inNameFinder.Class.FullUsingList.Contains(inItem.Namespace));
-                                if (tmpStaticClass != null)
+                                //Check for other Unknown Type
+                                var tmpStaticClassOrUnknown = ProjectInformation.GetClassOrUnknownForType(tmpVal, inNameFinder.Class.FullUsingList);
+                                tmpConstant.Value = tmpStaticClassOrUnknown.Type;
+                                if (tmpConstant.Type != null)
                                 {
-                                    tmpConstant.Value = tmpStaticClass;
-                                    tmpConstant.Type.Type = tmpStaticClass.Type.Type;
+                                    tmpConstant.Type.Type = tmpStaticClassOrUnknown.Type.Type;
                                 }
                                 else
                                 {
-                                    //TODO Check for Static Class and Namespaces with Class
-                                    //throw new NotImplementedException("CodeEntryHandling: ConstantValue Handling not Implemented");
-
-                                    //Check for other Unknown Type
-                                    var tmpUnknown = UnknownTypes.FirstOrDefault(inItem => inItem.Type.Name == tmpVal);
-                                    if (tmpUnknown == null)
-                                    {
-                                        tmpUnknown = new UnknownTypeClass(tmpVal)
-                                        {
-                                            PossibleNamespace = inNameFinder.Class.FullUsingList
-                                        };
-                                        Settings.InvokeUnknownTypeAdded(tmpUnknown);
-                                    }
-                                    tmpConstant.Value = tmpUnknown.Type;
+                                    tmpConstant.Type = tmpStaticClassOrUnknown.Type;
                                 }
+
+                                //TODO Create Interface for both class Types
+                                inNameFinder.Class = tmpStaticClassOrUnknown;
+
                             }
                         }
                     }
@@ -307,10 +303,11 @@ namespace CodeConverterCore.Analyzer
             else if (inCodeEntry is VariableAccess)
             {
                 var tmpVarAccess = inCodeEntry as VariableAccess;
-                CodeEntryHandling(tmpVarAccess.Access, inNameFinder);
+                var tmpNameFinder = new FieldNameFinder(inNameFinder);
+                CodeEntryHandling(tmpVarAccess.Access, tmpNameFinder);
                 if (tmpVarAccess.Child != null)
                 {
-                    CodeEntryHandling(tmpVarAccess.Child, inNameFinder);
+                    CodeEntryHandling(tmpVarAccess.Child, tmpNameFinder);
                 }
                 else if (tmpVarAccess.BaseDataSource != null)
                 {
@@ -328,10 +325,58 @@ namespace CodeConverterCore.Analyzer
             {
                 CodeEntryHandling((inCodeEntry as NewObjectDeclaration).InnerCode, inNameFinder);
             }
+            else if (inCodeEntry is MethodeCall)
+            {
+                var tmpMethodeCall = inCodeEntry as MethodeCall;
+                var tmpParentClass = inNameFinder.Class;
+                while (tmpParentClass != null)
+                {
+                    tmpMethodeCall.MethodeLink = tmpParentClass.MethodeList.FirstOrDefault(inItem => inItem.Name == tmpMethodeCall.Name);
+                    if (tmpMethodeCall.MethodeLink != null)
+                    {
+                        break;
+                    }
+                    var tmpParentSelection = tmpParentClass.InterfaceList
+                        .Select(inItem => ProjectInformation.GetClassForType(inItem.Type.Name, tmpParentClass.FullUsingList))
+                        .FirstOrDefault(inItem => !inItem.ModifierList.Any(inModifier => inModifier == "interface"));
+                    if (tmpParentSelection != null)
+                    {
+                        tmpParentClass = tmpParentSelection;
+                    }
+                    else if (tmpParentClass.Name != "object")
+                    {
+                        //object type laden
+                        tmpParentClass = ProjectInformation.GetClassForType("object", new List<string> { "-" });
+                    }
+                    else
+                    {
+                        tmpParentClass = null;
+                    }
+
+                }
+                if (tmpMethodeCall.MethodeLink == null)
+                {
+                    //TODO Implement Extension Methode finding
+                    if (inNameFinder.Class is UnknownTypeClass)
+                    {
+                        if (tmpMethodeCall.Parameter.Count > 0)
+                        {
+                            throw new NotImplementedException("Unknown Methode on Class");
+                        }
+                        var tmpMethode = Create.AddMethode(inNameFinder.Class, tmpMethodeCall.Name, inReturnType ?? TypeContainer.Void);
+                        tmpMethode.ReturnType = /*inReturnType ??*/ TypeContainer.Void;
+                    }
+                    else
+                    {
+                        throw new NotImplementedException("Unknown Methode on Class");
+                    }
+                }
+            }
             else
             {
                 throw new NotImplementedException("Code Entry Type not Implement");
             }
+            return tmpReturnType;
         }
 
         /// <summary>
@@ -363,7 +408,7 @@ namespace CodeConverterCore.Analyzer
                     UnknownTypes.Add(tmpUnknownType);
                     Settings.InvokeUnknownTypeAdded(tmpUnknownType);
                 }
-                inTypeContainer.Type = tmpUnknownType.Type;
+                inTypeContainer.Type = tmpUnknownType.Type.Type;
                 //TODO? Run Warning Event to Settings?
             }
             //Generic sub-Types handling

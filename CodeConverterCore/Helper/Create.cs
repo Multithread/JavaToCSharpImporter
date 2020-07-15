@@ -25,7 +25,7 @@ namespace CodeConverterCore.Helper
         /// </summary>
         public static FieldContainer AddField(this ClassContainer inClass, string inFieldName, BaseType inType, string inDefaultValue = null, params FieldAttributes[] inAttributes)
         {
-            var tmpFieldContainer=new FieldContainer()
+            var tmpFieldContainer = new FieldContainer()
             {
                 Name = inFieldName,
                 Type = new TypeContainer { Type = inType, Name = inType.Name }
@@ -37,15 +37,16 @@ namespace CodeConverterCore.Helper
         /// <summary>
         /// Add Methode to Class
         /// </summary>
-        public static ClassContainer AddMethode(this ClassContainer inClass, string inMethodeName, TypeContainer inReturnType, params FieldContainer[] inFieldContainer)
+        public static MethodeContainer AddMethode(this ClassContainer inClass, string inMethodeName, TypeContainer inReturnType, params FieldContainer[] inFieldContainer)
         {
-            inClass.AddMethode(new MethodeContainer()
+            var tmpMethode=new MethodeContainer()
             {
                 Name = inMethodeName,
                 ReturnType = inReturnType,
                 Parameter = inFieldContainer.ToList(),
             });
-            return inClass;
+            inClass.AddMethode(tmpMethode);
+            return tmpMethode;
         }
 
         /// <summary>
@@ -74,6 +75,20 @@ namespace CodeConverterCore.Helper
             };
             inParentBlock.CodeEntries.Add(tmpData);
             return inParentBlock;
+        }
+
+        /// <summary>
+        /// Set Value to Variable
+        /// </summary>
+        public static MethodeCall CallMethode(this CodeBlock inParentBlock, string inName, params CodeBlock[] inParamEntries)
+        {
+            var tmpData = new MethodeCall()
+            {
+                Name = inName,
+                Parameter = inParamEntries.ToList()
+            };
+            inParentBlock.CodeEntries.Add(tmpData);
+            return tmpData;
         }
     }
 }

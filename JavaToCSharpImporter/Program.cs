@@ -7,8 +7,8 @@ namespace JavaToCSharpConverter
 
         static void Main(string[] args)
         {
-            var tmpJavaSourcePath = @"C:\Data\LucenTestData\";
-            var tmpCSharpOutputpath = @"Z:\Result\Code\";
+            var tmpJavaSourcePath = @"C:\Data\LucenTestData\Working\";
+            var tmpCSharpOutputpath = @"C:\Data\LucenTestData\Result\";
 
             ConverterHelper.ConvertFiles(tmpJavaSourcePath, tmpCSharpOutputpath);
         }

@@ -22,7 +22,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// All Known Types(Interface, Class) with the spezific Namespace they are in
         /// </summary>
-        public Dictionary<string, List<BaseType>>  KnownTypeDictionary = new Dictionary<string, List<BaseType>>();
+        public Dictionary<string, List<BaseType>> KnownTypeDictionary = new Dictionary<string, List<BaseType>>();
 
         /// <summary>
         /// ObjectName, Namespaces
@@ -86,9 +86,55 @@ namespace CodeConverterCore.Model
         /// </summary>
         public List<string> MissingClassList = new List<string>();
 
-        internal object ClassesForType(string inType)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inType"></param>
+        /// <returns>null if no Matching class is found</returns>
+        public ClassContainer ClassForNameAndNamespaces(string inKey, List<string> inNamespaceList)
         {
-            throw new NotImplementedException();
+            if (!ClassDict.TryGetValue(inKey, out var tmpClassList)){
+                return null;
+            }
+            return tmpClassList.FirstOrDefault(inItem => inNamespaceList.Contains(inItem.Namespace));
+        }
+
+        /// <summary>
+        /// Return Class for the known BaseType
+        /// </summary>
+        /// <param name="inType"></param>
+        /// <returns>null if no Matching class is found</returns>
+        public ClassContainer ClassFromBaseType(BaseType inType)
+        {
+            if (!ClassDict.TryGetValue(inType.Name, out var tmpClassList)){
+                return null;
+            }
+            return tmpClassList.FirstOrDefault(inItem => inItem.Type.Type == inType);
+        }
+
+        /// <summary>
+        /// List of not known types
+        /// </summary>
+        private List<UnknownTypeClass> UnknownTypes = new List<UnknownTypeClass>();
+
+        /// <summary>
+        /// Get Unknown Type for Key and Namespace
+        /// </summary>
+        /// <param name="inType"></param>
+        /// <returns>null if no Matching class is found</returns>
+        public UnknownTypeClass UnknownClassForNameAndNamespaces(string inKey, List<string> inNamespaceList)
+        {
+            return UnknownTypes.FirstOrDefault(inItem => inItem.Type.Name == inKey
+            && inItem.PossibleNamespace.Any(inNamespace => inNamespaceList.Contains(inNamespace)));
+        }
+
+        /// <summary>
+        /// Add Unknonw Class to Project
+        /// </summary>
+        /// <param name="inClass"></param>
+        public void AddUnknownClass(UnknownTypeClass inClass)
+        {
+            UnknownTypes.Add(inClass);
         }
     }
 }

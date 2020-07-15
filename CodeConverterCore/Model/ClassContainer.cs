@@ -8,7 +8,7 @@ namespace CodeConverterCore.Model
     /// <summary>
     /// Definition einer Klasse
     /// </summary>
-    [DebuggerDisplay("{Namespace}: {Name}")]
+    [DebuggerDisplay("{Namespace}: {Type}")]
     public class ClassContainer
     {
         /// <summary>
@@ -83,7 +83,7 @@ namespace CodeConverterCore.Model
         /// Loaded and Unknown Classes do net to be put into Output
         /// </summary>
         public ClassTypeEnum ClassType { get; set; } = ClassTypeEnum.Normal;
-                
+
         /// <summary>
         /// CHeck for Empty
         /// </summary>

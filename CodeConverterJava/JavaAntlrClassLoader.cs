@@ -97,7 +97,7 @@ namespace CodeConverterJava.Model
                 if (tmpChild is IClassAndInterfaceBaseData)
                 {
                     var tmpContext = tmpChild as IClassAndInterfaceBaseData;
-                    tmpClass.Type = tmpContext.IDENTIFIER().GetText();
+                    tmpClass.Type = new TypeContainer(tmpContext.IDENTIFIER().GetText());
 
                     if (tmpContext.typeParameters() != null)
                     {
@@ -106,7 +106,7 @@ namespace CodeConverterJava.Model
                         var tmpExtends = tmpContext.EXTENDS()?.GetText();
                         if (tmpExtends != null)
                         {
-                            tmpClass.InterfaceList.Add(new TypeContainer { Name = tmpExtends });
+                            tmpClass.InterfaceList.Add(new TypeContainer(tmpExtends));
                         }
                     }
                 }
@@ -128,7 +128,7 @@ namespace CodeConverterJava.Model
                         {
                             ResolveInterfaceDeclaration(tmpClass, tmpComment, tmpSubChild);
                             //An Interface has no Implementation of an Methode. 
-                            tmpClass.MethodeList.ForEach(inItem => inItem.AntlrCode = null);
+                            //tmpClass.MethodeList.ForEach(inItem => inItem.AntlrCode = null);
                         }
                         else if (tmpSubChild is ErrorNodeImpl)
                         {
@@ -170,7 +170,7 @@ namespace CodeConverterJava.Model
                 if (tmpGenericClassDeclarationChild is TypeParameterContext)
                 {
                     var tmpParam = tmpGenericClassDeclarationChild as TypeParameterContext;
-                    tmpCurrentGenericType = new TypeContainer { Name = tmpParam.IDENTIFIER().GetText() };
+                    tmpCurrentGenericType = new TypeContainer(tmpParam.IDENTIFIER().GetText());
                     tmpReturnTypes.Add(tmpCurrentGenericType);
                     if (tmpParam.annotation().Length > 0 || tmpParam.EXTENDS() != null)
                     {
@@ -194,8 +194,7 @@ namespace CodeConverterJava.Model
                             tmpCurrentGenericType.Name = tmpType.IDENTIFIER(0).GetText();
                             foreach (var tmpTypeArgument in tmpType.typeArguments().SelectMany(inItem => inItem.typeArgument()))
                             {
-                                var tmpGenericInnerType = new TypeContainer();
-                                tmpGenericInnerType.Name = tmpTypeArgument.GetText();
+                                var tmpGenericInnerType = new TypeContainer(tmpTypeArgument.GetText());
                                 tmpCurrentGenericType.GenericTypes.Add(tmpGenericInnerType);
                                 //TODO Handling of Stacked Generics
                             }
@@ -227,10 +226,12 @@ namespace CodeConverterJava.Model
                         else if (tmpGEnericText == ">")
                         {
                             //TODO Handling of Stacked Generics
+                            throw new NotImplementedException($"Unknown Type inside Generic Class Header as Class {tmpClass.Name}");
                         }
                         else if (tmpGEnericText == "<")
                         {
                             //TODO Handling of Stacked Generics
+                            throw new NotImplementedException($"Unknown Type inside Generic Class Header as Class {tmpClass.Name}");
                         }
                         else if (tmpGEnericText == ",")
                         {
@@ -262,6 +263,51 @@ namespace CodeConverterJava.Model
             return tmpReturnTypes;
         }
         private static List<string> TypeNonNumberChars = new List<string>() { "[", "]", "<", ">" };
+
+        private static TypeContainer GetTypeContainer(TypeTypeContext inTypeContext)
+        {
+            var tmpTypeContainer = new TypeContainer();
+            if (inTypeContext == null)
+            {
+                return TypeContainer.Void;
+            }
+            if (inTypeContext.primitiveType() != null)
+            {
+                throw new NotImplementedException($"Unknown TypeContext: " + inTypeContext.GetText());
+            }
+            else if (inTypeContext.annotation() != null)
+            {
+                throw new NotImplementedException($"Unknown TypeContext: " + inTypeContext.GetText());
+            }
+            else if (inTypeContext.classOrInterfaceType() != null)
+            {
+                var tmpClassType = inTypeContext.classOrInterfaceType();
+                tmpTypeContainer.Name = tmpClassType.IDENTIFIER(0).GetText();
+                if (tmpClassType.IDENTIFIER().Length > 1)
+                {
+                    throw new NotImplementedException($"Unknown TypeContext: to many identifier");
+                }
+                foreach (var tmpArg in tmpClassType.typeArguments())
+                {
+                    foreach (var tmpTypeArg in tmpArg.typeArgument())
+                    {
+                        var tmpGenericType = GetTypeContainer(tmpTypeArg.typeType());
+                        if (tmpTypeArg.EXTENDS() != null)
+                        {
+                            throw new NotImplementedException($"TypeArgument EXTENDS handling");
+                        }
+                        if (tmpTypeArg.SUPER() != null)
+                        {
+                            throw new NotImplementedException($"TypeArgument SUPER handling");
+                        }
+                        tmpTypeContainer.GenericTypes.Add(tmpGenericType);
+                    }
+                }
+            }
+
+            return tmpTypeContainer;
+        }
+
         /// <summary>
         /// Resolve an Interface Declaration
         /// </summary>
@@ -278,7 +324,7 @@ namespace CodeConverterJava.Model
                 var tmpMethode = new MethodeContainer
                 {
                     Name = tmpIntDec.IDENTIFIER().GetText(),
-                    ReturnType = tmpIntDec.typeTypeOrVoid().GetText(),
+                    ReturnType = GetTypeContainer(tmpIntDec.typeTypeOrVoid().typeType()),
                     Comment = tmpComment,
                     AntlrCode = tmpIntDec.methodBody(),
                 };
@@ -332,10 +378,10 @@ namespace CodeConverterJava.Model
                     //Fill Type Parameters
                     foreach (var tmpParam in tmpBodyPart.classDeclaration().typeParameters().typeParameter())
                     {
-                        var tmpInnerType = (TypeContainer)tmpParam.IDENTIFIER().GetText();
+                        var tmpInnerType = new TypeContainer(tmpParam.IDENTIFIER().GetText());
                         if (tmpParam.annotation().Length > 0 || tmpParam.EXTENDS() != null)
                         {
-
+                            throw new NotImplementedException("Type Param Fill error");
                         }
                         tmpSubClass.Type.GenericTypes.Add(tmpInnerType);
                     }
@@ -375,7 +421,7 @@ namespace CodeConverterJava.Model
         /// <param name="inClassContext"></param>
         private static void FillClassContext(ClassContainer inClass, ClassDeclarationContext inClassContext)
         {
-            inClass.InterfaceList.AddRange(inClassContext.typeList().GetChildren().Select(inItem => new TypeContainer { Name = inItem.GetText() }));
+            inClass.InterfaceList.AddRange(inClassContext.typeList().GetChildren().Select(inItem => new TypeContainer(inItem.GetText())));
             inClass.ModifierList.Add("class");
             var tmpComment = "";
 
@@ -607,10 +653,7 @@ namespace CodeConverterJava.Model
                         tmpNewMethode.Type = tmpParam.typeType().classOrInterfaceType().IDENTIFIER(0).GetText();
                         foreach (var tmpGeneric in tmpParam.typeType().classOrInterfaceType().typeArguments().SelectMany(inItem => inItem.typeArgument()))
                         {
-                            var tmpType = new TypeContainer
-                            {
-                                Name = tmpGeneric.GetChild(0).GetText(),
-                            };
+                            var tmpType = new TypeContainer(tmpGeneric.GetChild(0).GetText());
                             if (tmpGeneric.EXTENDS() != null)
                             {
                                 tmpType.Extends.Add(tmpGeneric.typeType().GetText());

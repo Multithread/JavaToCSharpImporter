@@ -9,6 +9,7 @@ namespace CodeConverterCore.Model
     /// </summary>
     public class MethodeContainer
     {
+        public MethodeContainer() { }
         /// <summary>
         /// Name of the Methode
         /// </summary>
