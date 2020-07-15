@@ -29,6 +29,8 @@ public interface Accountable{
 
             var tmpClass1 = tmpProjectInformation.ClassList[0];
             Assert.AreEqual("getChildResources", tmpClass1.MethodeList[0].Name);
+
+            Assert.AreEqual(1, tmpProjectInformation.GetAllUnknownTypes().Count);
         }
     }
 }

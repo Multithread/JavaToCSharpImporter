@@ -115,7 +115,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// List of not known types
         /// </summary>
-        private List<UnknownTypeClass> UnknownTypes = new List<UnknownTypeClass>();
+        private List<UnknownTypeClass> _UnknownTypeClassList = new List<UnknownTypeClass>();
 
         /// <summary>
         /// Get Unknown Type for Key and Namespace
@@ -124,7 +124,7 @@ namespace CodeConverterCore.Model
         /// <returns>null if no Matching class is found</returns>
         public UnknownTypeClass UnknownClassForNameAndNamespaces(string inKey, List<string> inNamespaceList)
         {
-            return UnknownTypes.FirstOrDefault(inItem => inItem.Type.Name == inKey
+            return _UnknownTypeClassList.FirstOrDefault(inItem => inItem.Type.Name == inKey
             && inItem.PossibleNamespace.Any(inNamespace => inNamespaceList.Contains(inNamespace)));
         }
 
@@ -134,7 +134,18 @@ namespace CodeConverterCore.Model
         /// <param name="inClass"></param>
         public void AddUnknownClass(UnknownTypeClass inClass)
         {
-            UnknownTypes.Add(inClass);
+            _UnknownTypeClassList.Add(inClass);
+        }
+
+        /// <summary>
+        /// Get all Unknown Types from the Analyzer to be used later
+        /// </summary>
+        /// <returns></returns>
+        public List<UnknownTypeClass> GetAllUnknownTypes()
+        {
+            var tmpList=new List<UnknownTypeClass>();
+            tmpList.AddRange(_UnknownTypeClassList);
+            return tmpList;
         }
     }
 }

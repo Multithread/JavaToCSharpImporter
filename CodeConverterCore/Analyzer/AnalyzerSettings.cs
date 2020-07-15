@@ -12,10 +12,10 @@ namespace CodeConverterCore.Analyzer
         /// </summary>
         public event UnknownTypeHandler UnknownTypeAdded;
 
-        internal void InvokeUnknownTypeAdded(ClassContainer inUnknownType)
+        internal void InvokeUnknownTypeAdded(UnknownTypeClass inUnknownType)
         {
             UnknownTypeAdded?.Invoke(inUnknownType);
         }
-        public delegate void UnknownTypeHandler(ClassContainer inUnknownType);
+        public delegate void UnknownTypeHandler(UnknownTypeClass inUnknownType);
     }
 }

@@ -282,6 +282,7 @@ namespace CodeConverterCore.Analyzer
                             }
                         }
                     }
+                    tmpReturnType = tmpConstant.Type;
                 }
             }
             else if (inCodeEntry is StatementCode)
@@ -304,14 +305,14 @@ namespace CodeConverterCore.Analyzer
             {
                 var tmpVarAccess = inCodeEntry as VariableAccess;
                 var tmpNameFinder = new FieldNameFinder(inNameFinder);
-                CodeEntryHandling(tmpVarAccess.Access, tmpNameFinder);
+                tmpReturnType = CodeEntryHandling(tmpVarAccess.Access, tmpNameFinder);
                 if (tmpVarAccess.Child != null)
                 {
-                    CodeEntryHandling(tmpVarAccess.Child, tmpNameFinder);
+                    CodeEntryHandling(tmpVarAccess.Child, tmpNameFinder, inReturnType);
                 }
                 else if (tmpVarAccess.BaseDataSource != null)
                 {
-                    CodeEntryHandling(tmpVarAccess.BaseDataSource, inNameFinder);
+                    CodeEntryHandling(tmpVarAccess.BaseDataSource, inNameFinder, inReturnType);
                 }
             }
             else if (inCodeEntry is ReturnCodeEntry)
@@ -365,6 +366,7 @@ namespace CodeConverterCore.Analyzer
                         }
                         var tmpMethode = Create.AddMethode(inNameFinder.Class, tmpMethodeCall.Name, inReturnType ?? TypeContainer.Void);
                         tmpMethode.ReturnType = /*inReturnType ??*/ TypeContainer.Void;
+                        tmpReturnType = tmpMethode.ReturnType;
                     }
                     else
                     {

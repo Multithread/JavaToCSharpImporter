@@ -1,6 +1,7 @@
 ﻿using CodeConverterCore.Analyzer;
 using CodeConverterCore.Converter;
 using CodeConverterCore.Helper;
+using CodeConverterCore.Model;
 using CodeConverterCSharp;
 using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;

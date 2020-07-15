@@ -39,12 +39,12 @@ namespace CodeConverterCore.Helper
         /// </summary>
         public static MethodeContainer AddMethode(this ClassContainer inClass, string inMethodeName, TypeContainer inReturnType, params FieldContainer[] inFieldContainer)
         {
-            var tmpMethode=new MethodeContainer()
+            var tmpMethode = new MethodeContainer()
             {
                 Name = inMethodeName,
                 ReturnType = inReturnType,
                 Parameter = inFieldContainer.ToList(),
-            });
+            };
             inClass.AddMethode(tmpMethode);
             return tmpMethode;
         }
