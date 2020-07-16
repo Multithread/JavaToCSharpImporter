@@ -16,7 +16,11 @@ namespace CodeConverterCore.Model
 
         public TypeContainer(string inName)
         {
-            if (inName.EndsWith("[]") || inName.Contains("extends") || inName.Contains("<"))
+            if (inName.EndsWith("[]"))
+            {
+                IsArray = true;
+            }
+            else if (inName.Contains("extends") || inName.Contains("<"))
             {
                 throw new Exception("Name not allowed for TypeContainer Name");
             }

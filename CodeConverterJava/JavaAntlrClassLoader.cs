@@ -226,7 +226,6 @@ namespace CodeConverterJava.Model
                         else if (tmpGEnericText == ">")
                         {
                             //TODO Handling of Stacked Generics
-                            throw new NotImplementedException($"Unknown Type inside Generic Class Header as Class {tmpClass.Name}");
                         }
                         else if (tmpGEnericText == "<")
                         {

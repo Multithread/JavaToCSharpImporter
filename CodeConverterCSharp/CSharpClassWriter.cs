@@ -172,6 +172,16 @@ namespace CodeConverterCSharp
                         inOutput.Append("]");
                     }
                 }
+                else if (tmpConstant.Value is TypeContainer)
+                {
+                    inOutput.Append($"{tmpConstant.Value}");
+                    if (tmpConstant.Type?.ArrayInizialiser != null)
+                    {
+                        inOutput.Append("[");
+                        AddCodeEntryToString(inOutput, tmpConstant.Type.ArrayInizialiser);
+                        inOutput.Append("]");
+                    }
+                }
                 else
                 {
                     inOutput.Append($"{tmpConstant.Value}");
