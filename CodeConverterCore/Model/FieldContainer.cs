@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace CodeConverterCore.Model
@@ -7,12 +8,14 @@ namespace CodeConverterCore.Model
     /// Felddeklaration, Methodenparameter,...
     /// Every Field Container is also a Variable Declarion for Code Usage
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     [DebuggerDisplay("{Type}: {Name}")]
     public class FieldContainer: VariableDeclaration
     {
         /// <summary>
         /// Attributes (private, public, abstract, override,...)
         /// </summary>
+        [JsonProperty]
         public List<string> ModifierList { get; set; } = new List<string>();
 
         /// <summary>

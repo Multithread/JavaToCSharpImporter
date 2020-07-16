@@ -1,4 +1,5 @@
 ﻿using CodeConverterCore.Enum;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace CodeConverterCore.Model
     /// <summary>
     /// Definition einer Klasse
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     [DebuggerDisplay("{Namespace}: {Type}")]
     public class ClassContainer
     {
@@ -25,11 +27,13 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Class Type
         /// </summary>
+        [JsonProperty]
         public TypeContainer Type { get; set; }
 
         /// <summary>
         /// Namespace der Klasse
         /// </summary>
+        [JsonProperty]
         public string Namespace { get; set; }
 
         /// <summary>
@@ -45,26 +49,31 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Usings, welche der Klasse angefügt sind.
         /// </summary>
+        [JsonProperty]
         public List<string> UsingList { get; set; } = new List<string>();
 
         /// <summary>
         /// Parent and a List of Implemented Interfaces
         /// </summary>
+        [JsonProperty]
         public List<TypeContainer> InterfaceList { get; set; } = new List<TypeContainer>();
 
         /// <summary>
         /// Klassenattribute (sealed, Abstract, ....)
         /// </summary>
+        [JsonProperty]
         public List<string> ModifierList { get; set; } = new List<string>();
 
         /// <summary>
         /// Liste der Felder (Field, ggf. Property)
         /// </summary>
+        [JsonProperty]
         public List<FieldContainer> FieldList { get; set; } = new List<FieldContainer>();
 
         /// <summary>
         /// Liste der Methoden
         /// </summary>
+        [JsonProperty]
         public List<MethodeContainer> MethodeList { get; } = new List<MethodeContainer>();
 
         public void AddMethode(MethodeContainer inNewMethode)

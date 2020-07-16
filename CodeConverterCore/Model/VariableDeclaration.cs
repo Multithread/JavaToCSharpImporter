@@ -1,4 +1,5 @@
 ﻿using CodeConverterCore.Interface;
+using Newtonsoft.Json;
 
 namespace CodeConverterCore.Model
 {
@@ -7,6 +8,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Type of the Declaring Variable
         /// </summary>
+        [JsonProperty]
         public TypeContainer Type { get; set; }
 
         /// <summary>

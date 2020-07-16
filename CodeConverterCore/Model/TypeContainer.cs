@@ -1,4 +1,5 @@
 ﻿using CodeConverterCore.Interface;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,6 +10,7 @@ namespace CodeConverterCore.Model
     /// <summary>
     /// Methodendefinition für eine Klasse
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     [DebuggerDisplay("{ToString()}")]
     public class TypeContainer
     {
@@ -29,6 +31,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Typename (mostly another Class)
         /// </summary>
+        [JsonProperty]
         public string Name { get; set; }
 
         /// <summary>
@@ -39,6 +42,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// List of Generic Sub-Types
         /// </summary>
+        [JsonProperty]
         public List<TypeContainer> GenericTypes { get; set; } = new List<TypeContainer>();
 
         /// <summary>
@@ -49,6 +53,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Is it an Array
         /// </summary>
+        [JsonProperty]
         public bool IsArray { get; set; }
 
         /// <summary>
