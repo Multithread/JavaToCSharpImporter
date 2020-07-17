@@ -1,5 +1,7 @@
-﻿using CodeConverterCore.Enum;
+﻿using CodeConverterCore.Analyzer;
+using CodeConverterCore.Enum;
 using CodeConverterCore.Helper;
+using CodeConverterCore.ImportExport;
 using CodeConverterCore.Model;
 using CodeConverterJava.Model;
 using NUnit.Framework;

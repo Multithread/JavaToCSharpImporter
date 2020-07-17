@@ -1,5 +1,5 @@
 ﻿using Antlr4.Runtime.Tree;
-using CodeConverterCore.Model;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace CodeConverterCore.Model
@@ -7,6 +7,7 @@ namespace CodeConverterCore.Model
     /// <summary>
     /// Methodendefinition für eine Klasse
     /// </summary>
+    [JsonObject(MemberSerialization.OptIn)]
     public class MethodeContainer
     {
         public MethodeContainer() { }
@@ -18,21 +19,25 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Returntype. Might be void
         /// </summary>
+        [JsonProperty]
         public TypeContainer ReturnType { get; set; }
 
         /// <summary>
         /// List of Generic Sub-Types
         /// </summary>
+        [JsonProperty]
         public List<TypeContainer> GenericTypes { get; set; } = new List<TypeContainer>();
 
         /// <summary>
         /// A List of the Methode Params
         /// </summary>
+        [JsonProperty]
         public List<FieldContainer> Parameter { get; set; } = new List<FieldContainer>();
 
         /// <summary>
         /// Attributes (private, public, abstract, override,...)
         /// </summary>
+        [JsonProperty]
         public List<string> ModifierList { get; set; } = new List<string>();
 
         /// <summary>

@@ -248,7 +248,7 @@ namespace CodeConverterCore.Analyzer
                             tmpConstant.Value = tmpVar;
                             tmpConstant.Type = tmpVar.Type;
                             //TODO load class for Type
-                            inNameFinder.Class = ProjectInformation.ClassFromBaseType(tmpVar.Type.Type);
+                            inNameFinder.Class = ProjectInformation.ClassFromBaseType(tmpVar.Type);
                         }
                         else
                         {
@@ -259,7 +259,7 @@ namespace CodeConverterCore.Analyzer
                                 tmpConstant.Value = tmpField;
                                 tmpConstant.Type = tmpField.Type;
                                 //TODO load class for Type
-                                inNameFinder.Class = ProjectInformation.ClassFromBaseType(tmpField.Type.Type);
+                                inNameFinder.Class = ProjectInformation.ClassFromBaseType(tmpField.Type);
 
                             }
                             else
@@ -306,6 +306,7 @@ namespace CodeConverterCore.Analyzer
                 var tmpVarAccess = inCodeEntry as VariableAccess;
                 var tmpNameFinder = new FieldNameFinder(inNameFinder);
                 tmpReturnType = CodeEntryHandling(tmpVarAccess.Access, tmpNameFinder);
+                //tmpNameFinder.Class = ProjectInformation.GetClassOrUnknownForType(tmpReturnType.Name, inNameFinder.Class.FullUsingList);
                 if (tmpVarAccess.Child != null)
                 {
                     CodeEntryHandling(tmpVarAccess.Child, tmpNameFinder, inReturnType);

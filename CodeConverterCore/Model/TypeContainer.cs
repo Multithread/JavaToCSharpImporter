@@ -123,6 +123,10 @@ namespace CodeConverterCore.Model
         public override bool Equals(object obj)
         {
             var tmpOther = obj as TypeContainer;
+            if (tmpOther == null)
+            {
+                return obj == null;
+            }
             if (tmpOther.Name != Name)
             {
                 return false;

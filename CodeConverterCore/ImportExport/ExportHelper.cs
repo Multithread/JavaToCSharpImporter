@@ -8,7 +8,7 @@ namespace CodeConverterCore.ImportExport
     {
         public static string CreateJsonFromClassList(List<ClassContainer> inClassList)
         {
-            return JsonConvert.SerializeObject(inClassList);
+            return JsonConvert.SerializeObject(inClassList, Formatting.Indented);
         }
         public static string SaveAliasList(List<AliasObject> inAliasList)
         {

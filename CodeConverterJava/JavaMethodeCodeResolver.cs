@@ -356,7 +356,15 @@ namespace CodeConverterJava.Model
             }
             if (inContext.classCreatorRest() != null)
             {
-                throw new NotImplementedException("Not done yet");
+                var tmpClass = inContext.classCreatorRest();
+                if (tmpClass.arguments()?.expressionList() != null)
+                {
+                    throw new NotImplementedException("Not done yet");
+                }
+                if (tmpClass.classBody() != null)
+                {
+                    throw new NotImplementedException("Not done yet");
+                }
             }
             if (inContext.arrayCreatorRest() != null)
             {

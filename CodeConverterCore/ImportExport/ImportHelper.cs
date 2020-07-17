@@ -1,4 +1,5 @@
-﻿using CodeConverterCore.Model;
+﻿using CodeConverterCore.Enum;
+using CodeConverterCore.Model;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
@@ -8,7 +9,9 @@ namespace CodeConverterCore.ImportExport
     {
         public static List<ClassContainer> ImportClasses(string inClassJson)
         {
-            return JsonConvert.DeserializeObject<List<ClassContainer>>(inClassJson);
+            var tmpClassList= JsonConvert.DeserializeObject<List<ClassContainer>>(inClassJson);
+            tmpClassList.ForEach(inItem => inItem.ClassType = ClassTypeEnum.System);
+            return tmpClassList;
         }
 
         public static List<AliasObject> ImportAliasList(string inClassJson)
