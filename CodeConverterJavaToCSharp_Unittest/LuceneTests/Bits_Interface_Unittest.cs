@@ -31,7 +31,7 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
             //Check for inner classes existing
 
             //Expecting four unknown Types: true, false, int and boolean, two which I have not yet added a Pre-Runtime class
-            Assert.AreEqual(4, tmpUnknownTypeCounter);
+            Assert.AreEqual(2, tmpUnknownTypeCounter);
 
             Assert.AreEqual(true, tmpResult[0].Content.Contains("MatchAllBits"));
 

@@ -17,10 +17,10 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
         public void CheckAccountableInterfaceComments()
         {
             var tmpIniData = DataHelper.LoadIni("");
-            var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { JavaBits }, tmpIniData);
-            new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
+            //var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { JavaBits }, tmpIniData);
+            //new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
 
-            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList();
+            //var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList();
 //TODO Create Valid Asserts
             //Assert.AreEqual(1, tmpResult.Count);
             //Assert.AreEqual("Attribute", tmpResult[0].FullName);

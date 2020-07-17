@@ -272,7 +272,7 @@ namespace CodeConverterJava.Model
             }
             if (inTypeContext.primitiveType() != null)
             {
-                throw new NotImplementedException($"Unknown TypeContext: " + inTypeContext.GetText());
+                tmpTypeContainer.Name = inTypeContext.primitiveType().GetText();
             }
             else if (inTypeContext.annotation() != null)
             {
