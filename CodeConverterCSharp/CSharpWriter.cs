@@ -15,7 +15,7 @@ namespace CodeConverterCSharp
         /// <returns></returns>
         public static IEnumerable<FileWriteInfo> CreateClassesFromObjectInformation(ProjectInformation inObjectInformation, IConverter inConverter)
         {
-            var tmpWriter = new CSharpClassWriter(inConverter);
+            var tmpWriter = new CSharpClassWriter();
             foreach (var tmpClass in inObjectInformation.ClassList)
             {
                 yield return tmpWriter.CreateClassFile(tmpClass);

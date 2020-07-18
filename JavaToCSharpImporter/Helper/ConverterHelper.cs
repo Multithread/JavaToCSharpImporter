@@ -1,7 +1,12 @@
-﻿using CodeConverterCore.Helper;
+﻿using CodeConverterCore.Analyzer;
+using CodeConverterCore.Converter;
+using CodeConverterCore.Enum;
+using CodeConverterCore.Helper;
 using CodeConverterCore.ImportExport;
 using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
+using CodeConverterCSharp;
+using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;
 using CodeConverterJava.Resources;
 using JavaToCSharpConverter.Model;
@@ -26,6 +31,8 @@ namespace JavaToCSharpConverter
             var tmpIniData = DataHelper.LoadIniByPath(JavaMapperPath);
             ProjectInformation tmpObjectInformation = LoadFilesByPath(inSourcePath, tmpIniData, new JavaLoader() { LoadDefaultData = true });
 
+            new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
+
             Directory.CreateDirectory(inOutPath);
 
             var tmpReplacer = new IniParser.Parser.IniDataParser().Parse(File.ReadAllText(LuceneReplacerPath));
@@ -34,9 +41,9 @@ namespace JavaToCSharpConverter
             {
                 throw new Exception("Missing Methodes Class to be Implemented");
             }
-            WriteCSharpCode(inOutPath, tmpIniData, tmpObjectInformation, tmpReplacer);
+            WriteCSharpCode(inOutPath, tmpObjectInformation, tmpReplacer);
 
-            CreateCSharpSLNFile(tmpObjectInformation, tmpIniData);
+            CreateCSharpSLNFile(tmpObjectInformation, inOutPath);
         }
 
         /// <summary>
@@ -44,15 +51,21 @@ namespace JavaToCSharpConverter
         /// </summary>
         /// <param name="inOutPath"></param>
         /// <param name="tmpClassList"></param>
-        /// <param name="tmpIniData"></param>
-        /// <param name="tmpObjectInformation"></param>
+        /// <param name="inProjectInformation"></param>
         /// <param name="tmpReplacer"></param>
-        private static void WriteCSharpCode(string inOutPath, IniParser.Model.IniData tmpIniData, ProjectInformation tmpObjectInformation, IniParser.Model.IniData tmpReplacer)
+        private static void WriteCSharpCode(string inOutPath, ProjectInformation inProjectInformation, IniParser.Model.IniData tmpReplacer)
         {
-            foreach (var tmpClass in tmpObjectInformation.ClassList)
+            new NamingConvertionHelper(new ConverterLucene()).ConvertProject(inProjectInformation);
+            var tmpConverter = new ConverterLucene();
+
+            foreach (var tmpClass in inProjectInformation.ClassList)
             {
-                var tmpConverter = new JavaToCSharpNameConverter(tmpObjectInformation, tmpIniData);
-                var tmpCSharp = CSharpClassWriter.CreateFile(tmpClass, tmpConverter);
+                if (tmpClass.ClassType == ClassTypeEnum.System)
+                {
+                    continue;
+                }
+
+                var tmpCSharp = new CSharpClassWriter().CreateClassFile(tmpClass).Content;
 
                 //Do Replacements for non-Fixable Code Changes
                 foreach (var tmpKV in tmpReplacer[tmpClass.Name])
@@ -60,14 +73,11 @@ namespace JavaToCSharpConverter
                     tmpCSharp = tmpCSharp.Replace(tmpKV.KeyName, tmpKV.Value);
                 }
 
-                //tmpCSharp = CSharpCodePrettyfier.FormatCode(tmpCSharp);
-
-                var tmpNewNamespace = tmpConverter.ChangeNamespace(tmpClass.Namespace).Split('.');
+                var tmpNewNamespace = tmpClass.Namespace.Split('.');
                 var tmpNewPath = Path.Combine(inOutPath, Path.Combine(tmpNewNamespace));
 
                 Directory.CreateDirectory(tmpNewPath);
                 File.WriteAllText(Path.Combine(tmpNewPath, tmpClass.Name + ".cs"), tmpCSharp);
-                // Console.Write(tmpCSharp);
             }
         }
 
@@ -92,12 +102,10 @@ namespace JavaToCSharpConverter
         /// <param name="tmpClassList"></param>
         /// <param name="tmpObjectInformation"></param>
         /// <param name="tmpIniData"></param>
-        private static void CreateCSharpSLNFile(ProjectInformation tmpObjectInformation, IniParser.Model.IniData tmpIniData)
+        private static void CreateCSharpSLNFile(ProjectInformation tmpObjectInformation, string inPath)
         {
-            var tmpPathConverter = new JavaToCSharpNameConverter(tmpObjectInformation, tmpIniData);
-
             //Create C# Solution with all created Files
-            File.WriteAllText(@"Z:\Result\TestProject.csproj", $@"<?xml version=""1.0"" encoding=""utf-8""?>
+            File.WriteAllText(Path.Combine(inPath, "TestProject.csproj"), $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project ToolsVersion=""15.0"" xmlns=""http://schemas.microsoft.com/developer/msbuild/2003"">
   <Import Project=""$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"" Condition=""Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"" />
   <PropertyGroup>
@@ -107,7 +115,8 @@ namespace JavaToCSharpConverter
     <OutputType>Exe</OutputType>
     <RootNamespace>JavaToCSharpConverter</RootNamespace>
     <AssemblyName>JavaToCSharpConverter</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
@@ -178,7 +187,7 @@ namespace JavaToCSharpConverter
     <Reference Include=""System.Xml"" />
   </ItemGroup>
   <ItemGroup>
-{string.Join(Environment.NewLine, tmpObjectInformation.ClassList.Select(inItem => $"<Compile Include=\"{Path.Combine(tmpPathConverter.ChangeNamespace(inItem.Namespace).Split('.'))}\\{inItem.Name}.cs\" />"))}
+{string.Join(Environment.NewLine, tmpObjectInformation.ClassList.Where(inItem => inItem.ClassType == ClassTypeEnum.Normal).Select(inItem => $"<Compile Include=\"{Path.Combine(inItem.Namespace.Split('.'))}\\{inItem.Name}.cs\" />"))}
   </ItemGroup>
   <ItemGroup>
 {""    /*<None Include=""App.config"" />
@@ -190,7 +199,7 @@ namespace JavaToCSharpConverter
 </Project>
 ");
 
-            File.WriteAllText(@"Z:\Result\Solution.sln", $@"Microsoft Visual Studio Solution File, Format Version 12.00
+            File.WriteAllText(Path.Combine(inPath, "Solution.sln"), $@"Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1

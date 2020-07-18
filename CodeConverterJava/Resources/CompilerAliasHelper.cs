@@ -6,6 +6,7 @@
 {'From':'Object','To':'object'},
 {'From':'Integer','To':'int'},
 {'From':'String','To':'string'},
+{'From':'Boolean','To':'boolean'},
 ]";
     }
 }

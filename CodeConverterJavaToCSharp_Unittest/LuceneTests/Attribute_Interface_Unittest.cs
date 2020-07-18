@@ -1,4 +1,5 @@
 ﻿using CodeConverterCore.Analyzer;
+using CodeConverterCore.Converter;
 using CodeConverterCore.Helper;
 using CodeConverterCSharp;
 using CodeConverterCSharp.Lucenene;
@@ -19,6 +20,8 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
             var tmpIniData = DataHelper.LoadIni("");
             var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { JavaBits }, tmpIniData);
             new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
+
+            new NamingConvertionHelper(new ConverterLucene()).ConvertProject(tmpObjectInformation);
 
             var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList();
             Assert.AreEqual(1, tmpResult.Count);

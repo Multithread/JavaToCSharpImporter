@@ -14,5 +14,9 @@ namespace CodeConverterCore.ImportExport
         {
             return JsonConvert.SerializeObject(inAliasList);
         }
+        public static string SaveMappingList(List<LanguageMappingObject> inMappingObjectList)
+        {
+            return JsonConvert.SerializeObject(inMappingObjectList);
+        }
     }
 }

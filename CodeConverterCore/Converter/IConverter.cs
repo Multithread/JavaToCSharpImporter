@@ -1,4 +1,5 @@
 ﻿using CodeConverterCore.Model;
+using System.Collections.Generic;
 
 namespace CodeConverterCore.Converter
 {
@@ -13,12 +14,15 @@ namespace CodeConverterCore.Converter
         /// <param name="inComment">Comment string (single or Multiline)</param>
         /// <param name="inDefinitionCommennt">Simple Comment, or Methode/Class definition Comment</param>
         string Comment(string inComment, bool inDefinitionCommennt = false);
-
-        /// <summary>
-        /// Modifier handling
-        /// </summary>
-        string Modifier(string inOldmodifier);
         
+        /// <summary>
+        /// Mapp and Sort the Attributes from Java to C#
+        /// </summary>
+        /// <param name="inAttributeList"></param>
+        /// <param name="inProperty"></param>
+        /// <returns></returns>
+        List<string> MapAndSortAttributes(List<string> inAttributeList, bool inProperty = false);
+
         /// <summary>
         /// Class Name handling
         /// </summary>

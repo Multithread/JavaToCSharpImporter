@@ -1,6 +1,7 @@
 ﻿using Antlr4.Runtime.Tree;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace CodeConverterCore.Model
 {
@@ -8,6 +9,7 @@ namespace CodeConverterCore.Model
     /// Methodendefinition für eine Klasse
     /// </summary>
     [JsonObject(MemberSerialization.OptIn)]
+    [DebuggerDisplay("{Name}")]
     public class MethodeContainer
     {
         public MethodeContainer() { }

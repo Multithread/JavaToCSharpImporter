@@ -13,11 +13,6 @@ namespace CodeConverterCSharp
 {
     public class CSharpClassWriter
     {
-        private IConverter Converter;
-        public CSharpClassWriter(IConverter inConverter)
-        {
-            Converter = inConverter;
-        }
 
         /// <summary>
         /// Crete ClassFileInfo for a single Class
@@ -106,7 +101,7 @@ namespace CodeConverterCSharp
         private void AddMethodeToString(StringBuilder inOutput, MethodeContainer inMethode, int inIndentDepth)
         {
             AddComment(inOutput, inMethode.Comment, inIndentDepth, true);
-            var tmpMethodeString = $"{ReturnModifiersOrdered(inMethode.ModifierList)} {CreateStringFromType(inMethode.ReturnType)} {inMethode.Name}(";
+            var tmpMethodeString = $"{ReturnModifiersOrdered(inMethode.ModifierList)}{CreateStringFromType(inMethode.ReturnType)} {inMethode.Name}(";
 
             tmpMethodeString += string.Join("", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)} {inItem.Name}{(inItem.DefaultValue != null ? " = " + inItem.DefaultValue : "")}")) + ")";
 
@@ -318,13 +313,13 @@ namespace CodeConverterCSharp
         {
             if (inType == null)
             {
-                return "void";
+                return "";
             }
             if (inType.GenericTypes.Count > 0)
             {
-                return $"{inType.Type?.Name ?? inType.Name}<{string.Join(" ,", inType.GenericTypes.Select(inItem => CreateStringFromType(inItem)))}>{(inType.IsArray ? "[]" : "")}";
+                return $" {inType.Type?.Name ?? inType.Name}<{string.Join(" ,", inType.GenericTypes.Select(inItem => CreateStringFromType(inItem)))}>{(inType.IsArray ? "[]" : "")}";
             }
-            return $"{inType.Type?.Name ?? inType.Name}{(inType.IsArray ? "[]" : "")}";
+            return $" {inType.Type?.Name ?? inType.Name}{(inType.IsArray ? "[]" : "")}";
         }
 
         /// <summary>
@@ -340,8 +335,11 @@ namespace CodeConverterCSharp
             {
                 return;
             }
-            var tmpConverted = Converter.Comment(inComment, inDefinitionCommennt);
-            tmpConverted = CreateIndent(inIndentDepth) + tmpConverted.Replace(Environment.NewLine, Environment.NewLine + CreateIndent(inIndentDepth));
+            var tmpConverted = inComment;
+            if (inDefinitionCommennt)
+            {
+                tmpConverted = CreateIndent(inIndentDepth) + tmpConverted.Replace(Environment.NewLine, Environment.NewLine + CreateIndent(inIndentDepth));
+            }
 
             inOutput.AppendLine(tmpConverted);
         }

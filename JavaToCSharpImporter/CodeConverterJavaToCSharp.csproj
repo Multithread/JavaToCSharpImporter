@@ -90,7 +90,6 @@
   <ItemGroup>
     <Compile Include="Helper\ConverterHelper.cs" />
     <Compile Include="Model\JavaToCSharpNameConverter.cs" />
-    <Compile Include="Model\CSharp\CSharpClassWriter.cs" />
     <Compile Include="Model\ReplaceInFile.cs" />
     <Compile Include="Model\SearchAndReplacePattern.cs" />
     <Compile Include="Program.cs" />

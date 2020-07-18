@@ -1,4 +1,5 @@
 ﻿using CodeConverterCore.Model;
+using System.Collections.Generic;
 
 namespace CodeConverterCore.Converter
 {
@@ -15,14 +16,6 @@ namespace CodeConverterCore.Converter
         public virtual string Comment(string inOldComment, bool inDefinitionCommennt = false)
         {
             return inOldComment;
-        }
-
-        /// <summary>
-        /// Modifier handling
-        /// </summary>
-        public virtual string Modifier(string inOldmodifier)
-        {
-            return inOldmodifier;
         }
 
         /// <summary>
@@ -47,6 +40,17 @@ namespace CodeConverterCore.Converter
         public virtual string MethodeInParameter(FieldContainer inMethodeParameter)
         {
             return inMethodeParameter.Name;
+        }
+
+        /// <summary>
+        /// Map and Sort Attributes of classes, fields and methods
+        /// </summary>
+        /// <param name="inAttributeList"></param>
+        /// <param name="inProperty"></param>
+        /// <returns></returns>
+        public virtual List<string> MapAndSortAttributes(List<string> inAttributeList, bool inProperty = false)
+        {
+            return inAttributeList;
         }
     }
 }

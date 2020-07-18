@@ -97,7 +97,7 @@ namespace JavaToCSharpConverter.Model
             }
 
             //Attribute Sortieren
-            return inAttributeList.OrderBy(inItem =>
+            inAttributeList= inAttributeList.OrderBy(inItem =>
             {
                 if (_accessModifier.Contains(inItem))
                 {
@@ -111,6 +111,11 @@ namespace JavaToCSharpConverter.Model
                 return 1;
             })
             .ToList();
+
+            //Remove all other @ elements
+            return inAttributeList
+                .Where(inItem => !inItem.StartsWith("@"))
+                .ToList();
         }
 
         /// <summary>

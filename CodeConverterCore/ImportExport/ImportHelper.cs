@@ -9,7 +9,7 @@ namespace CodeConverterCore.ImportExport
     {
         public static List<ClassContainer> ImportClasses(string inClassJson)
         {
-            var tmpClassList= JsonConvert.DeserializeObject<List<ClassContainer>>(inClassJson);
+            var tmpClassList = JsonConvert.DeserializeObject<List<ClassContainer>>(inClassJson);
             tmpClassList.ForEach(inItem => inItem.ClassType = ClassTypeEnum.System);
             return tmpClassList;
         }
@@ -17,6 +17,11 @@ namespace CodeConverterCore.ImportExport
         public static List<AliasObject> ImportAliasList(string inClassJson)
         {
             return JsonConvert.DeserializeObject<List<AliasObject>>(inClassJson);
+        }
+
+        public static List<LanguageMappingObject> ImportMappingList(string inMappingJson)
+        {
+            return JsonConvert.DeserializeObject<List<LanguageMappingObject>>(inMappingJson);
         }
     }
 }

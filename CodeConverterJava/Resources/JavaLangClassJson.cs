@@ -81,6 +81,22 @@ namespace CodeConverterJava.Resources
     ],
     ""FieldList"": [],
     ""MethodeList"": []
+  },
+  {
+    ""Type"": {
+      ""Name"": ""Boolean"",
+      ""GenericTypes"": [],
+      ""IsArray"": false
+    },
+    ""Namespace"": ""java.lang"",
+    ""UsingList"": [],
+    ""InterfaceList"": [],
+    ""ModifierList"": [
+      ""public"",
+      ""class""
+    ],
+    ""FieldList"": [],
+    ""MethodeList"": []
   }
 ]";
     }

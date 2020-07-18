@@ -2,6 +2,8 @@
 using CodeConverterCore.Helper;
 using CodeConverterCore.Model;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace JavaToCSharpConverter.Model
@@ -18,7 +20,18 @@ namespace JavaToCSharpConverter.Model
         /// <param name="inDefinitionCommennt">Simple Comment, or Methode/Class definition Comment</param>
         public override string Comment(string inOldComment, bool inDefinitionCommennt = false)
         {
+            if (string.IsNullOrWhiteSpace(inOldComment))
+            {
+                return inOldComment;
+            }
             inOldComment = inOldComment.Trim(' ');
+            //Fixing newlines from files with only \n modifier
+            if(!inOldComment.Contains(Environment.NewLine)
+                && inOldComment.Contains("\n"))
+            {
+                inOldComment = inOldComment.Replace("\n", Environment.NewLine);
+            }
+
             if (inOldComment.Contains(Environment.NewLine))
             {
                 inOldComment = inOldComment.Trim('/').Trim('*');
@@ -47,22 +60,64 @@ namespace JavaToCSharpConverter.Model
         }
 
         /// <summary>
-        /// Change Modifier from Java to C# (ie. final)
+        /// Mapp and Sort the Attributes from Java to C#
         /// </summary>
-        /// <param name="inOldmodifier"></param>
+        /// <param name="inAttributeList"></param>
+        /// <param name="inProperty"></param>
         /// <returns></returns>
-        public override string Modifier(string inOldmodifier)
+        public override List<string> MapAndSortAttributes(List<string> inAttributeList, bool inProperty = false)
         {
-            if (inOldmodifier == "final")
+            //Attribute Mappen, welche anderst heissen
+            for (var tmpI = 0; tmpI < inAttributeList.Count; tmpI++)
             {
-                return "readonly";
+                if (inAttributeList[tmpI] == "@Override")
+                {
+                    inAttributeList[tmpI] = "override";
+                }
+                if (inAttributeList[tmpI] == "final")
+                {
+                    if (inProperty)
+                    {
+                        inAttributeList[tmpI] = "readonly";
+                    }
+                    else
+                    {
+                        inAttributeList[tmpI] = "sealed";
+                    }
+                }
+                else if (inAttributeList[tmpI] == "default")
+                {
+                    if (inAttributeList.Count > 1)
+                    {
+                        throw new NotImplementedException("Interface default implemenation with mupltiple attributes not handled");
+                    }
+                    inAttributeList[tmpI] = "public";
+                }
             }
-            if (inOldmodifier == "default")
+
+            //Attribute Sortieren
+            inAttributeList = inAttributeList.OrderBy(inItem =>
             {
-                return "public";
-            }
-            return base.Modifier(inOldmodifier);
+                if (_accessModifier.Contains(inItem))
+                {
+                    return -1;
+                }
+                if (_typeModifier.Contains(inItem))
+                {
+                    return 0;
+                }
+
+                return 1;
+            })
+            .ToList();
+
+            //Remove all other @ elements
+            return inAttributeList
+                .Where(inItem => !inItem.StartsWith("@"))
+                .ToList();
         }
+        private HashSet<string> _accessModifier = new HashSet<string> { "private", "protected", "internal", "public" };
+        private HashSet<string> _typeModifier = new HashSet<string> { "sealed", "static", "abstract", "override", "readonly" };
 
         /// <summary>
         /// MethodeParameter Handling (normal starting with "in", out param starting wit "out")
