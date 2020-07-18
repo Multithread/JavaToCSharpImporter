@@ -52,5 +52,15 @@ namespace CodeConverterCore.Converter
         {
             return inAttributeList;
         }
+
+        /// <summary>
+        /// Change Methode Names to be matching C# names
+        /// </summary>
+        /// <param name="inMethode"></param>
+        /// <returns></returns>
+        public virtual string MethodeName(MethodeContainer inMethode)
+        {
+            return inMethode.Name;
+        }
     }
 }

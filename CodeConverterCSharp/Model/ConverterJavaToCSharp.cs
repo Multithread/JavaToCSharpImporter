@@ -26,7 +26,7 @@ namespace JavaToCSharpConverter.Model
             }
             inOldComment = inOldComment.Trim(' ');
             //Fixing newlines from files with only \n modifier
-            if(!inOldComment.Contains(Environment.NewLine)
+            if (!inOldComment.Contains(Environment.NewLine)
                 && inOldComment.Contains("\n"))
             {
                 inOldComment = inOldComment.Replace("\n", Environment.NewLine);
@@ -147,6 +147,20 @@ namespace JavaToCSharpConverter.Model
                 return "out" + tmpName;
             }
             return "in" + tmpName;
+        }
+
+        /// <summary>
+        /// Change Methode Names to be matching C# names
+        /// </summary>
+        /// <param name="inMethode"></param>
+        /// <returns></returns>
+        public override string MethodeName(MethodeContainer inMethode)
+        {
+            if (inMethode.ModifierList.Contains("private"))
+            {
+                return $"_{inMethode.Name}";
+            }
+            return inMethode.Name.PascalCase();
         }
     }
 }

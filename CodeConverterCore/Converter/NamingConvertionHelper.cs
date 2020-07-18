@@ -60,9 +60,11 @@ namespace CodeConverterCore.Converter
         /// <param name="inClass"></param>
         private void ConvertMethode(MethodeContainer tmpMethode, ClassContainer inClass)
         {
+            var tmpOldName = tmpMethode.Name;
+            tmpMethode.Name = Converter.MethodeName(tmpMethode);
             tmpMethode.ModifierList = Converter.MapAndSortAttributes(tmpMethode.ModifierList);
-
             tmpMethode.Comment = Converter.Comment(tmpMethode.Comment, true);
+
             foreach (var tmpField in tmpMethode.Parameter)
             {
                 ConvertField(tmpField);
@@ -84,7 +86,7 @@ namespace CodeConverterCore.Converter
                         tmpParentClassQueue.Enqueue(tmpSubClassContainer);
 
                         //Check if Methode with same parameter Typers exist
-                        if (tmpSubClassContainer.MethodeList.Any(inItem => inItem.Name == tmpMethode.Name))
+                        if (tmpSubClassContainer.MethodeList.Any(inItem => inItem.Name == tmpMethode.Name || inItem.Name == tmpOldName))
                         {
                             if (tmpSubClassContainer.IsInterface())
                             {

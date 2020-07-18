@@ -39,5 +39,12 @@ namespace CodeConverterCore.Converter
         /// <param name="inNamespace"></param>
         /// <returns></returns>
         string Namespace(string inNamespace);
+
+        /// <summary>
+        /// Change Methode Names to be matching C# names
+        /// </summary>
+        /// <param name="inMethode"></param>
+        /// <returns></returns>
+        string MethodeName(MethodeContainer inMethode);
     }
 }

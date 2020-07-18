@@ -30,6 +30,10 @@ namespace CodeConverterCore.Helper
         /// <returns></returns>
         public static string PascalCase(this string inMethodeName)
         {
+            if (inMethodeName == null)
+            {
+                return null;
+            }
             if (inMethodeName.Length < 2)
             {
                 return inMethodeName.ToUpper();
