@@ -33,37 +33,40 @@ namespace CodeConverterJava.Model
             var tmpAdditionalClasses = new List<ClassContainer>();
 
             //Load all Classes, with Methodes we might need
-            foreach (var tmpMap in inConfiguration["Methode"])
+            if (inConfiguration != null)
             {
-                var tmpLeftSplit = tmpMap.KeyName.Split('.');
-                var tmpNamespace = string.Join(".", tmpLeftSplit.SkipLast(2));
-                var tmpName = (TypeContainer)tmpLeftSplit.SkipLast(1).Last();
-                var tmpMethodeName = tmpLeftSplit.Last();
-
-                var tmpClass = tmpAdditionalClasses.FirstOrDefault(inItem =>
-                    inItem.Namespace == tmpNamespace && inItem.Type == tmpName);
-                if (tmpClass == null)
+                foreach (var tmpMap in inConfiguration["Methode"])
                 {
-                    tmpClass = new ClassContainer
-                    {
-                        Type = tmpName,
-                        Namespace = tmpNamespace
-                    };
-                    tmpAdditionalClasses.Add(tmpClass);
-                }
+                    var tmpLeftSplit = tmpMap.KeyName.Split('.');
+                    var tmpNamespace = string.Join(".", tmpLeftSplit.SkipLast(2));
+                    var tmpName = (TypeContainer)tmpLeftSplit.SkipLast(1).Last();
+                    var tmpMethodeName = tmpLeftSplit.Last();
 
-                if (!tmpClass.MethodeList.Any(inItem => inItem.Name == tmpMethodeName))
-                {
-                    //TODO Check for Param Equality
-                    if (tmpClass.MethodeList.Count(inItem => inItem.Name == tmpMethodeName) > 1)
+                    var tmpClass = tmpAdditionalClasses.FirstOrDefault(inItem =>
+                        inItem.Namespace == tmpNamespace && inItem.Type == tmpName);
+                    if (tmpClass == null)
                     {
-                        throw new NotImplementedException("Methode differenting with params not implemented");
+                        tmpClass = new ClassContainer
+                        {
+                            Type = tmpName,
+                            Namespace = tmpNamespace
+                        };
+                        tmpAdditionalClasses.Add(tmpClass);
                     }
 
-                    var tmpNewMethode = new MethodeContainer();
-                    tmpNewMethode.Name = tmpMethodeName;
-                    tmpNewMethode.ModifierList = new List<string> { "public" };
-                    tmpClass.MethodeList.Add(tmpNewMethode);
+                    if (!tmpClass.MethodeList.Any(inItem => inItem.Name == tmpMethodeName))
+                    {
+                        //TODO Check for Param Equality
+                        if (tmpClass.MethodeList.Count(inItem => inItem.Name == tmpMethodeName) > 1)
+                        {
+                            throw new NotImplementedException("Methode differenting with params not implemented");
+                        }
+
+                        var tmpNewMethode = new MethodeContainer();
+                        tmpNewMethode.Name = tmpMethodeName;
+                        tmpNewMethode.ModifierList = new List<string> { "public" };
+                        tmpClass.MethodeList.Add(tmpNewMethode);
+                    }
                 }
             }
 

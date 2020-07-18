@@ -83,7 +83,7 @@ namespace CodeConverterCSharp
         private void AddFieldtoString(StringBuilder inOutput, FieldContainer inField, int inIndentDepth)
         {
             AddComment(inOutput, inField.Comment, inIndentDepth, true);
-            var tmpFieldString = $"{ReturnModifiersOrdered(inField.ModifierList)} {CreateStringFromType(inField.Type)} {inField.Name}";
+            var tmpFieldString = $"{ReturnModifiersOrdered(inField.ModifierList)}{CreateStringFromType(inField.Type)}{inField.Name}";
             if (inField.DefaultValue != null)
             {
                 var tmpSb = new StringBuilder();
@@ -101,9 +101,9 @@ namespace CodeConverterCSharp
         private void AddMethodeToString(StringBuilder inOutput, MethodeContainer inMethode, int inIndentDepth)
         {
             AddComment(inOutput, inMethode.Comment, inIndentDepth, true);
-            var tmpMethodeString = $"{ReturnModifiersOrdered(inMethode.ModifierList)}{CreateStringFromType(inMethode.ReturnType)} {inMethode.Name}(";
+            var tmpMethodeString = $"{ReturnModifiersOrdered(inMethode.ModifierList)}{CreateStringFromType(inMethode.ReturnType)}{inMethode.Name}(";
 
-            tmpMethodeString += string.Join("", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)} {inItem.Name}{(inItem.DefaultValue != null ? " = " + inItem.DefaultValue : "")}")) + ")";
+            tmpMethodeString += string.Join(", ", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)}{inItem.Name}{(inItem.DefaultValue != null ? " = " + inItem.DefaultValue : "")}")) + ")";
 
             inOutput.AppendLine(CreateIndent(inIndentDepth) + tmpMethodeString);
 
@@ -309,7 +309,7 @@ namespace CodeConverterCSharp
         /// </summary>
         /// <param name="inType"></param>
         /// <returns></returns>
-        private string CreateStringFromType(TypeContainer inType)
+        private string CreateStringFromType(TypeContainer inType, bool inAddEndEntry = true)
         {
             if (inType == null)
             {
@@ -317,9 +317,9 @@ namespace CodeConverterCSharp
             }
             if (inType.GenericTypes.Count > 0)
             {
-                return $" {inType.Type?.Name ?? inType.Name}<{string.Join(" ,", inType.GenericTypes.Select(inItem => CreateStringFromType(inItem)))}>{(inType.IsArray ? "[]" : "")}";
+                return $"{inType.Type?.Name ?? inType.Name}<{string.Join(" ,", inType.GenericTypes.Select(inItem => CreateStringFromType(inItem, false)))}>{(inType.IsArray ? "[]" : "")}{(inAddEndEntry ? " " : "")}";
             }
-            return $" {inType.Type?.Name ?? inType.Name}{(inType.IsArray ? "[]" : "")}";
+            return $"{inType.Type?.Name ?? inType.Name}{(inType.IsArray ? "[]" : "")}{(inAddEndEntry ? " " : "")}";
         }
 
         /// <summary>
@@ -363,7 +363,7 @@ namespace CodeConverterCSharp
         /// <returns></returns>
         private string CreateClassDefinition(ClassContainer inClass)
         {
-            return $"{ReturnModifiersOrdered(inClass.ModifierList)} {inClass.Type.Type.Name}{CreateClassInterfaceData(inClass)}";
+            return $"{ReturnModifiersOrdered(inClass.ModifierList)}{inClass.Type.Type.Name}{CreateClassInterfaceData(inClass)}";
         }
         /// <summary>
         /// Create the usings at top of the class
@@ -376,19 +376,24 @@ namespace CodeConverterCSharp
             {
                 return "";
             }
-            var tmpTypes = string.Join(", ", inClass.InterfaceList.Select(inItem => CreateStringFromType(inItem)));
+            var tmpTypes = string.Join(", ", inClass.InterfaceList.Select(inItem => CreateStringFromType(inItem, false)));
             var tmpExtendsList = inClass.InterfaceList.Where(inItem => inItem.Extends.Count > 0);
             var tmpExtends = string.Join(", ", tmpExtendsList);
             if (tmpExtends.Length > 0)
             {
                 tmpExtends = " where " + tmpExtends;
                 throw new NotImplementedException("Interfaces with Generics with Extends not Implemented yet");
+                return $" : {tmpTypes} {tmpExtends}";
             }
-            return $": {tmpTypes} {tmpExtends}";
+            return $" : {tmpTypes}";
         }
 
         private static string ReturnModifiersOrdered(List<string> inModifierList)
         {
+            if (inModifierList.Count == 0)
+            {
+                return "";
+            }
             return string.Join(" ", inModifierList.OrderBy(inItem =>
            {
                switch (inItem)
@@ -420,7 +425,7 @@ namespace CodeConverterCSharp
                    default:
                        throw new NotImplementedException("Unknown Attribute");
                }
-           }).ToList());
+           }).ToList()) + " ";
         }
 
         /// <summary>

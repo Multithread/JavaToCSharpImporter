@@ -45,7 +45,7 @@ namespace LuceNET.util
 {
     public interface Bits
     {
-         Bits[] EMPTY_ARRAY =  new Bits[0];
+        Bits[] EMPTY_ARRAY =  new Bits[0];
 
     }
 }

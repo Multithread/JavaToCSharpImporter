@@ -8,11 +8,8 @@ using CodeConverterCore.Model;
 using CodeConverterCSharp;
 using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;
-using CodeConverterJava.Resources;
-using JavaToCSharpConverter.Model;
-using MoreLinq;
+using JavaToCSharpConverter.Resources;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -32,6 +29,8 @@ namespace JavaToCSharpConverter
             ProjectInformation tmpObjectInformation = LoadFilesByPath(inSourcePath, tmpIniData, new JavaLoader() { LoadDefaultData = true });
 
             new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
+
+            ProjectInformationHelper.MapLanguageNames(tmpObjectInformation, ImportHelper.ImportMappingList(ClassRenameJson.SystemAliasJson));
 
             Directory.CreateDirectory(inOutPath);
 
@@ -56,7 +55,6 @@ namespace JavaToCSharpConverter
         private static void WriteCSharpCode(string inOutPath, ProjectInformation inProjectInformation, IniParser.Model.IniData tmpReplacer)
         {
             new NamingConvertionHelper(new ConverterLucene()).ConvertProject(inProjectInformation);
-            var tmpConverter = new ConverterLucene();
 
             foreach (var tmpClass in inProjectInformation.ClassList)
             {

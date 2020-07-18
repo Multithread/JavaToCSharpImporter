@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System.Linq;
 using CodeConverterCore.Helper;
 using CodeConverterCore.Analyzer;
+using System.Collections.Generic;
 
 namespace CodeConverterCSharp_Unittest
 {
@@ -41,7 +42,7 @@ namespace CodeConverterCSharp_Unittest
             var tmpObjectInformation = CSharpWriter.CreateClassesFromObjectInformation(tmpProject, new ConverterBase()).ToList();
 
             Assert.AreEqual(1, tmpObjectInformation.Count);
-            Assert.AreEqual(true, tmpObjectInformation[0].Content.Contains("public interface IAttribute: IAttr, IBaseAttribute"));
+            Assert.AreEqual(true, tmpObjectInformation[0].Content.Contains("public interface IAttribute : IAttr, IBaseAttribute"));
         }
 
         [Test]
@@ -80,7 +81,7 @@ namespace CodeConverterCSharp_Unittest
             tmpInnerClass.InterfaceList.Add("IAttribute");
             tmpClass.InnerClasses.Add(tmpInnerClass);
 
-            tmpProject.ClassList.Add(tmpClass);
+            tmpProject.FillClasses(new List<ClassContainer> { tmpClass });
             new AnalyzerCore().LinkProjectInformation(tmpProject);
             tmpClass.Type.Type.Name = "ISpezialAttribute";
 
@@ -88,7 +89,7 @@ namespace CodeConverterCSharp_Unittest
 
             Assert.AreEqual(1, tmpObjectInformation.Count);
             Assert.AreEqual(true, tmpObjectInformation[0].Content.Contains("public interface ISpezialAttribute"));
-            Assert.AreEqual(true, tmpObjectInformation[0].Content.Contains("internal class AttributeEmpty: ISpezialAttribute"));
+            Assert.AreEqual(true, tmpObjectInformation[0].Content.Contains("internal class AttributeEmpty : ISpezialAttribute"));
         }
 
     }

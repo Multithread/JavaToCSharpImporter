@@ -43,7 +43,7 @@ namespace
 {
     public interface IAttribute
     {
-         void m1(int in1int in2)
+        void m1(int in1, int in2)
         {
             if(in1 <= in2)
             {
@@ -90,7 +90,7 @@ namespace
 {
     public interface IAttribute
     {
-         void m1(int in1int in2)
+        void m1(int in1, int in2)
         {
             if(in1 <= in2)
             {

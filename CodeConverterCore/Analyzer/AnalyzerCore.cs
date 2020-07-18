@@ -9,14 +9,14 @@ namespace CodeConverterCore.Analyzer
 {
     public class AnalyzerCore
     {
-        private List<UnknownTypeClass> UnknownTypes = new List<UnknownTypeClass>();
-
         private ProjectInformation ProjectInformation;
 
         private AnalyzerSettings Settings;
 
         /// <summary>
         /// Links the classes and Types inside the Project
+        /// 
+        /// TODO Remove tmpTypeDictionary from this Class, it does not seem to be required to achive everything required to map Types
         /// </summary>
         /// <param name="inLoadedProject"></param>
         /// <param name="inSettings"></param>
@@ -425,26 +425,9 @@ namespace CodeConverterCore.Analyzer
             {
                 return;
             }
-            if (inDictionary.TryGetValue(inTypeContainer.Name, inItem => inClass.FullUsingList.Contains(inItem.Namespace), out var tmpResult))
-            {
-                inTypeContainer.Type = tmpResult;
-            }
-            else
-            {
-                //TODO checke if Unknown Type is used elsewhere with matching Namespaces
-                var tmpUnknownType = UnknownTypes.FirstOrDefault(
-                    inItem => inItem.Type.Name == inTypeContainer.Name);
-                if (tmpUnknownType == null)
-                {
-                    //Create new Unknown Type
-                    tmpUnknownType = new UnknownTypeClass(inTypeContainer.Name);
-                    tmpUnknownType.PossibleNamespace.AddRange(inClass.FullUsingList);
-                    UnknownTypes.Add(tmpUnknownType);
-                    Settings.InvokeUnknownTypeAdded(tmpUnknownType);
-                }
-                inTypeContainer.Type = tmpUnknownType.Type.Type;
-                //TODO? Run Warning Event to Settings?
-            }
+            var tmpResult = ProjectInformation.GetClassOrUnknownForType(inTypeContainer.Name, inClass.FullUsingList);
+            inTypeContainer.Type = tmpResult.Type.Type;
+
             //Generic sub-Types handling
             foreach (var tmpGeneric in inTypeContainer.GenericTypes)
             {
