@@ -5,6 +5,7 @@ using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static CodeConverterJava.Model.JavaParser;
 
 namespace CodeConverterJava.Model
@@ -157,10 +158,28 @@ namespace CodeConverterJava.Model
             var tmpStatement = new StatementCode();
             if (inStatement.IF() != null)
             {
+                if (inStatement.statement().Length > 2)
+                {
+                    throw new NotImplementedException("statement.statement length bigger than 1");
+                }
                 tmpStatement.StatementType = StatementTypeEnum.If;
                 tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { new CodeBlock() };
                 HandleExpressionContext(tmpStatement.StatementCodeBlocks[0], inStatement.parExpression().expression(), null);
-            }
+                tmpStatement.InnerContent = new CodeBlock();
+                HandleBlockStatementStatement(tmpStatement.InnerContent, inStatement.statement()[0]);
+
+                if (inStatement.ELSE() != null)
+                {
+                    inParentCodeBlock.CodeEntries.Add(tmpStatement);
+                    tmpStatement = new StatementCode();
+
+                    tmpStatement.StatementType = StatementTypeEnum.Else;
+                    tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { new CodeBlock() };
+                    HandleExpressionContext(tmpStatement.StatementCodeBlocks[0], inStatement.parExpression().expression(), null);
+                    tmpStatement.InnerContent = new CodeBlock();
+                    HandleBlockStatementStatement(tmpStatement.InnerContent, inStatement.statement().Last());
+                }
+            }            
             else if (inStatement.ASSERT() != null)
             {
                 throw new NotImplementedException("Not done yet");
@@ -188,10 +207,30 @@ namespace CodeConverterJava.Model
                 HandleExpressionContext(inParentCodeBlock, inStatement.expression()[0], null);
                 return;
             }
+            else if (inStatement.block() != null)
+            {
+                foreach (var tmpCode in inStatement.block().blockStatement())
+                {
+                    HandloBlockStatementContent(inParentCodeBlock, tmpCode);
+                }
+                return;
+            }
             else
             {
                 throw new NotImplementedException("Not done yet");
             }
+
+            if (inStatement.statement().Length > 0)
+            {
+                var tmpinnercount = (inStatement.ELSE() != null ? 1 : 0) 
+                    + (inStatement.IF() != null ? 1 : 0);
+                
+                if (inStatement.statement().Length != tmpinnercount)
+                {
+                    throw new NotImplementedException("Statement inner Statement length not matching");
+                }
+            }
+
             inParentCodeBlock.CodeEntries.Add(tmpStatement);
         }
 

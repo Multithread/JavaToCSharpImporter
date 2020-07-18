@@ -11,5 +11,10 @@ namespace CodeConverterCore.Model
         /// Yield Return?
         /// </summary>
         public bool IsYield { get; set; }
+
+        public override string ToString()
+        {
+            return $"{(IsYield ? "yield " : "")}return " + base.ToString();
+        }
     }
 }
