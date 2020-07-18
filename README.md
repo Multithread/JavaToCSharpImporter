@@ -8,12 +8,9 @@ The main target is to port Lucene 7.6 or 8 to C#, since IKVM might be dead.
 
 **Current Work Items**
 
-- Java: loading of if/for/foreach methode functions
-- Java: loading of methode calls inside function code 
-- Core: type cleaning inside of methode code
-- C#: Writing of Class Field Definitions
+- Java: loading of if/for/foreach methode functions and do let the IL understand it
 - Convert <T extends RollingBuffer.Resettable> into C# where T:RollingBuffer.Resettable
-- Even better Support for Generics in all the places
+- IL: Understandment for missing classes methods to be written in a seperate file so that there will be no Compile errors on the C# output
  
 
 **Working Parts so far**
@@ -21,46 +18,196 @@ The main target is to port Lucene 7.6 or 8 to C#, since IKVM might be dead.
 - Java: Loading of Code files with ANTLR
 - Java: Loading of Class definition information into IL
 - Java: Loading of Methode header information into IL
+- Java: loading of methode calls inside function code into IL
 - IL for Generic Classes and methods
-- C#: Writing of Function Headers
+- IL: Rewriting Comments to match C# Comments
+- IL: Renaming Methods to match C# Names
+- IL: Renaming Method-params to match C# Parameternames 
 - C#: Writing of Class headers
+- C#: Writing of Function Headers
+- C#: Writing of Class Field Definitions
 
 
-**Current State of Conversion (2019.02.10)**
+**Current State of Conversion (2020.07.18)**
+
+Conversion of the Lucene 7 Interface "Bits" into Valid C# code
 
 ```Java
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.lucene.util;
 
-import java.util.Collections;
 
-public class Class1 {
-private string Value;
-public Class1<int> CreateInstance(){
-return null;
+/**
+ * Interface for Bitset-like structures.
+ * @lucene.experimental
+ */
+
+public interface  Bits {
+  /** 
+   * Returns the value of the bit with the specified <code>index</code>.
+   * @param index index, should be non-negative and &lt; {@link #length()}.
+   *        The result of passing negative or out of bounds values is undefined
+   *        by this interface, <b>just don't do it!</b>
+   * @return <code>true</code> if the bit is set, <code>false</code> otherwise.
+   */
+  boolean get(int index);
+  
+  /** Returns the number of bits in this set */
+  int length();
+
+  Bits[] EMPTY_ARRAY = new Bits[0];
+  
+  /**
+   * Bits impl of the specified length with all bits set. 
+   */
+  class MatchAllBits implements Bits {
+    final int len;
+    
+    public MatchAllBits(int len) {
+      this.len = len;
+    }
+
+    @Override
+    public boolean get(int index) {
+      return true;
+    }
+
+    @Override
+    public int length() {
+      return len;
+    }
+  }
+
+  /**
+   * Bits impl of the specified length with no bits set. 
+   */
+  class MatchNoBits implements Bits {
+    final int len;
+    
+    public MatchNoBits(int len) {
+      this.len = len;
+    }
+
+    @Override
+    public boolean get(int index) {
+      return false;
+    }
+
+    @Override
+    public int length() {
+      return len;
+    }
+  }
 }
-public void SetValue(string inValue){
-Value=inValue;
-}
-}}
+
 ```
 gets converted to:
 
 ```C#
-using java.util.Collections;
 
-namespace org.apache.lucene.util
+
+/// <summary>
+/// Licensed to the Apache Software Foundation (ASF) under one or more
+/// contributor license agreements.  See the NOTICE file distributed with
+/// this work for additional information regarding copyright ownership.
+/// The ASF licenses this file to You under the Apache License, Version 2.0
+/// (the "License"); you may not use this file except in compliance with
+/// the License.  You may obtain a copy of the License at
+/// 
+///     http://www.apache.org/licenses/LICENSE-2.0
+/// 
+/// Unless required by applicable law or agreed to in writing, software
+/// distributed under the License is distributed on an "AS IS" BASIS,
+/// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+/// See the License for the specific language governing permissions and
+/// limitations under the License.
+/// </summary>
+namespace LuceNET.util
 {
-    public class Class1
+    /// <summary>
+    /// Interface for Bitset-like structures.
+    /// @lucene.experimental
+    /// </summary>
+    public interface Bits
     {
-        private string Value;
+        //Bits[] EMPTY_ARRAY =  new Bits[0];
 
-        public Class1<int> CreateInstance()
+        /// <summary>
+        /// Returns the value of the bit with the specified <code>index</code>.
+        /// @param index index, should be non-negative and &lt; {@link #length()}.
+        ///        The result of passing negative or out of bounds values is undefined
+        ///        by this interface, <b>just don't do it!</b>
+        /// @return <code>true</code> if the bit is set, <code>false</code> otherwise.
+        /// </summary>
+        bool Get(int inIndex)
+;
+
+        /// <summary>
+        /// Returns the number of bits in this set
+        /// </summary>
+        int Length()
+;
+        /// <summary>
+        /// Bits impl of the specified length with all bits set. 
+        /// </summary>
+        class MatchAllBits : Bits
         {
+            readonly int len;
+
+            public MatchAllBits(int inLen)
+            {
+                this.len = inLen;
+            }
+
+            public bool Get(int inIndex)
+            {
+                return true;
+            }
+
+            public int Length()
+            {
+                return len;
+            }
         }
 
-        public void SetValue(string inValue)
+        /// <summary>
+        /// Bits impl of the specified length with no bits set. 
+        /// </summary>
+        class MatchNoBits : Bits
         {
+            readonly int len;
+
+            public MatchNoBits(int inLen)
+            {
+                this.len = inLen;
+            }
+
+            public bool Get(int inIndex)
+            {
+                return false;
+            }
+
+            public int Length()
+            {
+                return len;
+            }
         }
     }
 }
+
 ```
