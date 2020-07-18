@@ -1,7 +1,9 @@
 ﻿using CodeConverterCore.Helper;
+using CodeConverterCore.ImportExport;
 using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
 using CodeConverterJava.Model;
+using CodeConverterJava.Resources;
 using JavaToCSharpConverter.Model;
 using MoreLinq;
 using System;
@@ -22,7 +24,7 @@ namespace JavaToCSharpConverter
             LuceneReplacerPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\LuceneReplacer.ini";
 
             var tmpIniData = DataHelper.LoadIniByPath(JavaMapperPath);
-            ProjectInformation tmpObjectInformation = LoadFilesByPath(inSourcePath, tmpIniData, new JavaLoader());
+            ProjectInformation tmpObjectInformation = LoadFilesByPath(inSourcePath, tmpIniData, new JavaLoader() { LoadDefaultData = true });
 
             Directory.CreateDirectory(inOutPath);
 

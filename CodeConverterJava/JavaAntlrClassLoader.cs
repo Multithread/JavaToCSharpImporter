@@ -302,6 +302,10 @@ namespace CodeConverterJava.Model
                         tmpTypeContainer.GenericTypes.Add(tmpGenericType);
                     }
                 }
+                if (inTypeContext.children.Last().GetText() == "]")
+                {
+                    tmpTypeContainer.IsArray = true;
+                }
             }
 
             return tmpTypeContainer;
@@ -327,7 +331,7 @@ namespace CodeConverterJava.Model
                     Comment = tmpComment,
                     AntlrCode = tmpIntDec.methodBody(),
                 };
-                foreach(var tmpEntry in tmpIntDec.interfaceMethodModifier())
+                foreach (var tmpEntry in tmpIntDec.interfaceMethodModifier())
                 {
                     if (tmpEntry.annotation() != null)
                     {
@@ -344,7 +348,7 @@ namespace CodeConverterJava.Model
                         var tmpFieldContainer = new FieldContainer
                         {
                             Name = tmpParam.variableDeclaratorId().IDENTIFIER().GetText(),
-                            Type = tmpParam.typeType().GetText(),
+                            Type = GetTypeContainer(tmpParam.typeType()),
                         };
                         foreach (var tmpInfo in tmpParam.variableModifier())
                         {
@@ -363,7 +367,7 @@ namespace CodeConverterJava.Model
                 var tmpFieldContainer = new FieldContainer
                 {
                     Name = tmpDeclarator.IDENTIFIER().GetText(),
-                    Type = tmpConstDef.typeType().GetText(),
+                    Type = GetTypeContainer(tmpConstDef.typeType()),
                     Comment = tmpComment,
                 };
                 var tmpInizialiser = tmpDeclarator.variableInitializer();

@@ -74,7 +74,7 @@ namespace JavaToCSharpConverter.Model
                 tmpStringBuilder.Append($"{string.Join(" ", inConverter.MapAndSortAttributes(tmpField.ModifierList, true))} {tmpTypeString} {tmpField.Name}");
                 if (tmpField.DefaultValue != null)
                 {
-                    throw new NotImplementedException("Field Default Vlaue");
+                    //throw new NotImplementedException("Field Default Vlaue");
                     //TODO Methode runner for ANTLR
                     tmpStringBuilder.Append($" = ");
 

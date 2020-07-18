@@ -4,8 +4,6 @@ using CodeConverterCore.Helper;
 using CodeConverterCSharp;
 using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;
-using JavaToCSharpConverter;
-using JavaToCSharpConverter.Model;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;

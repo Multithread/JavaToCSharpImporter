@@ -1,5 +1,8 @@
-﻿using CodeConverterCore.Interface;
+﻿using CodeConverterCore.Helper;
+using CodeConverterCore.ImportExport;
+using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
+using CodeConverterJava.Resources;
 using MoreLinq;
 using System;
 using System.Collections.Generic;
@@ -9,16 +12,23 @@ namespace CodeConverterJava.Model
 {
     public class JavaLoader : ILoadOOPLanguage
     {
+        public bool LoadDefaultData { get; set; } = false;
+
         public ProjectInformation CreateObjectInformation(List<string> inFileContents, IniParser.Model.IniData inConfiguration)
         {
             var tmpClassList = new List<ClassContainer>();
+            ProjectInformation tmpObjectInformation = new ProjectInformation();
+            if (LoadDefaultData)
+            {
+                tmpObjectInformation = ProjectInformationHelper.CreateSystemProjectInformation(ImportHelper.ImportClasses(JavaLangClassJson.JavaLang), ImportHelper.ImportAliasList(CompilerAliasHelper.SystemAliasJson), "java.lang");
+            }
+
             foreach (var tmpFile in inFileContents)
             {
                 //tmpClassList.AddRange(JavaClassLoader.LoadFile(tmpFile));
                 tmpClassList.AddRange(JavaAntlrClassLoader.LoaderOptimization(tmpFile));
             }
-            var tmpObjectInformation = new ProjectInformation()
-                .FillClasses(tmpClassList);
+            tmpObjectInformation.FillClasses(tmpClassList);
             //Add Mapped Methodes to Class List (So we don't need String oä as a Class List
             var tmpAdditionalClasses = new List<ClassContainer>();
 
@@ -45,7 +55,7 @@ namespace CodeConverterJava.Model
                 if (!tmpClass.MethodeList.Any(inItem => inItem.Name == tmpMethodeName))
                 {
                     //TODO Check for Param Equality
-                    if(tmpClass.MethodeList.Count(inItem => inItem.Name == tmpMethodeName) > 1)
+                    if (tmpClass.MethodeList.Count(inItem => inItem.Name == tmpMethodeName) > 1)
                     {
                         throw new NotImplementedException("Methode differenting with params not implemented");
                     }
