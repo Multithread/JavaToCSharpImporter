@@ -239,8 +239,6 @@ namespace CodeConverterCore.Analyzer
                     }
                     else
                     {
-                        //TODO Check for basic Types
-
                         //Check for in Variable List
                         var tmpVar = inNameFinder.VariableList?.FirstOrDefault(inItem => inItem.Name == tmpVal);
                         if (tmpVar != null)
@@ -264,7 +262,7 @@ namespace CodeConverterCore.Analyzer
                             }
                             else
                             {
-                                //Check for other Unknown Type
+                                //Check for Static Types, System aliases or other Unknown Type
                                 var tmpStaticClassOrUnknown = ProjectInformation.GetClassOrUnknownForType(tmpVal, inNameFinder.Class.FullUsingList);
                                 tmpConstant.Value = tmpStaticClassOrUnknown.Type;
                                 if (tmpConstant.Type != null)
@@ -276,7 +274,6 @@ namespace CodeConverterCore.Analyzer
                                     tmpConstant.Type = tmpStaticClassOrUnknown.Type;
                                 }
 
-                                //TODO Create Interface for both class Types
                                 inNameFinder.Class = tmpStaticClassOrUnknown;
 
                             }
@@ -287,7 +284,29 @@ namespace CodeConverterCore.Analyzer
             }
             else if (inCodeEntry is StatementCode)
             {
-                throw new NotImplementedException("CodeEntryHandling: StatementCode Handling not Implemented");
+                var tmpStatement = inCodeEntry as StatementCode;
+                if (tmpStatement.StatementType == Enum.StatementTypeEnum.If
+                    || tmpStatement.StatementType == Enum.StatementTypeEnum.Else)
+                {
+                    if (tmpStatement.InnerContent != null)
+                    {
+                        foreach (var tmpEntry in tmpStatement.InnerContent.CodeEntries)
+                        {
+                            CodeEntryHandling(tmpEntry, new FieldNameFinder(inNameFinder));
+                        }
+                    }
+                    if (tmpStatement.StatementCodeBlocks != null)
+                    {
+                        foreach (var tmpEntry in tmpStatement.StatementCodeBlocks.SelectMany(inItem => inItem.CodeEntries))
+                        {
+                            CodeEntryHandling(tmpEntry, new FieldNameFinder(inNameFinder));
+                        }
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException("CodeEntryHandling: StatementCode Handling not Implemented");
+                }
             }
             else if (inCodeEntry is SetFieldWithValue)
             {
@@ -372,6 +391,18 @@ namespace CodeConverterCore.Analyzer
                     else
                     {
                         throw new NotImplementedException("Unknown Methode on Class");
+                    }
+                }
+            }
+            else if (inCodeEntry is CodeExpression)
+            {
+                var tmpExpr = inCodeEntry as CodeExpression;
+                tmpReturnType = inReturnType;
+                foreach (var tmpSubClause in tmpExpr.SubClauseEntries)
+                {
+                    foreach (var tmpCodeEntry in tmpSubClause.CodeEntries)
+                    {
+                        tmpReturnType = CodeEntryHandling(tmpCodeEntry, inNameFinder, tmpReturnType);
                     }
                 }
             }

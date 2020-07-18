@@ -1,4 +1,5 @@
 ﻿using CodeConverterCore.Converter;
+using CodeConverterCore.Enum;
 using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
 using CodeConverterCSharp.Model;
@@ -128,9 +129,23 @@ namespace CodeConverterCSharp
             foreach (var tmpEntry in inCode.CodeEntries)
             {
                 inOutput.Append(CreateIndent(inIndentDepth));
-                AddCodeEntryToString(inOutput, tmpEntry);
-                inOutput.AppendLine(";");
+                AddCodeEntryToString(inOutput, tmpEntry, inIndentDepth);
+                if (inOutput[inOutput.Length - 1] == ')' ||
+                    char.IsLetterOrDigit(inOutput[inOutput.Length - 1]))
+                {
+                    inOutput.AppendLine(";");
+                }
             }
+        }
+
+        private string CreateStatementCodeBlock(CodeBlock inCode)
+        {
+            var tmpSb = new StringBuilder();
+            foreach (var tmpEntry in inCode.CodeEntries)
+            {
+                AddCodeEntryToString(tmpSb, tmpEntry, 0);
+            }
+            return tmpSb.ToString();
         }
 
         /// <summary>
@@ -138,7 +153,7 @@ namespace CodeConverterCSharp
         /// </summary>
         /// <param name="inOutput"></param>
         /// <param name="inCodeEntry"></param>
-        private void AddCodeEntryToString(StringBuilder inOutput, ICodeEntry inCodeEntry)
+        private void AddCodeEntryToString(StringBuilder inOutput, ICodeEntry inCodeEntry, int inIndentDepth = 0)
         {
             if (inCodeEntry == null) { return; }
             if (inCodeEntry is VariableDeclaration)
@@ -189,7 +204,7 @@ namespace CodeConverterCSharp
             }
             else if (inCodeEntry is StatementCode)
             {
-                AddStatementToString(inCodeEntry as StatementCode);
+                AddStatementToString(inOutput, inCodeEntry as StatementCode, inIndentDepth);
             }
             else if (inCodeEntry is SetFieldWithValue)
             {
@@ -240,6 +255,15 @@ namespace CodeConverterCSharp
                 var tmpMethodeCall = inCodeEntry as MethodeCall;
                 inOutput.Append($"{tmpMethodeCall.Name}({string.Join(",", tmpMethodeCall.Parameter.Select(inItem => AddCodeBlockToString(inItem)))})");
             }
+            else if (inCodeEntry is CodeExpression)
+            {
+                var tmpExpr = inCodeEntry as CodeExpression;
+                inOutput.Append("(");
+                inOutput.Append(string.Join($" {CSharpStaticInfo.GetOperatorString(tmpExpr.Manipulator)} ",
+                    tmpExpr.SubClauseEntries.Select(inItem => CreateStatementCodeBlock(inItem))
+                    ));
+                inOutput.Append(")");
+            }
             else
             {
                 throw new Exception("Code Entry Type not Implement");
@@ -253,10 +277,29 @@ namespace CodeConverterCSharp
             return tmpSb.ToString();
         }
 
-        private void AddStatementToString(StatementCode inStatement)
+        private void AddStatementToString(StringBuilder inOutput, StatementCode inStatement, int inIndentDepth)
         {
             switch (inStatement.StatementType)
             {
+                case StatementTypeEnum.If:
+                    var tmpStatementCodeString = CreateStatementCodeBlock(inStatement.StatementCodeBlocks[0]);
+                    if (tmpStatementCodeString.StartsWith("("))
+                    {
+                        inOutput.AppendLine($"if{tmpStatementCodeString}");
+                    }
+                    else
+                    {
+                        inOutput.AppendLine($"if({tmpStatementCodeString})");
+                    }
+                    inOutput.AppendLine(CreateIndent(inIndentDepth) + "{");
+                    AddCodeBlockToString(inOutput, inStatement.InnerContent, inIndentDepth + 1);
+                    inOutput.AppendLine(CreateIndent(inIndentDepth) + "}");
+                    break;
+                case StatementTypeEnum.Else:
+                    inOutput.AppendLine("else {");
+                    AddCodeBlockToString(inOutput, inStatement.InnerContent, inIndentDepth + 1);
+                    inOutput.AppendLine(CreateIndent(inIndentDepth) + "}");
+                    break;
                 default:
                     throw new Exception("Unhandlet Statement Type");
                     break;

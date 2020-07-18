@@ -18,8 +18,4 @@
     <ProjectReference Include="..\CodeConverterCSharp\CodeConverterCSharp.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Methode\" />
-  </ItemGroup>
-
 </Project>

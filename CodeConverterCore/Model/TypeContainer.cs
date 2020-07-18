@@ -157,6 +157,6 @@ namespace CodeConverterCore.Model
             return true;
         }
 
-        public static TypeContainer Void = new TypeContainer { Type = BaseType.Void };
+        public static TypeContainer Void = new TypeContainer { Type = BaseType.Void, Name="void" };
     }
 }

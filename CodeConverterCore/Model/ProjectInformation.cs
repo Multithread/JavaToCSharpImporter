@@ -127,6 +127,16 @@ namespace CodeConverterCore.Model
             _systemAlias.Add(inName, inContainer);
         }
 
+        /// <summary>
+        /// Add Unknonw Class to Project
+        /// </summary>
+        /// <param name="inClass"></param>
+        public ClassContainer GetAliasType(string inName)
+        {
+            _systemAlias.TryGetValue(inName, out var tmpName);
+            return tmpName;
+        }
+
 
         /// <summary>
         /// List of not known types

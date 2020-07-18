@@ -1,4 +1,5 @@
-﻿using CodeConverterCore.Interface;
+﻿using CodeConverterCore.Enum;
+using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +62,58 @@ namespace CodeConverterCore.Helper
             };
             inParentBlock.CodeEntries.Add(tmpData);
             return inParentBlock;
+        }
+
+        /// <summary>
+        /// Create new Variable
+        /// </summary>
+        public static CodeBlock AddReturnStatement(this CodeBlock inParentBlock, string inReturnVariableName)
+        {
+            var tmpData = new ReturnCodeEntry()
+            {
+                CodeEntries = new List<ICodeEntry> { new ConstantValue() { Value = inReturnVariableName } }
+            };
+            inParentBlock.CodeEntries.Add(tmpData);
+            return inParentBlock;
+        }
+        /// <summary>
+        /// Create new Variable
+        /// </summary>
+        public static CodeBlock AddIfStatement(this CodeBlock inParentBlock, CodeBlock inIfBlock, CodeBlock inIfContent, CodeBlock inElseContent = null)
+        {
+            var tmpStatement = new StatementCode()
+            {
+                StatementType = StatementTypeEnum.If,
+                InnerContent = inIfContent,
+                StatementCodeBlocks = new List<CodeBlock> { inIfBlock }
+            };
+            inParentBlock.CodeEntries.Add(tmpStatement);
+            if (inElseContent != null)
+            {
+                tmpStatement = new StatementCode()
+                {
+                    StatementType = StatementTypeEnum.Else,
+                    InnerContent = inElseContent
+                };
+                inParentBlock.CodeEntries.Add(tmpStatement);
+            }
+            return inParentBlock;
+        }
+
+        /// <summary>
+        /// Set Value to Variable
+        /// </summary>
+        public static CodeBlock CreateComparisionBlock(string inVar1, VariableOperatorType inOperatorType, string inVar2)
+        {
+            var tmpCodeBlock = new CodeBlock();
+            var tmpExpr = new CodeExpression()
+            {
+                Manipulator = inOperatorType,
+            };
+            tmpExpr.SubClauseEntries.Add(new CodeBlock { CodeEntries = new List<ICodeEntry> { new ConstantValue(inVar1) } });
+            tmpExpr.SubClauseEntries.Add(new CodeBlock { CodeEntries = new List<ICodeEntry> { new ConstantValue(inVar2) } });
+            tmpCodeBlock.CodeEntries.Add(tmpExpr);
+            return tmpCodeBlock;
         }
 
         /// <summary>

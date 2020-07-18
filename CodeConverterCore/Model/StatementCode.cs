@@ -1,6 +1,7 @@
 ﻿using CodeConverterCore.Enum;
 using CodeConverterCore.Interface;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeConverterCore.Model
 {
@@ -29,7 +30,7 @@ namespace CodeConverterCore.Model
         /// <returns></returns>
         public override string ToString()
         {
-            return StatementType.ToString();
+            return $"{StatementType.ToString()} {StatementCodeBlocks.FirstOrDefault()}{{{InnerContent}}}";
         }
     }
 }

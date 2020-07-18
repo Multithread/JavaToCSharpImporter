@@ -58,6 +58,7 @@
     <Compile Include="CSharpWriter.cs" />
     <Compile Include="Lucenene\ConverterLucene.cs" />
     <Compile Include="Model\FileWriteInfo.cs" />
+    <Compile Include="Model\CSharpStaticInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

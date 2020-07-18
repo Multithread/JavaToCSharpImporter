@@ -24,6 +24,10 @@ namespace CodeConverterCore.Helper
             {
                 return tmpClass;
             }
+            if (inProject.GetAliasType(inClassName)!=null)
+            {
+                return inProject.GetAliasType(inClassName);
+            }
             var tmpUnknown = inProject.UnknownClassForNameAndNamespaces(inClassName, inPossibleNamespaces);
             if (tmpUnknown == null)
             {
