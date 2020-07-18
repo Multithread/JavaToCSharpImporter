@@ -130,8 +130,10 @@ namespace CodeConverterCSharp
             {
                 inOutput.Append(CreateIndent(inIndentDepth));
                 AddCodeEntryToString(inOutput, tmpEntry, inIndentDepth);
-                if (inOutput[inOutput.Length - 1] == ')' ||
-                    char.IsLetterOrDigit(inOutput[inOutput.Length - 1]))
+                var tmpLastChar = inOutput[inOutput.Length - 1];
+                if (tmpLastChar == ')' ||
+                    tmpLastChar == ']' ||
+                    char.IsLetterOrDigit(tmpLastChar))
                 {
                     inOutput.AppendLine(";");
                 }
