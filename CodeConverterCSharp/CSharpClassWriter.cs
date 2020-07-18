@@ -235,12 +235,23 @@ namespace CodeConverterCSharp
                 inOutput.Append(" new ");
                 AddCodeEntryToString(inOutput, tmpReturn.InnerCode);
             }
+            else if (inCodeEntry is MethodeCall)
+            {
+                var tmpMethodeCall = inCodeEntry as MethodeCall;
+                inOutput.Append($"{tmpMethodeCall.Name}({string.Join(",", tmpMethodeCall.Parameter.Select(inItem => AddCodeBlockToString(inItem)))})");
+            }
             else
             {
                 throw new Exception("Code Entry Type not Implement");
             }
         }
 
+        private string AddCodeBlockToString(CodeBlock inCodeEntry)
+        {
+            var tmpSb = new StringBuilder();
+            AddCodeBlockToString(tmpSb, inCodeEntry, 0);
+            return tmpSb.ToString();
+        }
 
         private void AddStatementToString(StatementCode inStatement)
         {
@@ -350,6 +361,8 @@ namespace CodeConverterCSharp
                    case "abstract":
                        return 20;
                    case "override":
+                       return 30;
+                   case "default":
                        return 55;
                    case "readonly":
                        return 60;

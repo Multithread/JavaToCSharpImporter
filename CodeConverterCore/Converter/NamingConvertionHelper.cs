@@ -37,6 +37,11 @@ namespace CodeConverterCore.Converter
 
             foreach (var tmpMethode in inClass.MethodeList)
             {
+                for (var tmpI = 0; tmpI < tmpMethode.ModifierList.Count; tmpI++)
+                {
+                    tmpMethode.ModifierList[tmpI] = Converter.Modifier(tmpMethode.ModifierList[tmpI]);
+                }
+
                 foreach (var tmpField in tmpMethode.Parameter)
                 {
                     ConvertField(tmpField);

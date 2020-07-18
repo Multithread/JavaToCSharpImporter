@@ -1,6 +1,7 @@
 ﻿using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
 using MoreLinq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,22 +20,7 @@ namespace CodeConverterJava.Model
             var tmpObjectInformation = new ProjectInformation()
                 .FillClasses(tmpClassList);
             //Add Mapped Methodes to Class List (So we don't need String oä as a Class List
-            var tmpAdditionalClasses = new List<ClassContainer>
-            {
-                //new ClassContainer
-                //{
-                //    Type="int",
-                //    Namespace=""
-                //},new ClassContainer
-                //{
-                //    Type="String",
-                //    Namespace=""
-                //},new ClassContainer
-                //{
-                //    Type="File",
-                //    Namespace="java.io"
-                //}
-            };
+            var tmpAdditionalClasses = new List<ClassContainer>();
 
             //Load all Classes, with Methodes we might need
             foreach (var tmpMap in inConfiguration["Methode"])
@@ -44,25 +30,30 @@ namespace CodeConverterJava.Model
                 var tmpName = (TypeContainer)tmpLeftSplit.SkipLast(1).Last();
                 var tmpMethodeName = tmpLeftSplit.Last();
 
-                var tmpMethode = tmpAdditionalClasses.FirstOrDefault(inItem =>
+                var tmpClass = tmpAdditionalClasses.FirstOrDefault(inItem =>
                     inItem.Namespace == tmpNamespace && inItem.Type == tmpName);
-                if (tmpMethode == null)
+                if (tmpClass == null)
                 {
-                    tmpMethode = new ClassContainer
+                    tmpClass = new ClassContainer
                     {
                         Type = tmpName,
                         Namespace = tmpNamespace
                     };
-                    tmpAdditionalClasses.Add(tmpMethode);
+                    tmpAdditionalClasses.Add(tmpClass);
                 }
 
-                if (!tmpMethode.MethodeList.Any(inItem => inItem.Name == tmpMethodeName))
+                if (!tmpClass.MethodeList.Any(inItem => inItem.Name == tmpMethodeName))
                 {
                     //TODO Check for Param Equality
+                    if(tmpClass.MethodeList.Count(inItem => inItem.Name == tmpMethodeName) > 1)
+                    {
+                        throw new NotImplementedException("Methode differenting with params not implemented");
+                    }
+
                     var tmpNewMethode = new MethodeContainer();
                     tmpNewMethode.Name = tmpMethodeName;
                     tmpNewMethode.ModifierList = new List<string> { "public" };
-                    tmpMethode.MethodeList.Add(tmpNewMethode);
+                    tmpClass.MethodeList.Add(tmpNewMethode);
                 }
             }
 

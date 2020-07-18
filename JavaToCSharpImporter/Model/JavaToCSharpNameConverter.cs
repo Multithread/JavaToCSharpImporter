@@ -4,6 +4,7 @@ using CodeConverterCore.Interface;
 using System.Collections.Generic;
 using System.Linq;
 using CodeConverterCore.Model;
+using System;
 
 namespace JavaToCSharpConverter.Model
 {
@@ -84,6 +85,14 @@ namespace JavaToCSharpConverter.Model
                     {
                         inAttributeList[tmpI] = "sealed";
                     }
+                }
+                else if (inAttributeList[tmpI] == "default")
+                {
+                    if (inAttributeList.Count > 1)
+                    {
+                        throw new NotImplementedException("Interface default implemenation with mupltiple attributes not handled");
+                    }
+                    inAttributeList[tmpI] = "public";
                 }
             }
 

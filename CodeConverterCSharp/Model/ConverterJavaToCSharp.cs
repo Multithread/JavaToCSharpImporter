@@ -57,6 +57,10 @@ namespace JavaToCSharpConverter.Model
             {
                 return "readonly";
             }
+            if (inOldmodifier == "default")
+            {
+                return "public";
+            }
             return base.Modifier(inOldmodifier);
         }
 

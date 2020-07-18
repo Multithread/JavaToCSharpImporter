@@ -4,6 +4,8 @@ using CodeConverterCore.Helper;
 using CodeConverterCSharp;
 using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;
+using JavaToCSharpConverter;
+using JavaToCSharpConverter.Model;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,18 +19,23 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
         public void CheckAccountableInterfaceComments()
         {
             var tmpIniData = DataHelper.LoadIni("");
-            //var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { JavaBits }, tmpIniData);
-            //new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
+            var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { JavaBits }, tmpIniData);
+            new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
 
-            //var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList();
-//TODO Create Valid Asserts
-            //Assert.AreEqual(1, tmpResult.Count);
-            //Assert.AreEqual("Attribute", tmpResult[0].FullName);
-            ////Check for no double Comments
-            //Assert.AreEqual(false, tmpResult[0].Content.Contains("/*/*"));
-            ////Check for no double Comments
-            //int tmpCommentLineCount = new Regex(Regex.Escape("///")).Matches(tmpResult[0].Content).Count;
-            //Assert.AreEqual(19, tmpCommentLineCount);
+            new NamingConvertionHelper(new ConverterLucene()).ConvertProject(tmpObjectInformation);
+
+            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList();
+
+            Assert.AreEqual(1, tmpResult.Count);
+            Assert.AreEqual("Accountable", tmpResult[0].FullName);
+            //Check for no double Comments
+            Assert.AreEqual(false, tmpResult[0].Content.Contains("/*/*"));
+            //Check for no double Comments
+            int tmpCommentLineCount = new Regex(Regex.Escape("///")).Matches(tmpResult[0].Content).Count;
+            Assert.AreEqual(29, tmpCommentLineCount);
+
+            Assert.AreEqual(true, tmpResult[0].Content.Contains("Collections.emptyList();"));
+            Assert.AreEqual(true, tmpResult[0].Content.Contains("public Collection<Accountable>"));
         }
 
         private string JavaBits = @"/*

@@ -327,6 +327,14 @@ namespace CodeConverterJava.Model
                     Comment = tmpComment,
                     AntlrCode = tmpIntDec.methodBody(),
                 };
+                foreach(var tmpEntry in tmpIntDec.interfaceMethodModifier())
+                {
+                    if (tmpEntry.annotation() != null)
+                    {
+                        throw new NotImplementedException("Methode modifier annotation not Implemented");
+                    }
+                    tmpMethode.ModifierList.Add(tmpEntry.GetText());
+                }
                 var tmpParams = tmpIntDec.formalParameters()?.formalParameterList()?.formalParameter();
                 if (tmpParams != null)
                 {
@@ -593,35 +601,6 @@ namespace CodeConverterJava.Model
             var inType = inTypeOrVoid.GetText();
             var tmpTypes = GetGenericTypesFromGenericArgumentsChildren(new ClassContainer(), new List<IParseTree> { inTypeOrVoid });
             return tmpTypes.First();
-            //var tmpContainer = new TypeContainer();
-            //if (inType.EndsWith("[]"))
-            //{
-            //    tmpContainer.IsArray = true;
-            //    inType = inType.Substring(0, inType.Length - 2);
-            //}
-            //if (inType.Contains("extends"))
-            //{
-            //    tmpContainer.Name = inType.Split(' ')[0];
-            //    var tmpExtends = inType.Substring(inType.IndexOf("extends"));
-
-            //    tmpContainer.Extends = tmpExtends.Split(',').Select(inItem => inItem.Trim(' ')).ToList();
-            //}
-            //else if (inType.Contains("<"))
-            //{
-            //    tmpContainer.Name = inType.Substring(0, inType.IndexOf("<"));
-            //    var tmpInnerData = inType.Substring(inType.IndexOf("<") + 1, inType.Length - inType.IndexOf("<") - 2);
-            //    var tmpSplitted = CodeSplitter.FileDataSplitter(tmpInnerData, new ClassInterfaceSplitter()).ToList();
-            //    foreach (var tmpSplit in tmpSplitted)
-            //    {
-            //        tmpContainer.GenericTypes.Add(tmpSplit.Item2);
-            //    }
-            //}
-            //else
-            //{
-            //    tmpContainer.Name = inType;
-            //}
-
-            //return tmpContainer;
         }
 
         /// <summary>
