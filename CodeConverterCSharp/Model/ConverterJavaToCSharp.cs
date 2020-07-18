@@ -32,10 +32,10 @@ namespace JavaToCSharpConverter.Model
                 inOldComment = inOldComment.Replace("\n", Environment.NewLine);
             }
 
+            inOldComment = inOldComment.Trim('/').Trim('*');
+            inOldComment = inOldComment.Trim('/').Trim('*').Trim(' ');
             if (inOldComment.Contains(Environment.NewLine))
             {
-                inOldComment = inOldComment.Trim('/').Trim('*');
-                inOldComment = inOldComment.Trim('/').Trim('*');
                 inOldComment = ReplaceJavaLineComments.Replace(inOldComment, Environment.NewLine);
                 inOldComment = EmptyLinesStart.Replace(inOldComment, "");
                 inOldComment = EmptyLinesEnd.Replace(inOldComment, "");

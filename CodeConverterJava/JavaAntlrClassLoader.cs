@@ -127,8 +127,8 @@ namespace CodeConverterJava.Model
                         if (tmpSubChild is InterfaceBodyDeclarationContext)
                         {
                             ResolveInterfaceDeclaration(tmpClass, tmpComment, tmpSubChild);
-                            //An Interface has no Implementation of an Methode. 
-                            //tmpClass.MethodeList.ForEach(inItem => inItem.AntlrCode = null);
+                            //tmpClass.InnerClasses
+                            tmpComment = "";
                         }
                         else if (tmpSubChild is ErrorNodeImpl)
                         {
@@ -381,6 +381,7 @@ namespace CodeConverterJava.Model
                 {
                     UsingList = tmpClass.UsingList,
                     Namespace = tmpClass.Namespace,
+                    Comment = tmpComment,
                 };
 
                 tmpSubClass.Type = tmpBodyPart.classDeclaration().IDENTIFIER().GetText();

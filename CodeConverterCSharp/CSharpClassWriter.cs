@@ -50,7 +50,7 @@ namespace CodeConverterCSharp
         private void AddClassContainerString(ClassContainer inClass, StringBuilder tmpStringBuilder, int tmpIndentDepth)
         {
             //Create Class Header
-            AddComment(tmpStringBuilder, inClass.Comment, 1, true);
+            AddComment(tmpStringBuilder, inClass.Comment, tmpIndentDepth, true);
             tmpStringBuilder.AppendLine(CreateIndent(tmpIndentDepth) + CreateClassDefinition(inClass)); ;
             tmpStringBuilder.AppendLine(CreateIndent(tmpIndentDepth) + "{");
 
@@ -73,6 +73,11 @@ namespace CodeConverterCSharp
 
             for (var tmpI = 0; tmpI < inClass.InnerClasses.Count; tmpI++)
             {
+                if (tmpI > 0)
+                {
+                    //Add Newline between multiple subklasses
+                    tmpStringBuilder.AppendLine("");
+                }
                 AddClassContainerString(inClass.InnerClasses[tmpI], tmpStringBuilder, tmpIndentDepth + 1);
             }
 
