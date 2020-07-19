@@ -4,7 +4,7 @@ using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
 using System.Collections.Generic;
 using System.Linq;
-using CodeConverterCore.Analyzer;
+using CodeConverterCore.Converter;
 
 namespace CodeConverterCore.Helper
 {
@@ -111,11 +111,18 @@ namespace CodeConverterCore.Helper
         /// <param name="inProject"></param>
         /// <param name="inAliasList"></param>
         /// <param name="inSystemNamespace"></param>
-        public static ProjectInformation DoFullRun(List<LanguageMappingObject> inLanguageMapping, ILoadOOPLanguage inLanguageLoader, params string[] inClassStringData)
+        public static ProjectInformation DoFullRun(List<LanguageMappingObject> inLanguageMapping,IConverter inConverter, ILoadOOPLanguage inLanguageLoader, params string[] inClassStringData)
         {
             var tmpProject = inLanguageLoader.CreateObjectInformation(inClassStringData.ToList(), null);
 
+            foreach (var tmpCurrentClass in tmpProject.ClassList)
+            {
+                inConverter.PreAnalyzerClassModdifier(tmpCurrentClass);
+            }
+
             new AnalyzerCore().LinkProjectInformation(tmpProject);
+
+            new NamingConvertionHelper(inConverter).ConvertProject(tmpProject);
 
             MapLanguageNames(tmpProject, inLanguageMapping);
 

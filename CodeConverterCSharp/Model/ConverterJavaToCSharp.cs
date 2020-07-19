@@ -162,5 +162,32 @@ namespace JavaToCSharpConverter.Model
             }
             return inMethode.Name.PascalCase();
         }
+
+        /// <summary>
+        /// Handle Things, not handled inside other code
+        /// This is the last methode to be called on conversion
+        /// </summary>
+        /// <param name="inClass"></param>
+        public override void PreAnalyzerClassModdifier(ClassContainer inClass)
+        {
+            //Check all Constructors for SUPER Calls
+            foreach(var tmpMethode in inClass.MethodeList.Where(inItem=> inItem.Name == inClass.Name))
+            {
+                for(var tmpI = 0; tmpI < tmpMethode.Code.CodeEntries.Count; tmpI++)
+                { 
+                    var tmpCall = tmpMethode.Code.CodeEntries[tmpI] as MethodeCall;
+                    if (tmpCall!=null)
+                    {
+                        if (tmpCall.Name == "super")
+                        {
+                            //Change Methodecall to constructor call
+                            tmpMethode.ConstructorCall = tmpCall;
+                            tmpMethode.Code.CodeEntries.RemoveAt(tmpI);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

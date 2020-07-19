@@ -44,7 +44,13 @@ namespace CodeConverterCore.Converter
         /// Change Methode Names to be matching C# names
         /// </summary>
         /// <param name="inMethode"></param>
-        /// <returns></returns>
+        /// <returns>new Methode Name</returns>
         string MethodeName(MethodeContainer inMethode);
+
+        /// <summary>
+        /// Handle Things, not handled inside other code
+        /// </summary>
+        /// <param name="inClass"></param>
+        void PreAnalyzerClassModdifier(ClassContainer inClass);
     }
 }

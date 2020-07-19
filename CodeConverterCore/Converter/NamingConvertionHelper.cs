@@ -32,11 +32,6 @@ namespace CodeConverterCore.Converter
             inClass.NamespaceComment = Converter.Comment(inClass.NamespaceComment, true);
             inClass.Comment = Converter.Comment(inClass.Comment, true);
 
-            foreach (var tmpInnerClass in inClass.InnerClasses)
-            {
-                ConvertClass(tmpInnerClass);
-            }
-
             foreach (var tmpField in inClass.FieldList)
             {
                 ConvertField(tmpField, true, true);
@@ -51,6 +46,12 @@ namespace CodeConverterCore.Converter
             {
                 inClass.UsingList[tmpI] = Converter.Namespace(inClass.UsingList[tmpI]);
             }
+
+            foreach (var tmpInnerClass in inClass.InnerClasses)
+            {
+                ConvertClass(tmpInnerClass);
+            }
+            Converter.PreAnalyzerClassModdifier(inClass);
         }
 
         /// <summary>
@@ -96,6 +97,14 @@ namespace CodeConverterCore.Converter
                             }
                         }
                     }
+                }
+            }
+
+            if (tmpMethode.ConstructorCall != null)
+            {
+                if (tmpMethode.ConstructorCall.Name == "super")
+                {
+                    tmpMethode.ConstructorCall.Name = "base";
                 }
             }
         }

@@ -179,7 +179,7 @@ namespace CodeConverterJava.Model
                     tmpStatement.InnerContent = new CodeBlock();
                     HandleBlockStatementStatement(tmpStatement.InnerContent, inStatement.statement().Last());
                 }
-            }            
+            }
             else if (inStatement.ASSERT() != null)
             {
                 throw new NotImplementedException("Not done yet");
@@ -222,9 +222,9 @@ namespace CodeConverterJava.Model
 
             if (inStatement.statement().Length > 0)
             {
-                var tmpinnercount = (inStatement.ELSE() != null ? 1 : 0) 
+                var tmpinnercount = (inStatement.ELSE() != null ? 1 : 0)
                     + (inStatement.IF() != null ? 1 : 0);
-                
+
                 if (inStatement.statement().Length != tmpinnercount)
                 {
                     throw new NotImplementedException("Statement inner Statement length not matching");
@@ -420,7 +420,7 @@ namespace CodeConverterJava.Model
         {
             var tmpMethodeCall = new MethodeCall()
             {
-                Name = inMethodeCallContext.IDENTIFIER().GetText()
+                Name = (inMethodeCallContext.SUPER() ?? inMethodeCallContext.IDENTIFIER()).GetText()
             };
             if (inMethodeCallContext.expressionList() != null)
             {

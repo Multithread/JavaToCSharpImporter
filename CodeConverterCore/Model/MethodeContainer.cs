@@ -43,6 +43,11 @@ namespace CodeConverterCore.Model
         public List<string> ModifierList { get; set; } = new List<string>();
 
         /// <summary>
+        /// Constructor base calls (this and base)
+        /// </summary>
+        public MethodeCall ConstructorCall { get; set; }
+
+        /// <summary>
         /// Methode Comment
         /// </summary>
         public string Comment { get; set; }

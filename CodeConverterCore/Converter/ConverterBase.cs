@@ -62,5 +62,13 @@ namespace CodeConverterCore.Converter
         {
             return inMethode.Name;
         }
+
+        /// <summary>
+        /// Handle Things, not handled inside other code
+        /// </summary>
+        /// <param name="inClass"></param>
+        public virtual void PreAnalyzerClassModdifier(ClassContainer inClass)
+        {
+        }
     }
 }
