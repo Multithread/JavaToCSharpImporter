@@ -168,7 +168,7 @@ namespace JavaToCSharpConverter.Model
         /// This is the last methode to be called on conversion
         /// </summary>
         /// <param name="inClass"></param>
-        public override void PreAnalyzerClassModdifier(ClassContainer inClass)
+        public override void AnalyzerClassModifier(ClassContainer inClass)
         {
             //Check all Constructors for SUPER Calls
             foreach(var tmpMethode in inClass.MethodeList.Where(inItem=> inItem.Name == inClass.Name))
@@ -178,10 +178,11 @@ namespace JavaToCSharpConverter.Model
                     var tmpCall = tmpMethode.Code.CodeEntries[tmpI] as MethodeCall;
                     if (tmpCall!=null)
                     {
-                        if (tmpCall.Name == "super")
+                        if (tmpCall.MethodeLink.Name == "base")
                         {
                             //Change Methodecall to constructor call
                             tmpMethode.ConstructorCall = tmpCall;
+                            tmpMethode.ConstructorCall.Name = "base";
                             tmpMethode.Code.CodeEntries.RemoveAt(tmpI);
                             break;
                         }

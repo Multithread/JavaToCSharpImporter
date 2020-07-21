@@ -364,10 +364,10 @@ namespace CodeConverterCore.Analyzer
                     {
                         tmpParentClass = tmpParentSelection;
                     }
-                    else if (tmpParentClass.Name != "object")
+                    else if (tmpParentClass.Name != "Object")
                     {
                         //object type laden
-                        tmpParentClass = ProjectInformation.GetClassForType("object", new List<string> { "-" });
+                        tmpParentClass = ProjectInformation.GetClassForType("Object", new List<string> { ProjectInformation.SystemNamespace });
                     }
                     else
                     {
@@ -421,7 +421,7 @@ namespace CodeConverterCore.Analyzer
         /// <param name="inClass"></param>
         private void ManageTypeContainer(Dictionary<string, List<BaseType>> inDictionary, TypeContainer inTypeContainer, ClassContainer inClass)
         {
-            if (inTypeContainer == null)
+            if (inTypeContainer == null|| string.IsNullOrEmpty(inTypeContainer.Name))
             {
                 return;
             }

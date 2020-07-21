@@ -51,6 +51,6 @@ namespace CodeConverterCore.Converter
         /// Handle Things, not handled inside other code
         /// </summary>
         /// <param name="inClass"></param>
-        void PreAnalyzerClassModdifier(ClassContainer inClass);
+        void AnalyzerClassModifier(ClassContainer inClass);
     }
 }

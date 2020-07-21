@@ -87,9 +87,9 @@ namespace CodeConverterCore.Helper
                         if (tmpMap.Source.IsMethodeMapping())
                         {
                             //Apply all Methode renamings that need to be applied
-                            foreach(var tmpMethode in tmpClass.MethodeList)
+                            foreach (var tmpMethode in tmpClass.MethodeList)
                             {
-                                if(tmpMethode.Name== tmpMap.Source.MethodeName)
+                                if (tmpMethode.Name == tmpMap.Source.MethodeName)
                                 {
                                     tmpMethode.Name = tmpMap.Target.MethodeName;
                                 }
@@ -111,20 +111,20 @@ namespace CodeConverterCore.Helper
         /// <param name="inProject"></param>
         /// <param name="inAliasList"></param>
         /// <param name="inSystemNamespace"></param>
-        public static ProjectInformation DoFullRun(List<LanguageMappingObject> inLanguageMapping,IConverter inConverter, ILoadOOPLanguage inLanguageLoader, params string[] inClassStringData)
+        public static ProjectInformation DoFullRun(List<LanguageMappingObject> inLanguageMapping, IConverter inConverter, ILoadOOPLanguage inLanguageLoader, params string[] inClassStringData)
         {
             var tmpProject = inLanguageLoader.CreateObjectInformation(inClassStringData.ToList(), null);
-
-            foreach (var tmpCurrentClass in tmpProject.ClassList)
-            {
-                inConverter.PreAnalyzerClassModdifier(tmpCurrentClass);
-            }
 
             new AnalyzerCore().LinkProjectInformation(tmpProject);
 
             new NamingConvertionHelper(inConverter).ConvertProject(tmpProject);
 
             MapLanguageNames(tmpProject, inLanguageMapping);
+
+            foreach (var tmpCurrentClass in tmpProject.ClassList.Where(inItem => inItem.ClassType == Enum.ClassTypeEnum.Normal))
+            {
+                inConverter.AnalyzerClassModifier(tmpCurrentClass);
+            }
 
             return tmpProject;
         }

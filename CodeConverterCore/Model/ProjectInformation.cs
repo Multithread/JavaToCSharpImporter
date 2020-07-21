@@ -93,7 +93,8 @@ namespace CodeConverterCore.Model
         /// <returns>null if no Matching class is found</returns>
         public ClassContainer ClassForNameAndNamespaces(string inKey, List<string> inNamespaceList)
         {
-            if (!ClassDict.TryGetValue(inKey, out var tmpClassList)){
+            if (!ClassDict.TryGetValue(inKey, out var tmpClassList))
+            {
                 return null;
             }
             return tmpClassList.FirstOrDefault(inItem => inNamespaceList.Contains(inItem.Namespace));
@@ -110,7 +111,8 @@ namespace CodeConverterCore.Model
             {
                 inType.Type = new BaseType(inType.Name);
             }
-            if (!ClassDict.TryGetValue(inType.Name, out var tmpClassList)){
+            if (!ClassDict.TryGetValue(inType.Name, out var tmpClassList))
+            {
                 return null;
             }
             return tmpClassList.FirstOrDefault(inItem => inItem.Type.Type == inType.Type);
@@ -125,7 +127,10 @@ namespace CodeConverterCore.Model
         public void AddAlias(string inName, ClassContainer inContainer)
         {
             _systemAlias.Add(inName, inContainer);
+            SystemNamespace = inContainer.Namespace;
         }
+
+        public string SystemNamespace { get; set; }
 
         /// <summary>
         /// Add Unknonw Class to Project
@@ -169,7 +174,7 @@ namespace CodeConverterCore.Model
         /// <returns></returns>
         public List<UnknownTypeClass> GetAllUnknownTypes()
         {
-            var tmpList=new List<UnknownTypeClass>();
+            var tmpList = new List<UnknownTypeClass>();
             tmpList.AddRange(_UnknownTypeClassList);
             return tmpList;
         }

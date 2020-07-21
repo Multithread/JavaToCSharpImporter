@@ -25,6 +25,7 @@ namespace CodeConverterJava.Resources
     ""FieldList"": [],
     ""MethodeList"": [
       {
+        ""Name"": ""toString"",
         ""ReturnType"": {
           ""Name"": ""String"",
           ""GenericTypes"": [],
@@ -37,6 +38,20 @@ namespace CodeConverterJava.Resources
         ]
       },
       {
+        ""Name"": ""super"",
+        ""ReturnType"": {
+          ""Name"": """",
+          ""GenericTypes"": [],
+          ""IsArray"": false
+        },
+        ""GenericTypes"": [],
+        ""Parameter"": [],
+        ""ModifierList"": [
+          ""public""
+        ]
+      },
+      {
+        ""Name"": ""getHash"",
         ""ReturnType"": {
           ""Name"": ""Integer"",
           ""GenericTypes"": [],

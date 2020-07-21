@@ -1,4 +1,5 @@
-﻿using CodeConverterCore.Model;
+﻿using CodeConverterCore.Enum;
+using CodeConverterCore.Model;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,8 @@ namespace CodeConverterCore.Converter
         public void ConvertProject(ProjectInformation inProject)
         {
             _projectInfo = inProject;
-            foreach (var tmpClass in inProject.ClassList)
+            foreach (var tmpClass in inProject.ClassList
+                .Where(inItem=> inItem.ClassType == ClassTypeEnum.Normal))
             {
                 ConvertClass(tmpClass);
             }
@@ -51,7 +53,8 @@ namespace CodeConverterCore.Converter
             {
                 ConvertClass(tmpInnerClass);
             }
-            Converter.PreAnalyzerClassModdifier(inClass);
+
+            //Converter.AnalyzerClassModifier(inClass);
         }
 
         /// <summary>

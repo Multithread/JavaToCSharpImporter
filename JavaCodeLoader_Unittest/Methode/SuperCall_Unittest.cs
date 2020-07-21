@@ -1,9 +1,12 @@
 ﻿using CodeConverterCore.Converter;
 using CodeConverterCore.Helper;
+using CodeConverterCore.ImportExport;
 using CodeConverterCore.Model;
 using CodeConverterJava.Model;
+using JavaToCSharpConverter.Resources;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeConverterJava_Unittest.Methode
 {
@@ -38,10 +41,11 @@ public final class ThreadInterruptedException extends RuntimeException {
   public ThreadInterruptedException(InterruptedException ie) {
     super(ie);
   }}";
-            var tmpObjectInformation = ProjectInformationHelper.DoFullRun(new List<CodeConverterCore.ImportExport.LanguageMappingObject>(), new ConverterBase(), new JavaLoader(), tmpClass);
+            var tmpObjectInformation = ProjectInformationHelper.DoFullRun(new List<LanguageMappingObject>(), new ConverterBase(), new JavaLoader() { LoadDefaultData = true }, tmpClass);
 
-            var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0];
-            Assert.AreEqual("base", tmpMethodeContent.ConstructorCall.Name);
+            var tmpMethodeContent = tmpObjectInformation.ClassList.Last().MethodeList[0];
+            Assert.AreEqual("ThreadInterruptedException", tmpMethodeContent.Name);
+            Assert.AreEqual("super", (tmpMethodeContent.Code.CodeEntries[0] as MethodeCall).Name);
         }
 
     }

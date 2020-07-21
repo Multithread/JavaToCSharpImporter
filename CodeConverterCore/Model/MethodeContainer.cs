@@ -16,6 +16,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Name of the Methode
         /// </summary>
+        [JsonProperty]
         public string Name { get; set; }
 
         /// <summary>
