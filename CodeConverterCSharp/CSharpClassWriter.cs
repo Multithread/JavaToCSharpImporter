@@ -51,7 +51,7 @@ namespace CodeConverterCSharp
         {
             //Create Class Header
             AddComment(tmpStringBuilder, inClass.Comment, tmpIndentDepth, true);
-            tmpStringBuilder.AppendLine(CreateIndent(tmpIndentDepth) + CreateClassDefinition(inClass)); ;
+            tmpStringBuilder.AppendLine(CreateIndent(tmpIndentDepth) + CreateClassDefinition(inClass));
             tmpStringBuilder.AppendLine(CreateIndent(tmpIndentDepth) + "{");
 
             for (var tmpI = 0; tmpI < inClass.FieldList.Count; tmpI++)
@@ -111,6 +111,10 @@ namespace CodeConverterCSharp
             tmpMethodeString += string.Join(", ", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)}{inItem.Name}{(inItem.DefaultValue != null ? " = " + inItem.DefaultValue : "")}")) + ")";
 
             inOutput.AppendLine(CreateIndent(inIndentDepth) + tmpMethodeString);
+            if (inMethode.ConstructorCall != null)
+            {
+                inOutput.AppendLine($"{CreateIndent(inIndentDepth + 1)}:{inMethode.ConstructorCall.Name}({string.Join(",", inMethode.ConstructorCall.Parameter.Select(inItem => AddCodeBlockToString(inItem, false)))})");
+            }
 
             if (inMethode.Code == null)
             {
@@ -124,7 +128,7 @@ namespace CodeConverterCSharp
             }
         }
 
-        private void AddCodeBlockToString(StringBuilder inOutput, CodeBlock inCode, int inIndentDepth)
+        private void AddCodeBlockToString(StringBuilder inOutput, CodeBlock inCode, int inIndentDepth, bool inAddSemicolon = true)
         {
             foreach (var tmpEntry in inCode.CodeEntries)
             {
@@ -135,7 +139,10 @@ namespace CodeConverterCSharp
                     tmpLastChar == ']' ||
                     char.IsLetterOrDigit(tmpLastChar))
                 {
-                    inOutput.AppendLine(";");
+                    if (inAddSemicolon)
+                    {
+                        inOutput.AppendLine(";");
+                    }
                 }
             }
         }
@@ -272,10 +279,10 @@ namespace CodeConverterCSharp
             }
         }
 
-        private string AddCodeBlockToString(CodeBlock inCodeEntry)
+        private string AddCodeBlockToString(CodeBlock inCodeEntry, bool inAddSemicolon = true)
         {
             var tmpSb = new StringBuilder();
-            AddCodeBlockToString(tmpSb, inCodeEntry, 0);
+            AddCodeBlockToString(tmpSb, inCodeEntry, 0, inAddSemicolon);
             return tmpSb.ToString();
         }
 

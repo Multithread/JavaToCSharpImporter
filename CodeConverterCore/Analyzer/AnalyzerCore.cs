@@ -374,6 +374,13 @@ namespace CodeConverterCore.Analyzer
                         tmpParentClass = null;
                     }
 
+                    foreach (var tmpParam in tmpMethodeCall.Parameter)
+                    {
+                        foreach (var tmpEntry in tmpParam.CodeEntries)
+                        {
+                            CodeEntryHandling(tmpEntry, new FieldNameFinder(inNameFinder));
+                        }
+                    }
                 }
                 if (tmpMethodeCall.MethodeLink == null)
                 {
@@ -421,7 +428,7 @@ namespace CodeConverterCore.Analyzer
         /// <param name="inClass"></param>
         private void ManageTypeContainer(Dictionary<string, List<BaseType>> inDictionary, TypeContainer inTypeContainer, ClassContainer inClass)
         {
-            if (inTypeContainer == null|| string.IsNullOrEmpty(inTypeContainer.Name))
+            if (inTypeContainer == null || string.IsNullOrEmpty(inTypeContainer.Name))
             {
                 return;
             }
