@@ -10,8 +10,10 @@ using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;
 using JavaToCSharpConverter.Resources;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace JavaToCSharpConverter
 {
@@ -55,14 +57,16 @@ namespace JavaToCSharpConverter
         private static void WriteCSharpCode(string inOutPath, ProjectInformation inProjectInformation, IniParser.Model.IniData tmpReplacer)
         {
             new NamingConvertionHelper(new ConverterLucene()).ConvertProject(inProjectInformation);
-
             foreach (var tmpClass in inProjectInformation.ClassList)
             {
                 if (tmpClass.ClassType == ClassTypeEnum.System)
                 {
                     continue;
                 }
-
+                if (!tmpClass.UsingList.Contains("UnknownTypes"))
+                {
+                    tmpClass.UsingList.Add("UnknownTypes");
+                }
                 var tmpCSharp = new CSharpClassWriter().CreateClassFile(tmpClass).Content;
 
                 //Do Replacements for non-Fixable Code Changes
@@ -77,6 +81,30 @@ namespace JavaToCSharpConverter
                 Directory.CreateDirectory(tmpNewPath);
                 File.WriteAllText(Path.Combine(tmpNewPath, tmpClass.Name + ".cs"), tmpCSharp);
             }
+
+            //Write UnknownType File
+            var tmpUnknownFilePaths = new List<string>();
+            var tmpUsings = new List<string>();
+            foreach (var tmpClass in inProjectInformation.GetAllUnknownTypes())
+            {
+                var tmpCSharp = new StringBuilder();
+                tmpClass.ModifierList.Add("public");
+                tmpClass.ModifierList.Add("class");
+                new CSharpClassWriter().AddClassContainerString(tmpClass, tmpCSharp, 1);
+
+                tmpUnknownFilePaths.Add(tmpCSharp.ToString());
+            }
+
+            //Write unknown Types into File
+            var tmpUnknownFile = $@"
+{string.Join(Environment.NewLine, tmpUsings.OrderBy(inItem => inItem).Select(inItem => $"using {inItem};"))}
+
+namespace UnknownTypes
+{{
+{string.Join(Environment.NewLine + Environment.NewLine, tmpUnknownFilePaths)}
+}}";
+            Directory.CreateDirectory(Path.Combine(inOutPath));
+            File.WriteAllText(Path.Combine(inOutPath, "UnknownTypes.cs"), tmpUnknownFile);
         }
 
         private static ProjectInformation LoadFilesByPath(string inSourcePath, IniParser.Model.IniData inConfiguration, ILoadOOPLanguage inLanguageLoader)
@@ -186,7 +214,8 @@ namespace JavaToCSharpConverter
   </ItemGroup>
   <ItemGroup>
 {string.Join(Environment.NewLine, tmpObjectInformation.ClassList.Where(inItem => inItem.ClassType == ClassTypeEnum.Normal).Select(inItem => $"<Compile Include=\"{Path.Combine(inItem.Namespace.Split('.'))}\\{inItem.Name}.cs\" />"))}
-  </ItemGroup>
+<Compile Include=""UnknownTypes.cs"" />
+</ItemGroup>
   <ItemGroup>
 {""    /*<None Include=""App.config"" />
     <None Include=""packages.config"" />*/

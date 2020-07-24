@@ -1,8 +1,11 @@
-﻿namespace CodeConverterCore.ImportExport
+﻿using System.Diagnostics;
+
+namespace CodeConverterCore.ImportExport
 {
     /// <summary>
     /// Alias Object
     /// </summary>
+    [DebuggerDisplay("{Source} -> {Target}")]
     public class LanguageMappingObject
     {
         /// <summary>

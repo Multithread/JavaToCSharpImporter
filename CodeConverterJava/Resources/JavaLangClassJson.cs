@@ -51,6 +51,19 @@ namespace CodeConverterJava.Resources
         ]
       },
       {
+        ""Name"": ""this"",
+        ""ReturnType"": {
+          ""Name"": """",
+          ""GenericTypes"": [],
+          ""IsArray"": false
+        },
+        ""GenericTypes"": [],
+        ""Parameter"": [],
+        ""ModifierList"": [
+          ""public""
+        ]
+      },
+      {
         ""Name"": ""getHash"",
         ""ReturnType"": {
           ""Name"": ""Integer"",
@@ -100,6 +113,70 @@ namespace CodeConverterJava.Resources
   {
     ""Type"": {
       ""Name"": ""Boolean"",
+      ""GenericTypes"": [],
+      ""IsArray"": false
+    },
+    ""Namespace"": ""java.lang"",
+    ""UsingList"": [],
+    ""InterfaceList"": [],
+    ""ModifierList"": [
+      ""public"",
+      ""class""
+    ],
+    ""FieldList"": [],
+    ""MethodeList"": []
+  },
+  {
+    ""Type"": {
+      ""Name"": ""True"",
+      ""GenericTypes"": [],
+      ""IsArray"": false
+    },
+    ""Namespace"": ""java.lang"",
+    ""UsingList"": [],
+    ""InterfaceList"": [],
+    ""ModifierList"": [
+      ""public"",
+      ""class""
+    ],
+    ""FieldList"": [],
+    ""MethodeList"": []
+  },
+  {
+    ""Type"": {
+      ""Name"": ""False"",
+      ""GenericTypes"": [],
+      ""IsArray"": false
+    },
+    ""Namespace"": ""java.lang"",
+    ""UsingList"": [],
+    ""InterfaceList"": [],
+    ""ModifierList"": [
+      ""public"",
+      ""class""
+    ],
+    ""FieldList"": [],
+    ""MethodeList"": []
+  },
+  {
+    ""Type"": {
+      ""Name"": ""Int64"",
+      ""GenericTypes"": [],
+      ""IsArray"": false
+    },
+    ""Namespace"": ""java.lang"",
+    ""UsingList"": [],
+    ""InterfaceList"": [],
+    ""ModifierList"": [
+      ""public"",
+      ""class""
+    ],
+    ""FieldList"": [],
+    ""MethodeList"": []
+  },
+  {
+    ""Type"": {
+      ""Name"": ""Void"",
       ""GenericTypes"": [],
       ""IsArray"": false
     },

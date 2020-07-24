@@ -99,6 +99,7 @@ namespace CodeConverterCore.Helper
                         {
                             tmpClass.Namespace = tmpMap.Target.Namespace;
                             tmpClass.Type.Type.Name = tmpMap.Target.ClassName;
+                            tmpClass.Type.Name = tmpMap.Target.ClassName;
                         }
                     }
                 }

@@ -38,6 +38,7 @@ namespace CodeConverterCSharp
             AddComment(tmpStringBuilder, inClass.NamespaceComment, 0, true);
             tmpStringBuilder.AppendLine($"namespace {inClass.Namespace}");
             tmpStringBuilder.AppendLine("{");
+
             var tmpIndentDepth = 1;
 
             AddClassContainerString(inClass, tmpStringBuilder, tmpIndentDepth);
@@ -47,7 +48,7 @@ namespace CodeConverterCSharp
             return tmpInfo;
         }
 
-        private void AddClassContainerString(ClassContainer inClass, StringBuilder tmpStringBuilder, int tmpIndentDepth)
+        public void AddClassContainerString(ClassContainer inClass, StringBuilder tmpStringBuilder, int tmpIndentDepth)
         {
             //Create Class Header
             AddComment(tmpStringBuilder, inClass.Comment, tmpIndentDepth, true);
