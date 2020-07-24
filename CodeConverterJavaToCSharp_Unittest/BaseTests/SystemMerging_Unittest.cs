@@ -60,5 +60,19 @@ namespace org
             Assert.AreEqual(tmpExpectedResult, tmpResultText);
         }
 
+        [Test]
+        public void Test()
+        {
+            var tmpClass = @"
+package java.lang;
+public class Collection<T>{
+}";
+            var tmpObjectInformation = ProjectInformationHelper.DoFullRun(ImportHelper.ImportMappingList(ClassRenameJson.SystemAliasJson), new ConverterLucene(), new JavaLoader() { LoadDefaultData = true }, tmpClass);
+
+            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList();
+
+            ///Write to JSON to add additional Java Base Classes
+            var b= ExportHelper.CreateJsonFromClassList(tmpObjectInformation.ClassList.Where(inItem=> inItem.ClassType == CodeConverterCore.Enum.ClassTypeEnum.Normal).ToList());
+        }
     }
 }

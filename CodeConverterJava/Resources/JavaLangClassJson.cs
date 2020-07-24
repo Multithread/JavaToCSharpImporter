@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CodeConverterJava.Resources
+﻿namespace CodeConverterJava.Resources
 {
     public static class JavaLangClassJson
     {
@@ -181,6 +175,28 @@ namespace CodeConverterJava.Resources
       ""IsArray"": false
     },
     ""Namespace"": ""java.lang"",
+    ""UsingList"": [],
+    ""InterfaceList"": [],
+    ""ModifierList"": [
+      ""public"",
+      ""class""
+    ],
+    ""FieldList"": [],
+    ""MethodeList"": []
+  },
+  {
+    ""Type"": {
+      ""Name"": ""Collection"",
+      ""GenericTypes"": [
+        {
+          ""Name"": ""T"",
+          ""GenericTypes"": [],
+          ""IsArray"": false
+        }
+      ],
+      ""IsArray"": false
+    },
+    ""Namespace"": ""java.util.Collection"",
     ""UsingList"": [],
     ""InterfaceList"": [],
     ""ModifierList"": [

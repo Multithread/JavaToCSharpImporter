@@ -11,6 +11,7 @@
 {'Source':{'Namespace':'java.lang','ClassName':'True'},'Target':{'Namespace':'','ClassName':'true'}},
 {'Source':{'Namespace':'java.lang','ClassName':'False'},'Target':{'Namespace':'','ClassName':'false'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Int64'},'Target':{'Namespace':'','ClassName':'long'}},
+{'Source':{'Namespace':'java.lang','ClassName':'Collection'},'Target':{'Namespace':'System.Collections.ObjectModel','ClassName':'Collection'}},
 ]";
     }
 }
