@@ -359,7 +359,7 @@ namespace CodeConverterCore.Analyzer
                     }
                     var tmpParentSelection = tmpParentClass.InterfaceList
                         .Select(inItem => ProjectInformation.GetClassForType(inItem.Type.Name, tmpParentClass.FullUsingList))
-                        .FirstOrDefault(inItem => !inItem.ModifierList.Any(inModifier => inModifier == "interface"));
+                        .FirstOrDefault(inItem => inItem != null && !inItem.ModifierList.Any(inModifier => inModifier == "interface"));
                     if (tmpParentSelection != null)
                     {
                         tmpParentClass = tmpParentSelection;

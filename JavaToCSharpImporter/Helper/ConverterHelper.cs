@@ -34,6 +34,11 @@ namespace JavaToCSharpConverter
 
             ProjectInformationHelper.MapLanguageNames(tmpObjectInformation, ImportHelper.ImportMappingList(ClassRenameJson.SystemAliasJson));
 
+            foreach (var tmpCurrentClass in tmpObjectInformation.ClassList.Where(inItem => inItem.ClassType == ClassTypeEnum.Normal))
+            {
+                new ConverterLucene().AnalyzerClassModifier(tmpCurrentClass);
+            }
+
             Directory.CreateDirectory(inOutPath);
 
             var tmpReplacer = new IniParser.Parser.IniDataParser().Parse(File.ReadAllText(LuceneReplacerPath));

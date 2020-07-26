@@ -47,7 +47,7 @@ public final class ThreadInterruptedException extends RuntimeException {
 
 namespace org
 {
-    public sealed class ThreadInterruptedException
+    public sealed class ThreadInterruptedException : RuntimeException
     {
         public ThreadInterruptedException(InterruptedException inIe)
             :base(inIe)

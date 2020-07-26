@@ -48,7 +48,7 @@ namespace CodeConverterCore.Model
         /// <summary>
         /// Extends from Generic Types
         /// </summary>
-        public List<string> Extends { get; set; } = new List<string>();
+        public List<TypeContainer> Extends { get; set; } = new List<TypeContainer>();
 
         /// <summary>
         /// Is it an Array
@@ -78,7 +78,8 @@ namespace CodeConverterCore.Model
                 tmpContainer.Name = inType.Split(' ')[0];
                 var tmpExtends = inType.Substring(inType.IndexOf("extends"));
 
-                tmpContainer.Extends = tmpExtends.Split(',').Select(inItem => inItem.Trim(' ')).ToList();
+                tmpContainer.Extends = tmpExtends.Split(',').Select(inItem => inItem.Trim(' '))
+                    .Select(inItem => new TypeContainer(inItem)).ToList();
             }
             else if (inType.Contains("<"))
             {
@@ -157,6 +158,6 @@ namespace CodeConverterCore.Model
             return true;
         }
 
-        public static TypeContainer Void = new TypeContainer { Type = BaseType.Void, Name="void" };
+        public static TypeContainer Void = new TypeContainer { Type = BaseType.Void, Name = "void" };
     }
 }

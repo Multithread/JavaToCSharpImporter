@@ -102,14 +102,6 @@ namespace CodeConverterCore.Converter
                     }
                 }
             }
-
-            if (tmpMethode.ConstructorCall != null)
-            {
-                if (tmpMethode.ConstructorCall.Name == "super")
-                {
-                    tmpMethode.ConstructorCall.Name = "base";
-                }
-            }
         }
 
         private void ConvertField(FieldContainer inField, bool inIsProperty = false, bool inDefiningComment = false)

@@ -10,5 +10,7 @@ namespace CodeConverterCore.Model
         ITerminalNode EXTENDS();
 
         TypeParametersContext typeParameters();
+
+        TypeListContext typeList();
     }
 }

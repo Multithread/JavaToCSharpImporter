@@ -58,6 +58,19 @@
         ]
       },
       {
+        ""Name"": ""this"",
+        ""ReturnType"": {
+          ""Name"": """",
+          ""GenericTypes"": [],
+          ""IsArray"": false
+        },
+        ""GenericTypes"": [],
+        ""Parameter"": [],
+        ""ModifierList"": [
+          ""public""
+        ]
+      },
+      {
         ""Name"": ""getHash"",
         ""ReturnType"": {
           ""Name"": ""Integer"",
@@ -202,6 +215,28 @@
     ""ModifierList"": [
       ""public"",
       ""class""
+    ],
+    ""FieldList"": [],
+    ""MethodeList"": []
+  },
+  {
+    ""Type"": {
+      ""Name"": ""Comparator"",
+      ""GenericTypes"": [
+        {
+          ""Name"": ""T"",
+          ""GenericTypes"": [],
+          ""IsArray"": false
+        }
+      ],
+      ""IsArray"": false
+    },
+    ""Namespace"": ""java.util"",
+    ""UsingList"": [],
+    ""InterfaceList"": [],
+    ""ModifierList"": [
+      ""public"",
+      ""interface""
     ],
     ""FieldList"": [],
     ""MethodeList"": []

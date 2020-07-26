@@ -3,6 +3,7 @@ using Antlr4.Runtime.Tree;
 using CodeConverterCore.Helper;
 using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
+using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,12 +104,8 @@ namespace CodeConverterJava.Model
                     {
                         var tmpClassGenericTypes = GetGenericTypesFromGenericArgumentsChildren(tmpClass, tmpContext.typeParameters().GetChildren());
                         tmpClass.Type.GenericTypes.AddRange(tmpClassGenericTypes);
-                        var tmpExtends = tmpContext.EXTENDS()?.GetText();
-                        if (tmpExtends != null)
-                        {
-                            tmpClass.InterfaceList.Add(new TypeContainer(tmpExtends));
-                        }
                     }
+
                 }
                 if (tmpChild is ClassOrInterfaceModifierContext)
                 {
@@ -120,27 +117,66 @@ namespace CodeConverterJava.Model
                     tmpClass.ModifierList.Add("interface");
                     var tmpContext = tmpChild as InterfaceDeclarationContext;
 
-                    var tmpComment = "";
-                    for (var tmpI2 = 0; tmpI2 < tmpContext.interfaceBody().ChildCount; tmpI2++)
+                    if (tmpContext.typeList() != null)
                     {
-                        var tmpSubChild = tmpContext.interfaceBody().GetChild(tmpI2);
-                        if (tmpSubChild is InterfaceBodyDeclarationContext)
+                        foreach (var tmpEntry in tmpContext.typeList().typeType())
                         {
-                            ResolveInterfaceDeclaration(tmpClass, tmpComment, tmpSubChild);
-                            //tmpClass.InnerClasses
-                            tmpComment = "";
+                            var tmpTypeListType = GetTypeContainer(tmpEntry);
+                            tmpClass.InterfaceList.Add(tmpTypeListType);
                         }
-                        else if (tmpSubChild is ErrorNodeImpl)
-                        {
-                            tmpComment = tmpSubChild.GetText();
-                        }
-                        else if (tmpSubChild is TerminalNodeImpl)
-                        {
+                    }
 
-                        }
-                        else
+                    var tmpAdd = false;
+                    for (var tmpContextI = 0; tmpContextI < tmpContext.ChildCount; tmpContextI++)
+                    {
+                        if (!(tmpContext.children[tmpContextI] is ITerminalNode))
                         {
+                            continue;
+                        }
+                        var tmpChildText = tmpContext.children[tmpContextI].GetText();
+                        if (tmpChildText == "{")
+                        {
+                            break;
+                        }
+                        if (tmpChildText == "implements")
+                        {
+                            tmpAdd = true;
+                            continue;
+                        }
+                        if (tmpAdd)
+                        {
+                            if (tmpChildText == ",")
+                            {
+                                continue;
+                            }
+                            tmpClass.InterfaceList.Add(new TypeContainer(tmpChildText));
+                        }
+                    }
 
+                    var tmpComment = "";
+                    if (tmpContext.interfaceBody() != null)
+                    {
+                        for (var tmpI2 = 0; tmpI2 < tmpContext.interfaceBody().ChildCount; tmpI2++)
+                        {
+                            var tmpSubChild = tmpContext.interfaceBody().GetChild(tmpI2);
+                            if (tmpSubChild is InterfaceBodyDeclarationContext)
+                            {
+                                ResolveInterfaceDeclaration(tmpClass, tmpComment, tmpSubChild);
+                                //tmpClass.InnerClasses
+                                tmpComment = "";
+                            }
+                            else if (tmpSubChild is ErrorNodeImpl)
+                            {
+                                tmpComment = tmpSubChild.GetText();
+                            }
+                            else if (tmpSubChild is TerminalNodeImpl)
+                            {
+
+                            }
+                            else
+                            {
+
+                            }
                         }
                     }
                 }
@@ -433,9 +469,18 @@ namespace CodeConverterJava.Model
         /// <param name="inClassContext"></param>
         private static void FillClassContext(ClassContainer inClass, ClassDeclarationContext inClassContext)
         {
-            inClass.InterfaceList.AddRange(inClassContext.typeList().GetChildren().Select(inItem => new TypeContainer(inItem.GetText())));
+            if (inClassContext.typeList() != null)
+            {
+                inClass.InterfaceList.AddRange(inClassContext.typeList().typeType()
+                    .Select(inItem => GetTypeContainer(inItem)));
+            }
             inClass.ModifierList.Add("class");
             var tmpComment = "";
+
+            if (inClassContext.typeType() != null)
+            {
+                inClass.InterfaceList.Insert(0, GetTypeContainer(inClassContext.typeType()));
+            }
 
             var tmpChildList = inClassContext.classBody().GetChildren().ToList();
             for (var tmpI = 0; tmpI < tmpChildList.Count(); tmpI++)
