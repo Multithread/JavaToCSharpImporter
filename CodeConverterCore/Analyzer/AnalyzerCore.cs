@@ -251,7 +251,7 @@ namespace CodeConverterCore.Analyzer
                         else
                         {
                             //TODO Check for Parent CLass FieldList
-                            var tmpField = inNameFinder.Class.FieldList?.FirstOrDefault(inItem => inItem.Name == tmpVal);
+                            var tmpField = inNameFinder.Class?.FieldList?.FirstOrDefault(inItem => inItem.Name == tmpVal);
                             if (tmpField != null)
                             {
                                 tmpConstant.Value = tmpField;
@@ -263,7 +263,7 @@ namespace CodeConverterCore.Analyzer
                             else
                             {
                                 //Check for Static Types, System aliases or other Unknown Type
-                                var tmpStaticClassOrUnknown = ProjectInformation.GetClassOrUnknownForType(tmpVal, inNameFinder.Class.FullUsingList);
+                                var tmpStaticClassOrUnknown = ProjectInformation.GetClassOrUnknownForType(tmpVal, inNameFinder.Class?.FullUsingList ?? new List<string>());
                                 tmpConstant.Value = tmpStaticClassOrUnknown.Type;
                                 if (tmpConstant.Type != null)
                                 {
@@ -298,6 +298,16 @@ namespace CodeConverterCore.Analyzer
                     if (tmpStatement.StatementCodeBlocks != null)
                     {
                         foreach (var tmpEntry in tmpStatement.StatementCodeBlocks.SelectMany(inItem => inItem.CodeEntries))
+                        {
+                            CodeEntryHandling(tmpEntry, new FieldNameFinder(inNameFinder));
+                        }
+                    }
+                }
+                else if (tmpStatement.StatementType == Enum.StatementTypeEnum.Assert)
+                {
+                    foreach (var tmpCodeBlock in tmpStatement.StatementCodeBlocks)
+                    {
+                        foreach (var tmpEntry in tmpCodeBlock.CodeEntries)
                         {
                             CodeEntryHandling(tmpEntry, new FieldNameFinder(inNameFinder));
                         }

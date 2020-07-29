@@ -310,6 +310,13 @@ namespace CodeConverterCSharp
                     AddCodeBlockToString(inOutput, inStatement.InnerContent, inIndentDepth + 1);
                     inOutput.AppendLine(CreateIndent(inIndentDepth) + "}");
                     break;
+                case StatementTypeEnum.Assert:
+                    foreach (var tmpBlock in inStatement.StatementCodeBlocks)
+                    {
+                        inOutput.Append("Trace.Assert ");
+                        AddCodeBlockToString(inOutput, tmpBlock, 0);
+                    }
+                    break;
                 default:
                     throw new Exception("Unhandlet Statement Type");
                     break;

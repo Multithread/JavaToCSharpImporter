@@ -182,7 +182,14 @@ namespace CodeConverterJava.Model
             }
             else if (inStatement.ASSERT() != null)
             {
-                throw new NotImplementedException("Not done yet");
+                tmpStatement.StatementType = StatementTypeEnum.Assert;
+                tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { };
+                foreach (var tmpStatementExpression in inStatement.expression())
+                {
+                    var tmpBlock = new CodeBlock();
+                    HandleExpressionContext(tmpBlock, tmpStatementExpression);
+                    tmpStatement.StatementCodeBlocks.Add(tmpBlock);
+                }
             }
             else if (inStatement.IDENTIFIER() != null)
             {

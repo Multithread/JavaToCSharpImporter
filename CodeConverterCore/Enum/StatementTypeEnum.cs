@@ -7,5 +7,6 @@
         Else = 3,
         For = 4,
         While = 5,
+        Assert = 6,
     }
 }
