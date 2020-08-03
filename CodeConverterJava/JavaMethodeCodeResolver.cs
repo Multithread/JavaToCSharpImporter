@@ -358,6 +358,29 @@ namespace CodeConverterJava.Model
                                 tmpParent = tmpAccess;
                             }
                         }
+                        else if (tmpSecondChildText == "?")
+                        {
+                            //Implement Elvis
+                            var tmpStatement = new StatementCode
+                            {
+                                StatementType = StatementTypeEnum.Elvis,
+                                StatementCodeBlocks= new List<CodeBlock>()
+                            };
+                            //Boolean query
+                            var tmpCodeBlock = new CodeBlock();
+                            HandleExpressionContext(tmpCodeBlock, tmpChildList[0] as ExpressionContext, inVariable);
+                            tmpStatement.StatementCodeBlocks.Add(tmpCodeBlock);
+                            //First Result
+                            tmpCodeBlock = new CodeBlock();
+                            HandleExpressionContext(tmpCodeBlock, tmpChildList[2] as ExpressionContext, inVariable);
+                            tmpStatement.StatementCodeBlocks.Add(tmpCodeBlock);
+                            //Second Result
+                            tmpCodeBlock = new CodeBlock();
+                            HandleExpressionContext(tmpCodeBlock, tmpChildList[2] as ExpressionContext, inVariable);
+                            tmpStatement.StatementCodeBlocks.Add(tmpCodeBlock);
+
+                            inCodeBlock.CodeEntries.Add(tmpStatement);
+                        }
                         else
                         {
                             throw new NotImplementedException("Not done yet");

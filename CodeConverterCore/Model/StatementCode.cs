@@ -30,7 +30,12 @@ namespace CodeConverterCore.Model
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{StatementType.ToString()} {StatementCodeBlocks.FirstOrDefault()}{{{InnerContent}}}";
+            switch (StatementType)
+            {
+                case StatementTypeEnum.Elvis:
+                    return $" {StatementCodeBlocks[0]} ? {StatementCodeBlocks[1]} : {StatementCodeBlocks[2]};";
+            }
+            return $"{StatementType} {StatementCodeBlocks.FirstOrDefault()}{{{InnerContent}}}";
         }
     }
 }

@@ -303,7 +303,8 @@ namespace CodeConverterCore.Analyzer
                         }
                     }
                 }
-                else if (tmpStatement.StatementType == Enum.StatementTypeEnum.Assert)
+                else if (tmpStatement.StatementType == Enum.StatementTypeEnum.Assert
+                    || tmpStatement.StatementType == Enum.StatementTypeEnum.Elvis)
                 {
                     foreach (var tmpCodeBlock in tmpStatement.StatementCodeBlocks)
                     {

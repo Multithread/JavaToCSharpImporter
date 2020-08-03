@@ -8,5 +8,6 @@
         For = 4,
         While = 5,
         Assert = 6,
+        Elvis = 7,
     }
 }

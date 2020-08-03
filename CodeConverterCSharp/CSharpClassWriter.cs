@@ -317,6 +317,13 @@ namespace CodeConverterCSharp
                         AddCodeBlockToString(inOutput, tmpBlock, 0);
                     }
                     break;
+                case StatementTypeEnum.Elvis:
+                    AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[0], 0, false);
+                    inOutput.Append(" ? ");
+                    AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[1], 0, false);
+                    inOutput.Append(" : ");
+                    AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[2], 0);
+                    break;
                 default:
                     throw new Exception("Unhandlet Statement Type");
                     break;
