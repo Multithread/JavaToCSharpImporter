@@ -15,7 +15,7 @@ namespace CodeConverterJavaToCSharp_Unittest
     public class NewObjectParamCall_Unittest
     {
         [Test]
-        public void SimpleReturnElvis()
+        public void SimpleReturnNewObject()
         {
             var tmpClass = @"
 package org;
@@ -40,6 +40,39 @@ namespace org
         public void OneSmallerThanTwo(bool inFirst, int in1, int in2)
         {
             return  new Date(in1);
+        }
+    }
+}
+";
+            //Check Elvis Result
+            Assert.AreEqual(tmpExpectedResult, tmpResult[0].Content);
+        }
+        [Test]
+        public void SetVariableTonewObject()
+        {
+            var tmpClass = @"
+package org;
+public class Class1 {
+public void OneSmallerThanTwo(bool inFirst,int in1, int in2){
+var b= new Date(in1);
+}
+";
+            var tmpIniData = DataHelper.LoadIni("");
+            var tmpObjectInformation = new JavaLoader().CreateObjectInformation(new List<string> { tmpClass }, tmpIniData);
+
+            new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
+
+            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterJavaToCSharp()).ToList();
+
+            var tmpExpectedResult = @"
+
+namespace org
+{
+    public class Class1
+    {
+        public void OneSmallerThanTwo(bool inFirst, int in1, int in2)
+        {
+            var b =              new Date(in1);
         }
     }
 }

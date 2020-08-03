@@ -87,16 +87,19 @@ namespace CodeConverterCore.Converter
                     foreach (var tmpSubclass in tmpClass.InterfaceList)
                     {
                         var tmpSubClassContainer = _projectInfo.GetClassForType(tmpSubclass.Name, tmpClass.FullUsingList);
-                        tmpParentClassQueue.Enqueue(tmpSubClassContainer);
-
-                        //Check if Methode with same parameter Typers exist
-                        if (tmpSubClassContainer.MethodeList.Any(inItem => inItem.Name == tmpMethode.Name || inItem.Name == tmpOldName))
+                        if (tmpSubClassContainer != null)
                         {
-                            if (tmpSubClassContainer.IsInterface())
+                            tmpParentClassQueue.Enqueue(tmpSubClassContainer);
+
+                            //Check if Methode with same parameter Typers exist
+                            if (tmpSubClassContainer.MethodeList.Any(inItem => inItem.Name == tmpMethode.Name || inItem.Name == tmpOldName))
                             {
-                                tmpMethode.ModifierList = tmpMethode.ModifierList.Where(inItem => inItem != "override").ToList();
-                                tmpHandled = true;
-                                break;
+                                if (tmpSubClassContainer.IsInterface())
+                                {
+                                    tmpMethode.ModifierList = tmpMethode.ModifierList.Where(inItem => inItem != "override").ToList();
+                                    tmpHandled = true;
+                                    break;
+                                }
                             }
                         }
                     }

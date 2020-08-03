@@ -135,6 +135,12 @@ namespace CodeConverterCSharp
             {
                 inOutput.Append(CreateIndent(inIndentDepth));
                 AddCodeEntryToString(inOutput, tmpEntry, inIndentDepth);
+                //TODO find final fix for VariableDeclaration without semicolon at the end
+                if(tmpEntry is VariableDeclaration)
+                {
+                    inOutput.Append(" = ");
+                    continue;
+                }
                 var tmpLastChar = inOutput[inOutput.Length - 1];
                 if (tmpLastChar == ')' ||
                     tmpLastChar == ']' ||
