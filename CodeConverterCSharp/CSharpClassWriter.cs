@@ -259,6 +259,17 @@ namespace CodeConverterCSharp
                 var tmpReturn = inCodeEntry as NewObjectDeclaration;
                 inOutput.Append(" new ");
                 AddCodeEntryToString(inOutput, tmpReturn.InnerCode);
+                if (tmpReturn.ArgumentList != null)
+                {
+                    inOutput.Append($"({string.Join(", ", tmpReturn.ArgumentList.Select(inItem => CreateStatementCodeBlock(inItem)))})");
+                }
+                else
+                {
+                    if (inOutput[inOutput.Length - 1] != ']')
+                    {
+                        inOutput.Append("()");
+                    }
+                }
             }
             else if (inCodeEntry is MethodeCall)
             {

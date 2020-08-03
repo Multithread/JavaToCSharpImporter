@@ -355,7 +355,18 @@ namespace CodeConverterCore.Analyzer
             }
             else if (inCodeEntry is NewObjectDeclaration)
             {
-                CodeEntryHandling((inCodeEntry as NewObjectDeclaration).InnerCode, inNameFinder);
+                var tmpObjectDecl = (inCodeEntry as NewObjectDeclaration);
+                CodeEntryHandling(tmpObjectDecl.InnerCode, inNameFinder);
+                if (tmpObjectDecl.ArgumentList != null)
+                {
+                    foreach (var tmpArgument in tmpObjectDecl.ArgumentList)
+                    {
+                        foreach (var tmpEntry in tmpArgument.CodeEntries)
+                        {
+                            CodeEntryHandling(tmpEntry, inNameFinder);
+                        }
+                    }
+                }
             }
             else if (inCodeEntry is MethodeCall)
             {

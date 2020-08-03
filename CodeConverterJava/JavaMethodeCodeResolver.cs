@@ -364,7 +364,7 @@ namespace CodeConverterJava.Model
                             var tmpStatement = new StatementCode
                             {
                                 StatementType = StatementTypeEnum.Elvis,
-                                StatementCodeBlocks= new List<CodeBlock>()
+                                StatementCodeBlocks = new List<CodeBlock>()
                             };
                             //Boolean query
                             var tmpCodeBlock = new CodeBlock();
@@ -428,7 +428,13 @@ namespace CodeConverterJava.Model
                 var tmpClass = inContext.classCreatorRest();
                 if (tmpClass.arguments()?.expressionList() != null)
                 {
-                    throw new NotImplementedException("Not done yet");
+                    tmpEntry.ArgumentList = new List<CodeBlock>();
+                    foreach (var tmpExpression in tmpClass.arguments().expressionList().expression())
+                    {
+                        var tmpBlock = new CodeBlock();
+                        HandleExpressionContext(tmpBlock, tmpExpression);
+                        tmpEntry.ArgumentList.Add(tmpBlock);
+                    }
                 }
                 if (tmpClass.classBody() != null)
                 {
