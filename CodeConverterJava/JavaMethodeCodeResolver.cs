@@ -12,6 +12,11 @@ namespace CodeConverterJava.Model
 {
     public class JavaMethodeCodeResolver : IResolveMethodeContentToIL
     {
+        /// <summary>
+        /// ParentClass Info
+        /// </summary>
+        public ClassContainer ParentClass { get; set; }
+
         public void Resolve(MethodeContainer inMethodeContainer)
         {
             if (inMethodeContainer.AntlrCode == null)
@@ -398,7 +403,7 @@ namespace CodeConverterJava.Model
                         {
                             throw new NotImplementedException("Not done yet");
                         }
-                        inCodeBlock.CodeEntries.Add(HandleCreatorContext(tmpChildList[1] as CreatorContext));
+                        inCodeBlock.CodeEntries.Add(HandleCreatorContext(tmpChildList[1] as CreatorContext, inVariable));
                     }
                     else
                     {
@@ -409,7 +414,7 @@ namespace CodeConverterJava.Model
 
         }
 
-        private NewObjectDeclaration HandleCreatorContext(CreatorContext inContext)
+        private NewObjectDeclaration HandleCreatorContext(CreatorContext inContext, VariableDeclaration inVariableDeclaration)
         {
             var tmpEntry = new NewObjectDeclaration();
             ConstantValue tmpValue = null;
@@ -438,7 +443,25 @@ namespace CodeConverterJava.Model
                 }
                 if (tmpClass.classBody() != null)
                 {
-                    throw new NotImplementedException("Not done yet");
+                    if (inVariableDeclaration == null)
+                    {
+                        throw new NotImplementedException("Not done yet");
+                    }
+                    var tmpClassContainer = new ClassContainer()
+                    {
+                        Namespace = "",
+                        ModifierList = ParentClass.ModifierList.Where(inItem => inItem != "abstract").ToList(),
+                    };
+
+                    JavaAntlrClassLoader.ManageClassBodyContext(tmpClassContainer, "", tmpClass.classBody());
+                    tmpClassContainer.Type = new TypeContainer(ParentClass.Name + "_" + ParentClass.InnerClasses.Count);
+                    tmpClassContainer.InterfaceList.Add(inVariableDeclaration.Type);
+                    ParentClass.InnerClasses.Add(tmpClassContainer);
+
+                    tmpValue = new ConstantValue();
+                    tmpValue.Type = new TypeContainer() { Name = tmpClassContainer.Name };
+                    tmpEntry.InnerCode = tmpValue;
+
                 }
             }
             if (inContext.arrayCreatorRest() != null)

@@ -407,7 +407,7 @@ namespace CodeConverterJava.Model
                     Comment = tmpComment,
                 };
                 var tmpInizialiser = tmpDeclarator.variableInitializer();
-                tmpFieldContainer.DefaultValue = CreateBlockFromMethodeInizialiser(tmpInizialiser);
+                tmpFieldContainer.DefaultValue = CreateBlockFromMethodeInizialiser(tmpInizialiser, tmpClass, tmpFieldContainer);
 
                 tmpClass.FieldList.Add(tmpFieldContainer);
             }
@@ -444,7 +444,7 @@ namespace CodeConverterJava.Model
             }
         }
 
-        private static CodeBlock CreateBlockFromMethodeInizialiser(VariableInitializerContext tmpInizialiser)
+        private static CodeBlock CreateBlockFromMethodeInizialiser(VariableInitializerContext tmpInizialiser, ClassContainer inParentClass, VariableDeclaration inVarDeclaration)
         {
             if (tmpInizialiser != null)
             {
@@ -455,7 +455,8 @@ namespace CodeConverterJava.Model
                 }
                 else
                 {
-                    new JavaMethodeCodeResolver().HandleExpressionContext(tmpBlock, tmpInizialiser.expression(), null);
+                    new JavaMethodeCodeResolver() { ParentClass = inParentClass }
+                        .HandleExpressionContext(tmpBlock, tmpInizialiser.expression(), inVarDeclaration);
                 }
                 return tmpBlock;
             }
@@ -467,7 +468,7 @@ namespace CodeConverterJava.Model
         /// </summary>
         /// <param name="inClass"></param>
         /// <param name="inClassContext"></param>
-        private static void FillClassContext(ClassContainer inClass, ClassDeclarationContext inClassContext)
+        internal static void FillClassContext(ClassContainer inClass, ClassDeclarationContext inClassContext)
         {
             if (inClassContext.typeList() != null)
             {
@@ -482,7 +483,13 @@ namespace CodeConverterJava.Model
                 inClass.InterfaceList.Insert(0, GetTypeContainer(inClassContext.typeType()));
             }
 
-            var tmpChildList = inClassContext.classBody().GetChildren().ToList();
+            var tmpClassBoy = inClassContext.classBody();
+            tmpComment = ManageClassBodyContext(inClass, tmpComment, tmpClassBoy);
+        }
+
+        internal static string ManageClassBodyContext(ClassContainer inClass, string tmpComment, ClassBodyContext tmpClassBoy)
+        {
+            var tmpChildList = tmpClassBoy.GetChildren().ToList();
             for (var tmpI = 0; tmpI < tmpChildList.Count(); tmpI++)
             {
                 var tmpItem = tmpChildList[tmpI];
@@ -490,6 +497,10 @@ namespace CodeConverterJava.Model
                 if (tmpItem is ClassBodyDeclarationContext)
                 {
                     var tmpClassBody = tmpItem as ClassBodyDeclarationContext;
+                    if (tmpClassBody.memberDeclaration() == null)
+                    {
+                        continue;
+                    }
                     var tmpDeclaration = tmpClassBody.memberDeclaration();
                     if (tmpDeclaration == null)
                     {
@@ -506,6 +517,11 @@ namespace CodeConverterJava.Model
                             tmpModifierText = tmpModifierText.Substring(1).ToLower();
                         }
                         tmpModifierList.Add(tmpModifierText);
+                    }
+                    if (tmpClassBody.children[1].GetText() == "abstract")
+                    {
+                        tmpModifierList.Add("abstract");
+                        inClass.ModifierList.Add("abstract");
                     }
 
                     if (tmpDeclaration.methodDeclaration() != null)
@@ -551,7 +567,7 @@ namespace CodeConverterJava.Model
                         tmpComment = "";
                         if (tmpModifier.variableDeclarators().variableDeclarator().Length > 0)
                         {
-                            tmpFieldContainer.DefaultValue = CreateBlockFromMethodeInizialiser(tmpModifier.variableDeclarators().variableDeclarator()[0].variableInitializer());
+                            tmpFieldContainer.DefaultValue = CreateBlockFromMethodeInizialiser(tmpModifier.variableDeclarators().variableDeclarator()[0].variableInitializer(), inClass, tmpFieldContainer);
                         }
                         tmpFieldContainer.ModifierList = tmpModifierList;
                         inClass.FieldList.Add(tmpFieldContainer);
@@ -619,6 +635,8 @@ namespace CodeConverterJava.Model
 
                 }
             }
+
+            return tmpComment;
         }
 
         private static void HandlMethodeParameterContext(MethodeContainer tmpMethode, IFormalParameterContext tmpParam)

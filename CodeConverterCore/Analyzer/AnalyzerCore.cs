@@ -30,6 +30,10 @@ namespace CodeConverterCore.Analyzer
             //Load all Types of Classes
             foreach (var tmpClass in inLoadedProject.ClassList)
             {
+                if (tmpClass.Type == null)
+                {
+                    continue;
+                }
                 tmpTypeDictionary.Add(tmpClass.Name, new BaseType(tmpClass.Type.Name, tmpClass.Namespace));
                 if (tmpTypeDictionary.TryGetValue(tmpClass.Name, inItem => inItem.Namespace == tmpClass.Namespace, out var tmpResult))
                 {
