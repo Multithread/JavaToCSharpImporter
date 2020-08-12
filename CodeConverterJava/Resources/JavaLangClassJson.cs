@@ -5,28 +5,19 @@
         public static string JavaLang = @"[
   {
     ""Type"": {
-      ""Name"": ""Object"",
-      ""GenericTypes"": [],
-      ""IsArray"": false
+      ""Name"": ""Object""
     },
     ""Namespace"": ""java.lang"",
-    ""UsingList"": [],
-    ""InterfaceList"": [],
     ""ModifierList"": [
       ""public"",
       ""class""
     ],
-    ""FieldList"": [],
     ""MethodeList"": [
       {
         ""Name"": ""toString"",
         ""ReturnType"": {
-          ""Name"": ""String"",
-          ""GenericTypes"": [],
-          ""IsArray"": false
+          ""Name"": ""String""
         },
-        ""GenericTypes"": [],
-        ""Parameter"": [],
         ""ModifierList"": [
           ""public""
         ]
@@ -34,12 +25,17 @@
       {
         ""Name"": ""super"",
         ""ReturnType"": {
-          ""Name"": """",
-          ""GenericTypes"": [],
-          ""IsArray"": false
+          ""Name"": """"
         },
-        ""GenericTypes"": [],
-        ""Parameter"": [],
+        ""ModifierList"": [
+          ""public""
+        ]
+      },
+      {
+        ""Name"": ""getClass"",
+        ""ReturnType"": {
+          ""Name"": """"
+        },
         ""ModifierList"": [
           ""public""
         ]
@@ -47,12 +43,8 @@
       {
         ""Name"": ""this"",
         ""ReturnType"": {
-          ""Name"": """",
-          ""GenericTypes"": [],
-          ""IsArray"": false
+          ""Name"": """"
         },
-        ""GenericTypes"": [],
-        ""Parameter"": [],
         ""ModifierList"": [
           ""public""
         ]
@@ -60,12 +52,8 @@
       {
         ""Name"": ""this"",
         ""ReturnType"": {
-          ""Name"": """",
-          ""GenericTypes"": [],
-          ""IsArray"": false
+          ""Name"": """"
         },
-        ""GenericTypes"": [],
-        ""Parameter"": [],
         ""ModifierList"": [
           ""public""
         ]
@@ -73,12 +61,8 @@
       {
         ""Name"": ""getHash"",
         ""ReturnType"": {
-          ""Name"": ""Integer"",
-          ""GenericTypes"": [],
-          ""IsArray"": false
+          ""Name"": ""Integer""
         },
-        ""GenericTypes"": [],
-        ""Parameter"": [],
         ""ModifierList"": [
           ""public""
         ]
@@ -87,159 +71,103 @@
   },
   {
     ""Type"": {
-      ""Name"": ""String"",
-      ""GenericTypes"": [],
-      ""IsArray"": false
+      ""Name"": ""String""
     },
     ""Namespace"": ""java.lang"",
-    ""UsingList"": [],
-    ""InterfaceList"": [],
     ""ModifierList"": [
       ""public"",
       ""class""
-    ],
-    ""FieldList"": [],
-    ""MethodeList"": []
+    ]
   },
   {
     ""Type"": {
-      ""Name"": ""Integer"",
-      ""GenericTypes"": [],
-      ""IsArray"": false
+      ""Name"": ""Integer""
     },
     ""Namespace"": ""java.lang"",
-    ""UsingList"": [],
-    ""InterfaceList"": [],
     ""ModifierList"": [
       ""public"",
       ""class""
-    ],
-    ""FieldList"": [],
-    ""MethodeList"": []
+    ]
   },
   {
     ""Type"": {
-      ""Name"": ""Boolean"",
-      ""GenericTypes"": [],
-      ""IsArray"": false
+      ""Name"": ""Boolean""
     },
     ""Namespace"": ""java.lang"",
-    ""UsingList"": [],
-    ""InterfaceList"": [],
     ""ModifierList"": [
       ""public"",
       ""class""
-    ],
-    ""FieldList"": [],
-    ""MethodeList"": []
+    ]
   },
   {
     ""Type"": {
-      ""Name"": ""True"",
-      ""GenericTypes"": [],
-      ""IsArray"": false
+      ""Name"": ""True""
     },
     ""Namespace"": ""java.lang"",
-    ""UsingList"": [],
-    ""InterfaceList"": [],
     ""ModifierList"": [
       ""public"",
       ""class""
-    ],
-    ""FieldList"": [],
-    ""MethodeList"": []
+    ]
   },
   {
     ""Type"": {
-      ""Name"": ""False"",
-      ""GenericTypes"": [],
-      ""IsArray"": false
+      ""Name"": ""False""
     },
     ""Namespace"": ""java.lang"",
-    ""UsingList"": [],
-    ""InterfaceList"": [],
     ""ModifierList"": [
       ""public"",
       ""class""
-    ],
-    ""FieldList"": [],
-    ""MethodeList"": []
+    ]
   },
   {
     ""Type"": {
-      ""Name"": ""Int64"",
-      ""GenericTypes"": [],
-      ""IsArray"": false
+      ""Name"": ""Int64""
     },
     ""Namespace"": ""java.lang"",
-    ""UsingList"": [],
-    ""InterfaceList"": [],
     ""ModifierList"": [
       ""public"",
       ""class""
-    ],
-    ""FieldList"": [],
-    ""MethodeList"": []
+    ]
   },
   {
     ""Type"": {
-      ""Name"": ""Void"",
-      ""GenericTypes"": [],
-      ""IsArray"": false
+      ""Name"": ""Void""
     },
     ""Namespace"": ""java.lang"",
-    ""UsingList"": [],
-    ""InterfaceList"": [],
     ""ModifierList"": [
       ""public"",
       ""class""
-    ],
-    ""FieldList"": [],
-    ""MethodeList"": []
+    ]
   },
   {
     ""Type"": {
       ""Name"": ""Collection"",
       ""GenericTypes"": [
         {
-          ""Name"": ""T"",
-          ""GenericTypes"": [],
-          ""IsArray"": false
+          ""Name"": ""T""
         }
-      ],
-      ""IsArray"": false
+      ]
     },
     ""Namespace"": ""java.util.Collection"",
-    ""UsingList"": [],
-    ""InterfaceList"": [],
     ""ModifierList"": [
       ""public"",
       ""class""
-    ],
-    ""FieldList"": [],
-    ""MethodeList"": []
+    ]
   },
   {
     ""Type"": {
       ""Name"": ""Comparator"",
       ""GenericTypes"": [
         {
-          ""Name"": ""T"",
-          ""GenericTypes"": [],
-          ""IsArray"": false
+          ""Name"": ""T""
         }
-      ],
-      ""IsArray"": false
+      ]
     },
     ""Namespace"": ""java.util"",
-    ""UsingList"": [],
-    ""InterfaceList"": [],
     ""ModifierList"": [
       ""public"",
       ""interface""
-    ],
-    ""FieldList"": [],
-    ""MethodeList"": []
+    ]
   }
 ]";
     }

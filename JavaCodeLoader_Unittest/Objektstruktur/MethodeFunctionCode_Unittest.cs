@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace CodeConverterJava_Unittest.Objektstruktur
 {
-    public class MethodeFunctionCode_Unittest
+    public class MethodeFunctionCode
     {
         [Test]
         public void IfWIthConstant()

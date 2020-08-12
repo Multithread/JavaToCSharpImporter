@@ -1,5 +1,6 @@
 ﻿using CodeConverterCore.Converter;
 using CodeConverterCore.Helper;
+using CodeConverterCore.Interface;
 using CodeConverterCore.Model;
 using System;
 using System.Collections.Generic;
@@ -171,12 +172,25 @@ namespace JavaToCSharpConverter.Model
         public override void AnalyzerClassModifier(ClassContainer inClass)
         {
             //Check all Constructors for SUPER Calls
-            foreach(var tmpMethode in inClass.MethodeList.Where(inItem=> inItem.Name == inClass.Name))
+            foreach (var tmpMethode in inClass.MethodeList.Where(inItem => inItem.Name == inClass.Name))
             {
-                for(var tmpI = 0; tmpI < tmpMethode.Code.CodeEntries.Count; tmpI++)
-                { 
+                HandleCodeBlock(tmpMethode.Code, (inItem) =>
+                {
+                    if (inItem is VariableDeclaration)
+                    {
+                        var tmpVarDec = inItem as VariableDeclaration;
+                        if(tmpVarDec.Name == "Class")
+                        {
+                            tmpVarDec.Type.GenericTypes.Clear();
+                        }
+                    }
+                }
+                );
+
+                for (var tmpI = 0; tmpI < tmpMethode.Code.CodeEntries.Count; tmpI++)
+                {
                     var tmpCall = tmpMethode.Code.CodeEntries[tmpI] as MethodeCall;
-                    if (tmpCall!=null)
+                    if (tmpCall != null)
                     {
                         if (tmpCall.MethodeLink.Name == "base")
                         {
@@ -186,6 +200,32 @@ namespace JavaToCSharpConverter.Model
                             tmpMethode.Code.CodeEntries.RemoveAt(tmpI);
                             break;
                         }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handle Code Block Content with a 
+        /// </summary>
+        /// <param name="inBlock"></param>
+        /// <param name="inCodeEntryAction"></param>
+        private static void HandleCodeBlock(CodeBlock inBlock, Action<ICodeEntry> inCodeEntryAction)
+        {
+            if (inBlock == null)
+            {
+                return;
+            }
+            foreach (var tmpEntry in inBlock.CodeEntries)
+            {
+                inCodeEntryAction(tmpEntry);
+
+                if (tmpEntry is StatementCode)
+                {
+                    HandleCodeBlock((tmpEntry as StatementCode).InnerContent, inCodeEntryAction);
+                    foreach (var tmpBlock in (tmpEntry as StatementCode).StatementCodeBlocks)
+                    {
+                        HandleCodeBlock(tmpBlock, inCodeEntryAction);
                     }
                 }
             }

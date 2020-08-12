@@ -101,16 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="JavaData\JavaMapper.ini">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="JavaData\LuceneReplacer.ini">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="JavaData\Example.java" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeConverterCore\CodeConverterCore.csproj">
