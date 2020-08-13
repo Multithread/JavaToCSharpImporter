@@ -136,7 +136,7 @@ namespace CodeConverterCSharp
                 inOutput.Append(CreateIndent(inIndentDepth));
                 AddCodeEntryToString(inOutput, tmpEntry, inIndentDepth);
                 //TODO find final fix for VariableDeclaration without semicolon at the end
-                if(tmpEntry is VariableDeclaration)
+                if (tmpEntry is VariableDeclaration)
                 {
                     inOutput.Append(" = ");
                     continue;
@@ -175,7 +175,7 @@ namespace CodeConverterCSharp
             if (inCodeEntry is VariableDeclaration)
             {
                 var tmpVar = inCodeEntry as VariableDeclaration;
-                inOutput.Append($"{tmpVar.Type.Name} {tmpVar.Name}");
+                inOutput.Append($"{tmpVar.Type.Type?.Name?? tmpVar.Type.Name} {tmpVar.Name}");
             }
             else if (inCodeEntry is ConstantValue)
             {
@@ -280,7 +280,7 @@ namespace CodeConverterCSharp
             else if (inCodeEntry is MethodeCall)
             {
                 var tmpMethodeCall = inCodeEntry as MethodeCall;
-                inOutput.Append($"{tmpMethodeCall.Name}({string.Join(",", tmpMethodeCall.Parameter.Select(inItem => AddCodeBlockToString(inItem)))})");
+                inOutput.Append($"{tmpMethodeCall.MethodeLink?.Name ?? tmpMethodeCall.Name}({string.Join(",", tmpMethodeCall.Parameter.Select(inItem => AddCodeBlockToString(inItem)))})");
             }
             else if (inCodeEntry is CodeExpression)
             {

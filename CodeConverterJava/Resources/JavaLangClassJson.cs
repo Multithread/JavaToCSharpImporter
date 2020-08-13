@@ -50,16 +50,7 @@
         ]
       },
       {
-        ""Name"": ""this"",
-        ""ReturnType"": {
-          ""Name"": """"
-        },
-        ""ModifierList"": [
-          ""public""
-        ]
-      },
-      {
-        ""Name"": ""getHash"",
+        ""Name"": ""hashCode"",
         ""ReturnType"": {
           ""Name"": ""Integer""
         },
@@ -72,6 +63,27 @@
   {
     ""Type"": {
       ""Name"": ""String""
+    },
+    ""Namespace"": ""java.lang"",
+    ""ModifierList"": [
+      ""public"",
+      ""class""
+    ],
+    ""MethodeList"": [
+      {
+        ""Name"": ""getCanonicalName"",
+        ""ReturnType"": {
+          ""Name"": ""String""
+        },
+        ""ModifierList"": [
+          ""public""
+        ]
+      }
+    ]
+  },
+  {
+    ""Type"": {
+      ""Name"": ""Class""
     },
     ""Namespace"": ""java.lang"",
     ""ModifierList"": [

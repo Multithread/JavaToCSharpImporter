@@ -93,7 +93,7 @@ namespace CodeConverterJava.Model
                 var tmpVarDeclaration = new VariableDeclaration();
                 if (tmpVar.typeType() != null)
                 {
-                    tmpVarDeclaration.Type = tmpVar.typeType().GetText();
+                    tmpVarDeclaration.Type = JavaAntlrClassLoader.GetTypeContainer(tmpVar.typeType());
                 }
                 if (tmpVar.variableDeclarators() != null)
                 {

@@ -27,8 +27,8 @@ namespace JavaToCSharpConverter
             JavaMapperPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\JavaMapper.ini";
             LuceneReplacerPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\LuceneReplacer.ini";
 
-            var tmpIniData = DataHelper.LoadIniByPath(JavaMapperPath);
-            ProjectInformation tmpObjectInformation = LoadFilesByPath(inSourcePath, tmpIniData, new JavaLoader() { LoadDefaultData = true });
+            //var tmpIniData = DataHelper.LoadIniByPath(JavaMapperPath);
+            ProjectInformation tmpObjectInformation = LoadFilesByPath(inSourcePath, null, new JavaLoader() { LoadDefaultData = true });
 
             new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
 
@@ -41,13 +41,13 @@ namespace JavaToCSharpConverter
 
             Directory.CreateDirectory(inOutPath);
 
-            var tmpReplacer = new IniParser.Parser.IniDataParser().Parse(File.ReadAllText(LuceneReplacerPath));
+            //var tmpReplacer = new IniParser.Parser.IniDataParser().Parse(File.ReadAllText(LuceneReplacerPath));
 
             if (tmpObjectInformation.MissingMethodes.Count > 0)
             {
                 throw new Exception("Missing Methodes Class to be Implemented");
             }
-            WriteCSharpCode(inOutPath, tmpObjectInformation, tmpReplacer);
+            WriteCSharpCode(inOutPath, tmpObjectInformation, null);
 
             CreateCSharpSLNFile(tmpObjectInformation, inOutPath);
         }
@@ -75,9 +75,12 @@ namespace JavaToCSharpConverter
                 var tmpCSharp = new CSharpClassWriter().CreateClassFile(tmpClass).Content;
 
                 //Do Replacements for non-Fixable Code Changes
-                foreach (var tmpKV in tmpReplacer[tmpClass.Name])
+                if (tmpReplacer != null)
                 {
-                    tmpCSharp = tmpCSharp.Replace(tmpKV.KeyName, tmpKV.Value);
+                    foreach (var tmpKV in tmpReplacer[tmpClass.Name])
+                    {
+                        tmpCSharp = tmpCSharp.Replace(tmpKV.KeyName, tmpKV.Value);
+                    }
                 }
 
                 var tmpNewNamespace = tmpClass.Namespace.Split('.');
@@ -114,7 +117,7 @@ namespace UnknownTypes
 
         private static ProjectInformation LoadFilesByPath(string inSourcePath, IniParser.Model.IniData inConfiguration, ILoadOOPLanguage inLanguageLoader)
         {
-            var tmpFileList = Directory.EnumerateFiles(inSourcePath, "*", SearchOption.TopDirectoryOnly).ToList();
+            var tmpFileList = Directory.EnumerateFiles(inSourcePath, "*", SearchOption.AllDirectories).ToList();
             for (var tmpI = 0; tmpI < tmpFileList.Count; tmpI++)
             {
                 var tmpFileText = File.ReadAllText(tmpFileList[tmpI]);

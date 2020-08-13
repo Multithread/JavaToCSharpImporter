@@ -220,6 +220,7 @@ namespace CodeConverterJava.Model
                     tmpReturnTypes.Add(tmpCurrentGenericType);
                     if (tmpTypeOrVoid.typeType() != null)
                     {
+                        //TODO Replace with GetTypeContainer(), if it's the same
                         if (tmpTypeOrVoid.typeType().classOrInterfaceType() != null)
                         {
                             var tmpType = tmpTypeOrVoid.typeType().classOrInterfaceType();
@@ -299,7 +300,7 @@ namespace CodeConverterJava.Model
         }
         private static List<string> TypeNonNumberChars = new List<string>() { "[", "]", "<", ">" };
 
-        private static TypeContainer GetTypeContainer(TypeTypeContext inTypeContext)
+        public static TypeContainer GetTypeContainer(TypeTypeContext inTypeContext)
         {
             var tmpTypeContainer = new TypeContainer();
             if (inTypeContext == null)
@@ -329,7 +330,7 @@ namespace CodeConverterJava.Model
                         var tmpGenericType = GetTypeContainer(tmpTypeArg.typeType());
                         if (tmpTypeArg.EXTENDS() != null)
                         {
-                            throw new NotImplementedException($"TypeArgument EXTENDS handling");
+                            tmpGenericType.Extends.Add(GetTypeContainer(tmpTypeArg.typeType()));
                         }
                         if (tmpTypeArg.SUPER() != null)
                         {
