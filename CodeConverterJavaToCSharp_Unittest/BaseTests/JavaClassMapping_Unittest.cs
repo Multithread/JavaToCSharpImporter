@@ -41,9 +41,9 @@ public abstract class MutableValue
     }
 }";
 
-        private string CSharpResult1 = @"
+        private string CSharpResult1 = @"using System;
 
-namespace java.lang
+namespace System
 {
     public class MutableValue
     {

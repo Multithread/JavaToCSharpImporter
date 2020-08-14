@@ -16,6 +16,10 @@ namespace CodeConverterCSharp.Lucenene
             {
                 inNamespace = inNamespace.Replace("org.apache.lucene", "LuceNET");
             }
+            if (inNamespace == "java.lang")
+            {
+                return "System";
+            }
             return base.Namespace(inNamespace);
         }
     }

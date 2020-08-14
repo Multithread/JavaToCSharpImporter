@@ -43,7 +43,7 @@ public final class ThreadInterruptedException extends RuntimeException {
 
             var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList();
 
-            var tmpExpectedResult = @"
+            var tmpExpectedResult = @"using System;
 
 namespace org
 {

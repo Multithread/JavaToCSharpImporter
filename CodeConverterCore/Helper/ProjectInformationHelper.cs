@@ -115,6 +115,13 @@ namespace CodeConverterCore.Helper
         public static ProjectInformation DoFullRun(List<LanguageMappingObject> inLanguageMapping, IConverter inConverter, ILoadOOPLanguage inLanguageLoader, params string[] inClassStringData)
         {
             var tmpProject = inLanguageLoader.CreateObjectInformation(inClassStringData.ToList(), null);
+            foreach(var tmpClass in tmpProject.ClassList)
+            {
+                if (!tmpClass.UsingList.Contains("java.lang"))
+                {
+                    tmpClass.UsingList.Add("java.lang");
+                }
+            }
 
             new AnalyzerCore().LinkProjectInformation(tmpProject);
 

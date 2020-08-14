@@ -27,17 +27,9 @@ namespace JavaToCSharpConverter
             JavaMapperPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\JavaMapper.ini";
             LuceneReplacerPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\JavaData\\LuceneReplacer.ini";
 
-            //var tmpIniData = DataHelper.LoadIniByPath(JavaMapperPath);
-            ProjectInformation tmpObjectInformation = LoadFilesByPath(inSourcePath, null, new JavaLoader() { LoadDefaultData = true });
-
-            new AnalyzerCore().LinkProjectInformation(tmpObjectInformation);
-
-            ProjectInformationHelper.MapLanguageNames(tmpObjectInformation, ImportHelper.ImportMappingList(ClassRenameJson.SystemAliasJson));
-
-            foreach (var tmpCurrentClass in tmpObjectInformation.ClassList.Where(inItem => inItem.ClassType == ClassTypeEnum.Normal))
-            {
-                new ConverterLucene().AnalyzerClassModifier(tmpCurrentClass);
-            }
+            var tmpObjectInformation = ProjectInformationHelper.DoFullRun(
+                ImportHelper.ImportMappingList(ClassRenameJson.SystemAliasJson), new ConverterLucene(), new JavaLoader() { LoadDefaultData = true },
+                LoadFIleContents(inSourcePath).ToArray());
 
             Directory.CreateDirectory(inOutPath);
 
@@ -61,7 +53,7 @@ namespace JavaToCSharpConverter
         /// <param name="tmpReplacer"></param>
         private static void WriteCSharpCode(string inOutPath, ProjectInformation inProjectInformation, IniParser.Model.IniData tmpReplacer)
         {
-            new NamingConvertionHelper(new ConverterLucene()).ConvertProject(inProjectInformation);
+            var tmpWriter = new CSharpClassWriter();
             foreach (var tmpClass in inProjectInformation.ClassList)
             {
                 if (tmpClass.ClassType == ClassTypeEnum.System)
@@ -72,7 +64,11 @@ namespace JavaToCSharpConverter
                 {
                     tmpClass.UsingList.Add("UnknownTypes");
                 }
-                var tmpCSharp = new CSharpClassWriter().CreateClassFile(tmpClass).Content;
+                if (!tmpClass.UsingList.Contains("System"))
+                {
+                    tmpClass.UsingList.Add("System");
+                }
+                var tmpCSharp = tmpWriter.CreateClassFile(tmpClass).Content;
 
                 //Do Replacements for non-Fixable Code Changes
                 if (tmpReplacer != null)
@@ -115,7 +111,7 @@ namespace UnknownTypes
             File.WriteAllText(Path.Combine(inOutPath, "UnknownTypes.cs"), tmpUnknownFile);
         }
 
-        private static ProjectInformation LoadFilesByPath(string inSourcePath, IniParser.Model.IniData inConfiguration, ILoadOOPLanguage inLanguageLoader)
+        private static List<string> LoadFIleContents(string inSourcePath)
         {
             var tmpFileList = Directory.EnumerateFiles(inSourcePath, "*", SearchOption.AllDirectories).ToList();
             for (var tmpI = 0; tmpI < tmpFileList.Count; tmpI++)
@@ -127,7 +123,7 @@ namespace UnknownTypes
 
                 tmpFileList[tmpI] = tmpFileText;
             }
-            return inLanguageLoader.CreateObjectInformation(tmpFileList, inConfiguration);
+            return tmpFileList;
         }
 
         /// <summary>
