@@ -520,7 +520,7 @@ namespace CodeConverterJava.Model
                         tmpModifierList.Add(tmpModifierText);
                     }
                     if (tmpClassBody.children.Count > 1
-                        && tmpClassBody.children[1].GetText() == "abstract")
+                        && tmpClassBody.children[1].GetText() == "abstract" && !inClass.ModifierList.Contains("abstract"))
                     {
                         tmpModifierList.Add("abstract");
                         inClass.ModifierList.Add("abstract");

@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
 {
 
-    class MutableValue_Unittest
+    public class MutableValue_Unittest
     {
         [Test]
         public void CheckAccountableInterfaceComments()
@@ -27,8 +27,9 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
             var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList().Last();
 
             Assert.AreEqual("MutableValue", tmpResult.FullName);
-            
+
             Assert.AreEqual(true, tmpResult.Content.Contains("Type c1 =             this.GetType()"));
+            Assert.AreEqual(true, tmpResult.Content.Contains("c2.GetHashCode()"));
         }
 
         private string JavaBits = @"

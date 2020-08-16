@@ -1,8 +1,10 @@
 ﻿using CodeConverterCore.Interface;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace CodeConverterCore.Model
 {
+    [DebuggerDisplay("{Type}: {Name}")]
     public class VariableDeclaration : ICodeEntry, IName
     {
         /// <summary>
