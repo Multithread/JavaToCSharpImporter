@@ -17,12 +17,12 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
     public class ObjectMethodeCallReplace_Unittest
     {
         [Test]
-        public void CheckAccountableInterfaceComments()
+        public void CheckMitableValueCompareTo()
         {
 
             var tmpObjectInformation = ProjectInformationHelper.DoFullRun(
                 ImportHelper.ImportMappingList(ClassRenameJson.SystemAliasJson), new ConverterLucene(), new JavaLoader() { LoadDefaultData = true },
-                JavaBits);
+                CompareToString);
 
             var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList().Last();
 
@@ -32,7 +32,7 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
             Assert.AreEqual(true, tmpResult.Content.Contains(" - c2.GetHashCode()"));
         }
 
-        private string JavaBits = @"
+        private string CompareToString = @"
 package org.apache.lucene.util.mutable;
 
 public abstract class MutableValue implements Comparable<MutableValue> {
@@ -43,6 +43,32 @@ public abstract class MutableValue implements Comparable<MutableValue> {
         Class <? extends MutableValue > c2 = other.getClass();
         int c = c1.hashCode() -c2.hashCode();            
     }
+}";
+
+        [Test]
+        public void CheckMitableValueEquals()
+        {
+
+            var tmpObjectInformation = ProjectInformationHelper.DoFullRun(
+                ImportHelper.ImportMappingList(ClassRenameJson.SystemAliasJson), new ConverterLucene(), new JavaLoader() { LoadDefaultData = true },
+                EqualsString);
+
+            var tmpResult = CSharpWriter.CreateClassesFromObjectInformation(tmpObjectInformation, new ConverterLucene()).ToList().Last();
+
+            Assert.AreEqual("MutableValue", tmpResult.FullName);
+
+            Assert.AreEqual(true, tmpResult.Content.Contains("   return ((GetType() == inOther.GetType()) && this.equalsSameType(inOther));"));
+        }
+
+        private string EqualsString = @"
+package org.apache.lucene.util.mutable;
+
+public abstract class MutableValue implements Comparable<MutableValue> {
+
+  @Override
+  public boolean equals(Object other) {
+    return (getClass() == other.getClass()) && this.equalsSameType(other);
+  }
 }";
     }
 }

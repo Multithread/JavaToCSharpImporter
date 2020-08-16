@@ -285,7 +285,37 @@ namespace CodeConverterJava.Model
                     //Primary Value analyse type
                     var tmpPrimary = inBlockStatement.primary();
                     var tmpPrimaryAsText = tmpPrimary.GetText();
-                    inCodeBlock.CodeEntries.Add(new ConstantValue { Value = tmpPrimaryAsText });
+
+                    if (tmpPrimary.expression() != null)
+                    {
+                        var tmpCodeBlock = new CodeBlocContainer();
+                        HandleExpressionContext(tmpCodeBlock.InnerBlock, tmpPrimary.expression(), inVariable);
+                        inCodeBlock.CodeEntries.Add(tmpCodeBlock);
+                    }
+                    else if (tmpPrimary.literal() != null)
+                    {
+                        inCodeBlock.CodeEntries.Add(new ConstantValue { Value = tmpPrimaryAsText });
+                    }
+                    else if (tmpPrimary.typeTypeOrVoid() != null)
+                    {
+                        throw new NotImplementedException("Not done yet");
+                    }
+                    else if (tmpPrimary.nonWildcardTypeArguments() != null)
+                    {
+                        throw new NotImplementedException("Not done yet");
+                    }
+                    else if (tmpPrimary.explicitGenericInvocationSuffix() != null)
+                    {
+                        throw new NotImplementedException("Not done yet");
+                    }
+                    else if (tmpPrimary.arguments() != null)
+                    {
+                        throw new NotImplementedException("Not done yet");
+                    }
+                    else
+                    {
+                        inCodeBlock.CodeEntries.Add(new ConstantValue { Value = tmpPrimaryAsText });
+                    }
                 }
                 else
                 {

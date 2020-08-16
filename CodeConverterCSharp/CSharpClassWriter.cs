@@ -175,7 +175,7 @@ namespace CodeConverterCSharp
             if (inCodeEntry is VariableDeclaration)
             {
                 var tmpVar = inCodeEntry as VariableDeclaration;
-                inOutput.Append($"{tmpVar.Type.Type?.Name?? tmpVar.Type.Name} {tmpVar.Name}");
+                inOutput.Append($"{tmpVar.Type.Type?.Name ?? tmpVar.Type.Name} {tmpVar.Name}");
             }
             else if (inCodeEntry is ConstantValue)
             {
@@ -280,7 +280,7 @@ namespace CodeConverterCSharp
             else if (inCodeEntry is MethodeCall)
             {
                 var tmpMethodeCall = inCodeEntry as MethodeCall;
-                inOutput.Append($"{tmpMethodeCall.MethodeLink?.Name ?? tmpMethodeCall.Name}({string.Join(",", tmpMethodeCall.Parameter.Select(inItem => AddCodeBlockToString(inItem)))})");
+                inOutput.Append($"{tmpMethodeCall.MethodeLink?.Name ?? tmpMethodeCall.Name}({string.Join(",", tmpMethodeCall.Parameter.Select(inItem => AddCodeBlockToString(inItem, false)))})");
             }
             else if (inCodeEntry is CodeExpression)
             {
@@ -290,6 +290,10 @@ namespace CodeConverterCSharp
                     tmpExpr.SubClauseEntries.Select(inItem => CreateStatementCodeBlock(inItem))
                     ));
                 inOutput.Append(")");
+            }
+            else if (inCodeEntry is CodeBlocContainer)
+            {
+                inOutput.Append(CreateStatementCodeBlock((inCodeEntry as CodeBlocContainer).InnerBlock));
             }
             else
             {

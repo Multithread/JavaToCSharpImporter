@@ -101,6 +101,7 @@
     <Compile Include="Model\ReturnCodeEntry.cs" />
     <Compile Include="Model\SetFieldWithValue.cs" />
     <Compile Include="Model\StatementCode.cs" />
+    <Compile Include="Model\CodeBlocContainer.cs" />
     <Compile Include="Model\VariableAccess.cs" />
     <Compile Include="Model\VariableDeclaration.cs" />
     <Compile Include="Model\MissingFunctionInformation.cs" />

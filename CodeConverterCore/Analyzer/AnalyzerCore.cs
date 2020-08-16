@@ -430,6 +430,15 @@ namespace CodeConverterCore.Analyzer
                     }
                 }
             }
+            else if (inCodeEntry is CodeBlocContainer)
+            {
+                var tmpExpr = inCodeEntry as CodeBlocContainer;
+                tmpReturnType = inReturnType;
+                foreach (var tmpEntry in tmpExpr.InnerBlock.CodeEntries)
+                {
+                    tmpReturnType = CodeEntryHandling(tmpEntry, inNameFinder);
+                }
+            }
             else
             {
                 throw new NotImplementedException("Code Entry Type not Implement");
