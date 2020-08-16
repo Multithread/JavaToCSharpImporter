@@ -20,7 +20,7 @@ namespace CodeConverterCore.Converter
         {
             _projectInfo = inProject;
             foreach (var tmpClass in inProject.ClassList
-                .Where(inItem=> inItem.ClassType == ClassTypeEnum.Normal))
+                .Where(inItem => inItem.ClassType == ClassTypeEnum.Normal))
             {
                 ConvertClass(tmpClass);
             }
@@ -30,7 +30,7 @@ namespace CodeConverterCore.Converter
         {
             inClass.Type.Type.Name = Converter.ClassName(inClass);
             inClass.ModifierList = Converter.MapAndSortAttributes(inClass.ModifierList);
-            inClass.Namespace = Converter.Namespace(inClass.Namespace);
+            inClass.Namespace = Converter.Namespace(inClass.Namespace).FirstOrDefault();
             inClass.NamespaceComment = Converter.Comment(inClass.NamespaceComment, true);
             inClass.Comment = Converter.Comment(inClass.Comment, true);
 
@@ -44,10 +44,7 @@ namespace CodeConverterCore.Converter
                 ConvertMethode(tmpMethode, inClass);
             }
 
-            for (var tmpI = 0; tmpI < inClass.UsingList.Count; tmpI++)
-            {
-                inClass.UsingList[tmpI] = Converter.Namespace(inClass.UsingList[tmpI]);
-            }
+            inClass.UsingList = Converter.Namespace(inClass.UsingList.ToArray()).ToList();
 
             foreach (var tmpInnerClass in inClass.InnerClasses)
             {

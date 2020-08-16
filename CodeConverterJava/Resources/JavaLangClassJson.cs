@@ -32,6 +32,15 @@
         ]
       },
       {
+        ""Name"": ""equals"",
+        ""ReturnType"": {
+          ""Name"": ""Object""
+        },
+        ""ModifierList"": [
+          ""public""
+        ]
+      },
+      {
         ""Name"": ""getClass"",
         ""ReturnType"": {
           ""Name"": """"
@@ -74,6 +83,27 @@
         ""Name"": ""getCanonicalName"",
         ""ReturnType"": {
           ""Name"": ""String""
+        },
+        ""ModifierList"": [
+          ""public""
+        ]
+      }
+    ]
+  },
+  {
+    ""Type"": {
+      ""Name"": ""Comparable""
+    },
+    ""Namespace"": ""java.lang"",
+    ""ModifierList"": [
+      ""public"",
+      ""interface""
+    ],
+    ""MethodeList"": [
+      {
+        ""Name"": ""compareTo"",
+        ""ReturnType"": {
+          ""Name"": ""Integer""
         },
         ""ModifierList"": [
           ""public""

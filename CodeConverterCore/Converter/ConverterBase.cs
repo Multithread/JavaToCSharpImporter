@@ -1,5 +1,6 @@
 ﻿using CodeConverterCore.Model;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodeConverterCore.Converter
 {
@@ -29,9 +30,9 @@ namespace CodeConverterCore.Converter
         /// <summary>
         /// Class Name handling
         /// </summary>
-        public virtual string Namespace(string inNamespace)
+        public virtual IEnumerable<string> Namespace(params string[] inNamespace)
         {
-            return inNamespace;
+            return inNamespace.ToList();
         }
 
         /// <summary>

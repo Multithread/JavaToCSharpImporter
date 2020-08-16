@@ -4,6 +4,7 @@ using CodeConverterCore.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CodeConverterCore.Analyzer
 {
@@ -249,6 +250,14 @@ namespace CodeConverterCore.Analyzer
                             .FirstOrDefault(inItem => !inItem.IsInterface());
                         inNameFinder.VariableList = null;
                     }
+                    else if (tmpVal.StartsWith("\"") && tmpVal.EndsWith("\""))
+                    {
+                        //GetGlobalTypeForType(inNameFinder, tmpConstant, "String");
+                    }
+                    else if (new Regex("^[0-9]*$").IsMatch(tmpVal))
+                    {
+                        //GetGlobalTypeForType(inNameFinder, tmpConstant, "Integer");
+                    }
                     else
                     {
                         GetGlobalTypeForType(inNameFinder, tmpConstant, tmpVal);
@@ -386,7 +395,7 @@ namespace CodeConverterCore.Analyzer
                     {
                         if (tmpMethodeCall.Parameter.Count > 0)
                         {
-                            foreach(var tmpParam in tmpMethodeCall.Parameter)
+                            foreach (var tmpParam in tmpMethodeCall.Parameter)
                             {
                                 for (var tmpI = 0; tmpI < tmpParam.CodeEntries.Count; tmpI++)
                                 {

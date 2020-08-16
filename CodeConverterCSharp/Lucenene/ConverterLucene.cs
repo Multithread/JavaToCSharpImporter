@@ -1,4 +1,5 @@
 ﻿using JavaToCSharpConverter.Model;
+using System.Collections.Generic;
 
 namespace CodeConverterCSharp.Lucenene
 {
@@ -10,17 +11,23 @@ namespace CodeConverterCSharp.Lucenene
         /// </summary>
         /// <param name="inNamespace"></param>
         /// <returns></returns>
-        public override string Namespace(string inNamespace)
+        public override IEnumerable<string> Namespace(params string[] inNamespace)
         {
-            if (inNamespace.StartsWith("org.apache.lucene"))
+            foreach (var tmpNamespace in base.Namespace(inNamespace))
             {
-                inNamespace = inNamespace.Replace("org.apache.lucene", "LuceNET");
+                if (tmpNamespace.StartsWith("org.apache.lucene"))
+                {
+                    yield return tmpNamespace.Replace("org.apache.lucene", "LuceNET");
+                }
+                else if (tmpNamespace == "java.lang")
+                {
+                    yield return "System";
+                }
+                else
+                {
+                    yield return tmpNamespace;
+                }
             }
-            if (inNamespace == "java.lang")
-            {
-                return "System";
-            }
-            return base.Namespace(inNamespace);
         }
     }
 }

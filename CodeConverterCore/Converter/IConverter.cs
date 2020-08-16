@@ -38,7 +38,7 @@ namespace CodeConverterCore.Converter
         /// </summary>
         /// <param name="inNamespace"></param>
         /// <returns></returns>
-        string Namespace(string inNamespace);
+        IEnumerable<string> Namespace(params string[] inNamespace);
 
         /// <summary>
         /// Change Methode Names to be matching C# names
