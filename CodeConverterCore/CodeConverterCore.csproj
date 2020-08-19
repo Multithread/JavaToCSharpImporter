@@ -62,6 +62,8 @@
     <Compile Include="Analyzer\AnalyzerCore.cs" />
     <Compile Include="Analyzer\AnalyzerSettings.cs" />
     <Compile Include="Analyzer\DictionaryHelper.cs" />
+    <Compile Include="Helper\ClassHelper.cs" />
+    <Compile Include="Helper\Modifiers.cs" />
     <Compile Include="Helper\ProjectInformationHelper.cs" />
     <Compile Include="ImportExport\MappingObject.cs" />
     <Compile Include="ImportExport\LanguageMappingObject.cs" />

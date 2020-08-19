@@ -44,6 +44,7 @@ namespace CodeConverterCore.Model
         /// <param name="inClass"></param>
         private void AddClass(ClassContainer inClass)
         {
+            inClass.Parent = this;
             AddToDictList(ClassDict, inClass, inItem => inItem.Name, inItem => inItem);
         }
         /// <summary>
@@ -165,6 +166,7 @@ namespace CodeConverterCore.Model
         /// <param name="inClass"></param>
         public void AddUnknownClass(UnknownTypeClass inClass)
         {
+            inClass.Parent = this;
             _UnknownTypeClassList.Add(inClass);
         }
 

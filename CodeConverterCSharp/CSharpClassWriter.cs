@@ -454,6 +454,8 @@ namespace CodeConverterCSharp
                        return 13;
                    case "protected":
                        return 14;
+                   case "new":
+                       return 16;
                    case "abstract":
                        return 20;
                    case "override":

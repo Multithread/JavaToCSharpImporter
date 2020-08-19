@@ -362,22 +362,7 @@ namespace CodeConverterCore.Analyzer
                     {
                         break;
                     }
-                    var tmpParentSelection = tmpParentClass.InterfaceList
-                        .Select(inItem => ProjectInformation.GetClassForType(inItem.Type.Name, tmpParentClass.FullUsingList))
-                        .FirstOrDefault(inItem => inItem != null && !inItem.ModifierList.Any(inModifier => inModifier == "interface"));
-                    if (tmpParentSelection != null)
-                    {
-                        tmpParentClass = tmpParentSelection;
-                    }
-                    else if (tmpParentClass.Name != "Object")
-                    {
-                        //object type laden
-                        tmpParentClass = ProjectInformation.GetClassForType("Object", new List<string> { ProjectInformation.SystemNamespace });
-                    }
-                    else
-                    {
-                        tmpParentClass = null;
-                    }
+                    tmpParentClass = tmpParentClass.GetParentClass();
 
                     foreach (var tmpParam in tmpMethodeCall.Parameter)
                     {

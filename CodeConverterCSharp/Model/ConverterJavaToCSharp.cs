@@ -118,7 +118,7 @@ namespace JavaToCSharpConverter.Model
                 .ToList();
         }
         private HashSet<string> _accessModifier = new HashSet<string> { "private", "protected", "internal", "public" };
-        private HashSet<string> _typeModifier = new HashSet<string> { "sealed", "static", "abstract", "override", "readonly" };
+        private HashSet<string> _typeModifier = new HashSet<string> { "sealed", "static", "abstract", "new", "override", "readonly" };
 
         /// <summary>
         /// MethodeParameter Handling (normal starting with "in", out param starting wit "out")
@@ -179,14 +179,14 @@ namespace JavaToCSharpConverter.Model
                     if (inItem is VariableDeclaration)
                     {
                         var tmpVarDec = inItem as VariableDeclaration;
-                        if(tmpVarDec.Name == "Class")
+                        if (tmpVarDec.Name == "Class")
                         {
                             tmpVarDec.Type.GenericTypes.Clear();
                         }
                     }
                 }
                 );
-
+                //Check Code for base calls
                 for (var tmpI = 0; tmpI < tmpMethode.Code.CodeEntries.Count; tmpI++)
                 {
                     var tmpCall = tmpMethode.Code.CodeEntries[tmpI] as MethodeCall;
@@ -201,6 +201,41 @@ namespace JavaToCSharpConverter.Model
                             break;
                         }
                     }
+                }
+            }
+
+            //Handle Methode modifiers override/new/abstract to be C# compatible
+            foreach (var tmpMethode in inClass.MethodeList.Where(inItem => inItem.Name == inClass.Name))
+            {
+                //ParentClass Methode
+                var tmpParentClass = inClass;
+                while (true)
+                {
+                    tmpParentClass = inClass.GetParentClass();
+                    if (tmpParentClass != null)
+                    {
+                        var tmpMethode2 = tmpMethode.FindMatchingMethode(tmpParentClass);
+                        if (tmpMethode2 != null)
+                        {
+                            tmpMethode.ModifierList.HandleListContent(Modifiers.Override);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        tmpMethode.ModifierList.HandleListContent(Modifiers.Override, false);
+                        break;
+                    }
+                }
+
+                //Handle abstract
+                if (tmpMethode.Code == null)
+                {
+                    tmpMethode.ModifierList.HandleListContent(Modifiers.Abstract);
+                }
+                else
+                {
+                    tmpMethode.ModifierList.HandleListContent(Modifiers.Abstract, false);
                 }
             }
         }

@@ -120,6 +120,11 @@ namespace CodeConverterCore.Model
             return ModifierList.Contains("interface");
         }
 
+        /// <summary>
+        /// Parent Project Information
+        /// </summary>
+        public ProjectInformation Parent { get; internal set; }
+
         public List<string> FullUsingList
         {
             get
