@@ -226,7 +226,11 @@ namespace CodeConverterCore.Analyzer
             {
                 var tmpConstant = (inCodeEntry as ConstantValue);
                 var tmpVal = tmpConstant.Value?.ToString() ?? tmpConstant.Type.Name;
-                if (tmpVal.EndsWith("\""))
+                if (tmpConstant.Value is FieldContainer)
+                {
+                    tmpVal = (tmpConstant.Value as FieldContainer).Name;
+                }
+                else if (tmpVal.EndsWith("\""))
                 {
                     //Nichts zu Tun
                     throw new NotImplementedException("CodeEntryHandling: Text Handling missing");
@@ -241,14 +245,14 @@ namespace CodeConverterCore.Analyzer
                     //Access to Variable, Field, Param or static Class, so we need to do a lot here for Code-link
                     if (tmpVal == "this")
                     {
-                        inNameFinder.VariableList = null;
+                        inNameFinder.VariableList = new List<VariableDeclaration>();
                     }
                     else if (tmpVal == "base")
                     {
                         inNameFinder.Class = inNameFinder.Class.InterfaceList
                             .Select(inItem => ProjectInformation.GetClassForType(inItem.Type.Name, new List<string> { inItem.Type.Namespace }))
                             .FirstOrDefault(inItem => !inItem.IsInterface());
-                        inNameFinder.VariableList = null;
+                        inNameFinder.VariableList = new List<VariableDeclaration>();
                     }
                     else if (tmpVal.StartsWith("\"") && tmpVal.EndsWith("\""))
                     {
@@ -317,14 +321,15 @@ namespace CodeConverterCore.Analyzer
             else if (inCodeEntry is VariableAccess)
             {
                 var tmpVarAccess = inCodeEntry as VariableAccess;
-                var tmpNameFinder = new FieldNameFinder(inNameFinder);
-                tmpReturnType = CodeEntryHandling(tmpVarAccess.Access, tmpNameFinder);
-                //tmpNameFinder.Class = ProjectInformation.GetClassOrUnknownForType(tmpReturnType.Name, inNameFinder.Class.FullUsingList);
+                inNameFinder.StackVariables(true, true);
+                tmpReturnType = CodeEntryHandling(tmpVarAccess.Access, inNameFinder);
                 if (tmpVarAccess.Child != null)
                 {
-                    CodeEntryHandling(tmpVarAccess.Child, tmpNameFinder, inReturnType);
+                    CodeEntryHandling(tmpVarAccess.Child, inNameFinder, inReturnType);
                 }
-                else if (tmpVarAccess.BaseDataSource != null)
+
+                inNameFinder.UnstackVariableList();
+                if (tmpVarAccess.BaseDataSource != null)
                 {
                     CodeEntryHandling(tmpVarAccess.BaseDataSource, inNameFinder, inReturnType);
                 }
@@ -368,7 +373,11 @@ namespace CodeConverterCore.Analyzer
                     {
                         foreach (var tmpEntry in tmpParam.CodeEntries)
                         {
-                            CodeEntryHandling(tmpEntry, new FieldNameFinder(inNameFinder));
+                            CodeEntryHandling(tmpEntry, new FieldNameFinder()
+                            {
+                                VariableList = inNameFinder.GetMethodeVariableList(),
+                                Class = inNameFinder.Class
+                            });
                         }
                     }
                 }
