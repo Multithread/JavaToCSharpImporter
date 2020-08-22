@@ -36,7 +36,7 @@ namespace CodeConverterJavaToCSharp_Unittest
         private string JavaClass = @"package org.apache.lucene.util;
         public abstract class Bits
         {
-            public abstzract void AbstrMethode();
+            public abstract void AbstrMethode();
 }";
 
         private string CSharpResult1 = @"

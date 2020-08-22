@@ -26,7 +26,7 @@ namespace CodeConverterCore.Helper
                 return tmpPartentClass;
             }
 
-            if (inClass.Name != "Object")
+            if (inClass.Name?.ToLower() != "object")
             {
                 //object type laden
                 return inClass.Parent.GetClassForType("Object", new List<string> { inClass.Parent.SystemNamespace });

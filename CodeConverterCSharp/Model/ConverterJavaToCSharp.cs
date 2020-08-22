@@ -205,13 +205,13 @@ namespace JavaToCSharpConverter.Model
             }
 
             //Handle Methode modifiers override/new/abstract to be C# compatible
-            foreach (var tmpMethode in inClass.MethodeList.Where(inItem => inItem.Name == inClass.Name))
+            foreach (var tmpMethode in inClass.MethodeList)
             {
                 //ParentClass Methode
                 var tmpParentClass = inClass;
                 while (true)
                 {
-                    tmpParentClass = inClass.GetParentClass();
+                    tmpParentClass = tmpParentClass.GetParentClass();
                     if (tmpParentClass != null)
                     {
                         var tmpMethode2 = tmpMethode.FindMatchingMethode(tmpParentClass);

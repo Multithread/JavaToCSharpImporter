@@ -30,6 +30,7 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
 
             Assert.AreEqual(true, tmpResult.Content.Contains("Type c1 =             this.GetType()"));
             Assert.AreEqual(true, tmpResult.Content.Contains("c2.GetHashCode()"));
+            Assert.AreEqual(true, tmpResult.Content.Contains("Type c2 =             inOther.GetType();"));
         }
 
         private string JavaBits = @"
