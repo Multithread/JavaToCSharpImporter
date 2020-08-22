@@ -52,8 +52,7 @@ namespace
         /// </summary>
         public readonly static LongValues IDENTITY =  new LongValues_0();
 
-        public abstract long Get(long inIndex)
-;
+        public abstract long Get(long inIndex);
         public class LongValues_0 : LongValues
         {
             public override long Get(long inIndex)

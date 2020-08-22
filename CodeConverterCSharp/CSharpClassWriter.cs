@@ -111,10 +111,11 @@ namespace CodeConverterCSharp
 
             tmpMethodeString += string.Join(", ", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)}{inItem.Name}{(inItem.DefaultValue != null ? " = " + inItem.DefaultValue : "")}")) + ")";
 
-            inOutput.AppendLine(CreateIndent(inIndentDepth) + tmpMethodeString);
+            inOutput.Append(CreateIndent(inIndentDepth) + tmpMethodeString);
             if (inMethode.ConstructorCall != null)
             {
-                inOutput.AppendLine($"{CreateIndent(inIndentDepth + 1)}:{inMethode.ConstructorCall.Name}({string.Join(",", inMethode.ConstructorCall.Parameter.Select(inItem => AddCodeBlockToString(inItem, false)))})");
+                inOutput.AppendLine("");
+                inOutput.Append($"{CreateIndent(inIndentDepth + 1)}:{inMethode.ConstructorCall.Name}({string.Join(",", inMethode.ConstructorCall.Parameter.Select(inItem => AddCodeBlockToString(inItem, false)))})");
             }
 
             if (inMethode.Code == null)
@@ -123,6 +124,7 @@ namespace CodeConverterCSharp
             }
             else
             {
+                inOutput.AppendLine("");
                 inOutput.AppendLine(CreateIndent(inIndentDepth) + "{");
                 AddCodeBlockToString(inOutput, inMethode.Code, inIndentDepth + 1);
                 inOutput.AppendLine(CreateIndent(inIndentDepth) + "}");
