@@ -219,7 +219,7 @@ namespace CodeConverterCore.Analyzer
                 {
                     Type = tmpVarDecl.Type
                 };
-                GetGlobalTypeForType(inNameFinder, tmpConstant, tmpVarDecl.Type.Name);
+                GetGlobalTypeForType(new FieldNameFinder(inNameFinder), tmpConstant, tmpVarDecl.Type.Name);
                 tmpVarDecl.Type = tmpConstant.Type;
             }
             else if (inCodeEntry is ConstantValue)
@@ -229,6 +229,10 @@ namespace CodeConverterCore.Analyzer
                 if (tmpConstant.Value is FieldContainer)
                 {
                     tmpVal = (tmpConstant.Value as FieldContainer).Name;
+                }
+                else if (tmpConstant.Value is VariableDeclaration)
+                {
+                    tmpVal = (tmpConstant.Value as VariableDeclaration).Name;
                 }
                 else if (tmpVal.EndsWith("\""))
                 {
@@ -322,7 +326,10 @@ namespace CodeConverterCore.Analyzer
             {
                 var tmpVarAccess = inCodeEntry as VariableAccess;
                 inNameFinder.StackVariables(true, true);
-                tmpReturnType = CodeEntryHandling(tmpVarAccess.Access, inNameFinder);
+                if (!(tmpVarAccess.Access is VariableDeclaration))
+                {
+                    tmpReturnType = CodeEntryHandling(tmpVarAccess.Access, inNameFinder);
+                }
                 if (tmpVarAccess.Child != null)
                 {
                     CodeEntryHandling(tmpVarAccess.Child, inNameFinder, inReturnType);

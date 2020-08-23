@@ -43,9 +43,9 @@ namespace CodeConverterJavaToCSharp_Unittest
 
 namespace LuceNET.util
 {
-    public class Bits
+    public abstract class Bits
     {
-        void AbstrMethode();
+        public abstract void AbstrMethode();
     }
 }
 ";

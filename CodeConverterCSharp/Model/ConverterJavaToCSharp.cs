@@ -172,7 +172,7 @@ namespace JavaToCSharpConverter.Model
         public override void AnalyzerClassModifier(ClassContainer inClass)
         {
             //Check all Constructors for SUPER Calls
-            foreach (var tmpMethode in inClass.MethodeList.Where(inItem => inItem.Name == inClass.Name))
+            foreach (var tmpMethode in inClass.MethodeList.Where(inItem => inItem.Code != null))
             {
                 HandleCodeBlock(tmpMethode.Code, (inItem) =>
                 {
