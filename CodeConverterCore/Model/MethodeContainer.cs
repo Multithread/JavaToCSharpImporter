@@ -17,7 +17,12 @@ namespace CodeConverterCore.Model
         /// Name of the Methode
         /// </summary>
         [JsonProperty]
-        public string Name { get; set; }
+        public string Name
+        {
+            get => ParentContainer?.Name ?? _name;
+            set => _name = value;
+        }
+        private string _name;
 
         /// <summary>
         /// Returntype. Might be void
@@ -69,7 +74,17 @@ namespace CodeConverterCore.Model
         public MethodeContainer Constructorinfo { get; set; }
 
         /// <summary>
-        /// Methode Parent
+        /// Methode is a Property, if supported by the Language
+        /// </summary>
+        public bool IsProperty { get; set; }
+
+        /// <summary>
+        /// Parent Container when 
+        /// </summary>
+        public MethodeContainer ParentContainer { get; set; }
+
+        /// <summary>
+        /// Methode Parent if this Methode overrides another Methode
         /// </summary>
         public ClassContainer Parent { get; set; }
 

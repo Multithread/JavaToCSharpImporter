@@ -5,7 +5,12 @@ namespace CodeConverterCore.Model
 {
     public class MethodeCall : ICodeEntry
     {
-        public string Name { get; set; }
+        public string Name
+        {
+            get => MethodeLink?.Name ?? _name;
+            set => _name = value;
+        }
+        private string _name;
 
         /// <summary>
         /// Methode Return Type

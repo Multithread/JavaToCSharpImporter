@@ -115,7 +115,19 @@ namespace CodeConverterCSharp
             if (inMethode.ConstructorCall != null)
             {
                 inOutput.AppendLine("");
-                inOutput.Append($"{CreateIndent(inIndentDepth + 1)}:{inMethode.ConstructorCall.Name}({string.Join(",", inMethode.ConstructorCall.Parameter.Select(inItem => AddCodeBlockToString(inItem, false)))})");
+                inOutput.Append($"{CreateIndent(inIndentDepth + 1)}:{inMethode.ConstructorCall.Name}");
+                if (inMethode.IsProperty)
+                {
+                    if (inMethode.Code != null)
+                    {
+                        throw new Exception("Properties with Code (get or set) is not Implemented yet");
+                    }
+                    inOutput.Append("{get; set;}");
+                }
+                else
+                {
+                    inOutput.Append($"({string.Join(",", inMethode.ConstructorCall.Parameter.Select(inItem => AddCodeBlockToString(inItem, false)))})");
+                }
             }
 
             if (inMethode.Code == null)
@@ -282,7 +294,25 @@ namespace CodeConverterCSharp
             else if (inCodeEntry is MethodeCall)
             {
                 var tmpMethodeCall = inCodeEntry as MethodeCall;
-                inOutput.Append($"{tmpMethodeCall.MethodeLink?.Name ?? tmpMethodeCall.Name}({string.Join(",", tmpMethodeCall.Parameter.Select(inItem => AddCodeBlockToString(inItem, false)))})");
+                if (tmpMethodeCall.MethodeLink?.IsProperty == true)
+                {
+                    if (tmpMethodeCall.Parameter.Count == 0)
+                    {
+                        inOutput.Append($"{tmpMethodeCall.Name}");
+                    }
+                    else if (tmpMethodeCall.Parameter.Count == 1)
+                    {
+                        throw new Exception("Set C# Property with Code not Implemented");
+                    }
+                    else
+                    {
+                        throw new ArgumentException("To Many Parameters for a C# Property");
+                    }
+                }
+                else
+                {
+                    inOutput.Append($"{tmpMethodeCall.Name}({string.Join(",", tmpMethodeCall.Parameter.Select(inItem => AddCodeBlockToString(inItem, false)))})");
+                }
             }
             else if (inCodeEntry is CodeExpression)
             {

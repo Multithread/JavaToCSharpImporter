@@ -17,7 +17,8 @@ namespace CodeConverterCore.Helper
             return new ClassContainer
             {
                 Type = new TypeContainer() { Name = inName, Type = new BaseType(inName) },
-                Namespace = inNamespace ?? ""
+                Namespace = inNamespace ?? "",
+                IsAnalyzed = true,
             };
         }
 

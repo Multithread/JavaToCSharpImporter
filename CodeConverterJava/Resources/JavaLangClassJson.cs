@@ -119,6 +119,17 @@
     ""ModifierList"": [
       ""public"",
       ""class""
+    ],
+    ""MethodeList"": [
+      {
+        ""Name"": ""getCanonicalName"",
+        ""ReturnType"": {
+          ""Name"": ""String""
+        },
+        ""ModifierList"": [
+          ""public""
+        ]
+      }
     ]
   },
   {

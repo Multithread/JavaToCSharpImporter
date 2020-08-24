@@ -14,7 +14,7 @@
 {'Source':{'Namespace':'java.lang','ClassName':'False'},'Target':{'Namespace':'System','ClassName':'false'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Int64'},'Target':{'Namespace':'System','ClassName':'long'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Collection'},'Target':{'Namespace':'System.Collections.ObjectModel','ClassName':'Collection'}},
-{'Source':{'Namespace':'java.lang','ClassName':'Class','MethodeName':'getCanonicalName'},'Target':{'Namespace':'System','ClassName':'Type','MethodeName':'getCanonicalName'}},
+{'Source':{'Namespace':'java.lang','ClassName':'Class','MethodeName':'getCanonicalName'},'Target':{'Namespace':'System','ClassName':'Type','MethodeName':'FullName','MethodeAsProperty':true}},
 {'Source':{'Namespace':'java.lang','ClassName':'Class'},'Target':{'Namespace':'System','ClassName':'Type'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Comparable','MethodeName':'compareTo'},'Target':{'Namespace':'System','ClassName':'IComparable','MethodeName':'CompareTo'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Comparable'},'Target':{'Namespace':'System','ClassName':'IComparable'}},

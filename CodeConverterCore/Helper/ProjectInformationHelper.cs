@@ -92,6 +92,7 @@ namespace CodeConverterCore.Helper
                                 if (tmpMethode.Name == tmpMap.Source.MethodeName)
                                 {
                                     tmpMethode.Name = tmpMap.Target.MethodeName;
+                                    tmpMethode.IsProperty = tmpMap.Target.MethodeAsProperty;
                                 }
                             }
                         }

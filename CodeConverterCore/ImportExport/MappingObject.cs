@@ -23,6 +23,11 @@ namespace CodeConverterCore.ImportExport
         /// </summary>
         public string MethodeName { get; set; }
 
+        /// <summary>
+        /// Write the Methode as Property if supported by the output Language
+        /// </summary>
+        public bool MethodeAsProperty { get; set; }
+
         public bool IsMethodeMapping()
         {
             return !string.IsNullOrEmpty(MethodeName);
