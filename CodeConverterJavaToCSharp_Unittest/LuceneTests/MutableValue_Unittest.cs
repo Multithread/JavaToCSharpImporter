@@ -31,6 +31,7 @@ namespace CodeConverterJavaToCSharp_Unittest.LuceneTests
             Assert.AreEqual(true, tmpResult.Content.Contains("Type c1 =             this.GetType()"));
             Assert.AreEqual(true, tmpResult.Content.Contains("c2.GetHashCode()"));
             Assert.AreEqual(true, tmpResult.Content.Contains("Type c2 =             inOther.GetType();"));
+            Assert.AreEqual(true, tmpResult.Content.Contains("c = c1.FullName.CompareTo(c2.FullName);"));
         }
 
         private string JavaBits = @"

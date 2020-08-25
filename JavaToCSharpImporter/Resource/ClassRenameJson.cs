@@ -13,6 +13,8 @@
 {'Source':{'Namespace':'java.lang','ClassName':'True'},'Target':{'Namespace':'System','ClassName':'true'}},
 {'Source':{'Namespace':'java.lang','ClassName':'False'},'Target':{'Namespace':'System','ClassName':'false'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Int64'},'Target':{'Namespace':'System','ClassName':'long'}},
+{'Source':{'Namespace':'java.lang','ClassName':'String','MethodeName':'compareTo'},'Target':{'Namespace':'System','ClassName':'String','MethodeName':'CompareTo'}},
+{'Source':{'Namespace':'java.lang','ClassName':'String'},'Target':{'Namespace':'System','ClassName':'String'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Collection'},'Target':{'Namespace':'System.Collections.ObjectModel','ClassName':'Collection'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Class','MethodeName':'getCanonicalName'},'Target':{'Namespace':'System','ClassName':'Type','MethodeName':'FullName','MethodeAsProperty':true}},
 {'Source':{'Namespace':'java.lang','ClassName':'Class'},'Target':{'Namespace':'System','ClassName':'Type'}},

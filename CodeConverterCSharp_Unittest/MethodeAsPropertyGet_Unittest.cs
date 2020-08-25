@@ -21,9 +21,8 @@ namespace CodeConverterCSharp_Unittest
 
 
             Assert.AreEqual(1, tmpObjectInformation.Count);
-            Assert.AreEqual(true, tmpObjectInformation[0].Content.Contains("string Name"));
+            Assert.AreEqual(true, tmpObjectInformation[0].Content.Contains("string Name{"));
             Assert.AreEqual(false, tmpObjectInformation[0].Content.Contains("string Name()"));
         }
-
     }
 }

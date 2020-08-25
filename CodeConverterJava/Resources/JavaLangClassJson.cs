@@ -79,10 +79,10 @@
       ""class""
     ],
     ""MethodeList"": [
-      {
-        ""Name"": ""getCanonicalName"",
+        {
+        ""Name"": ""compareTo"",
         ""ReturnType"": {
-          ""Name"": ""String""
+          ""Name"": ""Int32""
         },
         ""ModifierList"": [
           ""public""

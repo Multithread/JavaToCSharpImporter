@@ -107,9 +107,12 @@ namespace CodeConverterCSharp
         private void AddMethodeToString(StringBuilder inOutput, MethodeContainer inMethode, int inIndentDepth)
         {
             AddComment(inOutput, inMethode.Comment, inIndentDepth, true);
-            var tmpMethodeString = $"{ReturnModifiersOrdered(inMethode.ModifierList)}{CreateStringFromType(inMethode.ReturnType)}{inMethode.Name}(";
+            var tmpMethodeString = $"{ReturnModifiersOrdered(inMethode.ModifierList)}{CreateStringFromType(inMethode.ReturnType)}{inMethode.Name}";
 
-            tmpMethodeString += string.Join(", ", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)}{inItem.Name}{(inItem.DefaultValue != null ? " = " + inItem.DefaultValue : "")}")) + ")";
+            if (!inMethode.IsProperty)
+            {
+                tmpMethodeString += "(" + string.Join(", ", inMethode.Parameter.Select(inItem => $"{CreateStringFromType(inItem.Type)}{inItem.Name}{(inItem.DefaultValue != null ? " = " + inItem.DefaultValue : "")}")) + ")";
+            }
 
             inOutput.Append(CreateIndent(inIndentDepth) + tmpMethodeString);
             if (inMethode.ConstructorCall != null)
@@ -132,6 +135,11 @@ namespace CodeConverterCSharp
 
             if (inMethode.Code == null)
             {
+                if (inMethode.IsProperty)
+                {
+                    inOutput.AppendLine("{get; set;}");
+                }
+
                 inOutput.AppendLine(";");
             }
             else
