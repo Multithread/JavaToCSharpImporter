@@ -10,17 +10,24 @@ namespace CodeConverterCore.Model
         public FieldNameFinder(ClassContainer inClass)
         {
             Class = inClass;
+            MethodeParentClass = inClass;
         }
 
         public FieldNameFinder(FieldNameFinder inParentFinder)
         {
             Class = inParentFinder.Class;
+            MethodeParentClass = inParentFinder.MethodeParentClass;
             VariableList = inParentFinder.VariableList;
             VariableStack = inParentFinder.VariableStack;
             MethodeVarList = inParentFinder.MethodeVarList;
         }
 
         public ClassContainer Class { get; set; }
+
+        /// <summary>
+        /// Base Class from the Calling Methode
+        /// </summary>
+        public ClassContainer MethodeParentClass { get; set; }
 
         public List<VariableDeclaration> VariableList { get; set; } = new List<VariableDeclaration>();
 

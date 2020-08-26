@@ -43,7 +43,7 @@
       {
         ""Name"": ""getClass"",
         ""ReturnType"": {
-          ""Name"": """"
+          ""Name"": ""Class""
         },
         ""ModifierList"": [
           ""public""

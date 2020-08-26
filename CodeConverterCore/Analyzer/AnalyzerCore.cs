@@ -250,6 +250,7 @@ namespace CodeConverterCore.Analyzer
                     if (tmpVal == "this")
                     {
                         inNameFinder.VariableList = new List<VariableDeclaration>();
+                        tmpConstant.Type = inNameFinder.Class.Type;
                     }
                     else if (tmpVal == "base")
                     {
@@ -257,6 +258,7 @@ namespace CodeConverterCore.Analyzer
                             .Select(inItem => ProjectInformation.GetClassForType(inItem.Type.Name, new List<string> { inItem.Type.Namespace }))
                             .FirstOrDefault(inItem => !inItem.IsInterface());
                         inNameFinder.VariableList = new List<VariableDeclaration>();
+                        tmpConstant.Type = inNameFinder.Class.GetParentClass().Type;
                     }
                     else if (tmpVal.StartsWith("\"") && tmpVal.EndsWith("\""))
                     {
@@ -326,14 +328,25 @@ namespace CodeConverterCore.Analyzer
             {
                 var tmpVarAccess = inCodeEntry as VariableAccess;
                 inNameFinder.StackVariables(true, true);
+                ClassContainer tmpPrevClass = null;
                 if (!(tmpVarAccess.Access is VariableDeclaration))
                 {
                     tmpReturnType = CodeEntryHandling(tmpVarAccess.Access, inNameFinder);
+                    tmpPrevClass = inNameFinder.Class;
+                    if (tmpReturnType != null)
+                    {
+                        inNameFinder.Class = ProjectInformation.ClassFromBaseType(tmpReturnType);
+                    }
+                    else
+                    {
+                        inNameFinder.Class = null;
+                    }
                 }
                 if (tmpVarAccess.Child != null)
                 {
-                    CodeEntryHandling(tmpVarAccess.Child, inNameFinder, inReturnType);
+                    tmpReturnType = CodeEntryHandling(tmpVarAccess.Child, inNameFinder, inReturnType);
                 }
+                inNameFinder.Class = tmpPrevClass;
 
                 inNameFinder.UnstackVariableList();
                 if (tmpVarAccess.BaseDataSource != null)
@@ -383,7 +396,7 @@ namespace CodeConverterCore.Analyzer
                             CodeEntryHandling(tmpEntry, new FieldNameFinder()
                             {
                                 VariableList = inNameFinder.GetMethodeVariableList(),
-                                Class = inNameFinder.Class
+                                Class = inNameFinder.MethodeParentClass ?? inNameFinder.Class
                             });
                         }
                     }
@@ -401,7 +414,11 @@ namespace CodeConverterCore.Analyzer
                                 for (var tmpI = 0; tmpI < tmpParam.CodeEntries.Count; tmpI++)
                                 {
                                     var tmpCodeBlock = tmpParam.CodeEntries[tmpI];
-                                    CodeEntryHandling(tmpCodeBlock, new FieldNameFinder(inNameFinder.Class));
+                                    CodeEntryHandling(tmpCodeBlock, new FieldNameFinder()
+                                    {
+                                        VariableList = inNameFinder.GetMethodeVariableList(),
+                                        Class = inNameFinder.MethodeParentClass ?? inNameFinder.Class
+                                    });
                                 }
                             }
                         }
@@ -417,6 +434,25 @@ namespace CodeConverterCore.Analyzer
                     {
                         throw new NotImplementedException("Unknown Methode on Class");
                     }
+                }
+                else
+                {
+                    if (tmpMethodeCall.Parameter.Count > 0)
+                    {
+                        foreach (var tmpParam in tmpMethodeCall.Parameter)
+                        {
+                            for (var tmpI = 0; tmpI < tmpParam.CodeEntries.Count; tmpI++)
+                            {
+                                var tmpCodeBlock = tmpParam.CodeEntries[tmpI];
+                                CodeEntryHandling(tmpCodeBlock, new FieldNameFinder()
+                                {
+                                    VariableList = inNameFinder.GetMethodeVariableList(),
+                                    Class = inNameFinder.MethodeParentClass ?? inNameFinder.Class
+                                });
+                            }
+                        }
+                    }
+                    tmpReturnType = tmpMethodeCall.MethodeLink.ReturnType;
                 }
             }
             else if (inCodeEntry is CodeExpression)
