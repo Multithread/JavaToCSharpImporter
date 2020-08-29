@@ -317,6 +317,19 @@ namespace CodeConverterJava.Model
                         inCodeBlock.CodeEntries.Add(new ConstantValue { Value = tmpPrimaryAsText });
                     }
                 }
+                else if (inBlockStatement.expression().Length > 0
+                    && inBlockStatement.typeType() != null)
+                {
+                    //Type Conversion
+                    var tmpInfo = inBlockStatement.expression();
+                    var tmpConverter = new TypeConversion();
+                    tmpConverter.PreconversionValue = new CodeBlock();
+                    HandleExpressionContext(tmpConverter.PreconversionValue, tmpInfo[0]);
+
+                    var tmpType = inBlockStatement.typeType();
+                    tmpConverter.Type = JavaAntlrClassLoader.GetTypeContainer(tmpType);
+                    inCodeBlock.CodeEntries.Add(tmpConverter);
+                }
                 else
                 {
                     var tmpChildList = inBlockStatement.children;

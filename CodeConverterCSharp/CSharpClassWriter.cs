@@ -335,6 +335,20 @@ namespace CodeConverterCSharp
             {
                 inOutput.Append(CreateStatementCodeBlock((inCodeEntry as CodeBlocContainer).InnerBlock));
             }
+            else if (inCodeEntry is TypeConversion)
+            {
+                var tmpTypeConversion = inCodeEntry as TypeConversion;
+                if (tmpTypeConversion.IsAsConversion)
+                {
+                    inOutput.Append($"({CreateStatementCodeBlock(tmpTypeConversion.PreconversionValue)} as {CreateStringFromType(tmpTypeConversion.Type, false)}");
+                    throw new Exception("To be tested");
+                }
+                else
+                {
+                    inOutput.Append($"({CreateStringFromType(tmpTypeConversion.Type, false)})");
+                    inOutput.Append($"{CreateStatementCodeBlock(tmpTypeConversion.PreconversionValue)}");
+                }
+            }
             else
             {
                 throw new Exception("Code Entry Type not Implement");

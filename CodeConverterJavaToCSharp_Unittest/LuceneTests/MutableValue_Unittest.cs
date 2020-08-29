@@ -47,7 +47,8 @@ package org.apache.lucene.util.mutable;
 
         public abstract void copy(MutableValue source);
         public abstract boolean equalsSameType(Object other);
-  public int compareTo(MutableValue other)
+        public abstract int compareSameType(Object other);
+        public int compareTo(MutableValue other)
         {
             Class <? extends MutableValue > c1 = this.getClass();
             Class <? extends MutableValue > c2 = other.getClass();
@@ -73,5 +74,57 @@ package org.apache.lucene.util.mutable;
             return exists() ? toObject().toString() : ""(null)"";
         }
     }";
+
+        private string CSharpResultExpected = @"using System;
+
+namespace LuceNET.util.mutable
+{
+    /// <summary>
+    /// Base class for all mutable values.
+    ///  
+    /// @lucene.internal 
+    /// </summary>
+    public abstract class MutableValue : IComparable<MutableValue>
+    {
+        public bool exists = true;
+
+        public abstract void Copy(MutableValue inSource);
+
+        public abstract bool EqualsSameType(object inOther);
+
+        public int CompareTo(MutableValue inOther)
+        {
+            Type c1 =             this.GetType();
+            Type c2 =             inOther.GetType();
+            if(c1 != c2)
+            {
+                int c =                 (c1.GetHashCode() - c2.GetHashCode());
+                if(c == 0)
+                {
+                    c = c1.FullName.CompareTo(c2.FullName);
+                }
+                return c;
+            }
+            return compareSameType(inOther);
+        }
+
+        public bool Equals(object inOther)
+        {
+            return ((GetType() == inOther.GetType()) && this.EqualsSameType(inOther));
+        }
+
+        public String ToString()
+        {
+            return exists() ? toObject().toString() : ToObject().toString();
+        }
+
+        abstract void CompareSameType();
+
+        abstract void Exists();
+
+        abstract void ToObject();
+    }
+}
+";
     }
 }

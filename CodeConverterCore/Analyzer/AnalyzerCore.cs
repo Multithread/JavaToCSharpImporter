@@ -250,7 +250,7 @@ namespace CodeConverterCore.Analyzer
                     if (tmpVal == "this")
                     {
                         inNameFinder.VariableList = new List<VariableDeclaration>();
-                        tmpConstant.Type = inNameFinder.Class.Type;
+                        tmpConstant.Type = inNameFinder.MethodeParentClass.Type;
                     }
                     else if (tmpVal == "base")
                     {
@@ -474,6 +474,15 @@ namespace CodeConverterCore.Analyzer
                 foreach (var tmpEntry in tmpExpr.InnerBlock.CodeEntries)
                 {
                     tmpReturnType = CodeEntryHandling(tmpEntry, inNameFinder);
+                }
+            }
+            else if (inCodeEntry is TypeConversion)
+            {
+                var tmpExpr = inCodeEntry as TypeConversion;
+                tmpReturnType = tmpExpr.Type;
+                foreach (var tmpEntry in tmpExpr.PreconversionValue.CodeEntries)
+                {
+                    CodeEntryHandling(tmpEntry, inNameFinder);
                 }
             }
             else

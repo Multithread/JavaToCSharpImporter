@@ -29,21 +29,28 @@ namespace CodeConverterCore_Unittest
             Assert.AreEqual(tmpMethode, tmpMethodeCall.MethodeLink);
         }
 
-        //[Test]
-        //public void CallKnownMethodeOnItself()
-        //{
-        //    var tmpProject = new ProjectInformation();
-        //    var tmpClass1 = Create.AddClass("Class1");
-        //    var tmpMethodeName = "inStr";
-        //    tmpClass1.AddMethode(tmpMethodeName, new TypeContainer { Name = "void" }, Create.AddField(tmpClass1, tmpMethodeName, new BaseType("string")));
-        //    var tmpMethode = tmpClass1.MethodeList[0];
-        //    tmpMethode.Code = new CodeBlock();
-        //    var tmpSet = Create.SetFieldValue(tmpMethode.Code, tmpClass1.MethodeList[0].Parameter[0], new ConstantValue { Value = "\"BBBB\"" });
-        // 
-        //    new AnalyzerCore().LinkProjectInformation(tmpProject);
+        [Test]
+        public void CallKnownMethodeOnItselfWithThis()
+        {
+            var tmpProject = new ProjectInformation();
+            var tmpClass1 = Create.AddClass("Class1");
+            tmpProject.FillClasses(new List<ClassContainer> { tmpClass1 });
+            var tmpMethodeName = "compareTo";
+            tmpClass1.AddMethode(tmpMethodeName, new TypeContainer { Name = "void" });
+            var tmpMethode = tmpClass1.MethodeList[0];
+            tmpMethode.Code = new CodeBlock();
+            var tmpMethodeCall = Create.CallMethode(new CodeBlock(), tmpMethodeName);
+            var tmpVarAccess = new VariableAccess()
+            {
+                Access = new ConstantValue("this"),
+                Child = tmpMethodeCall,
+            };
+            tmpMethode.Code.CodeEntries.Add(tmpVarAccess);
+            new AnalyzerCore().LinkProjectInformation(tmpProject);
+            tmpMethode.Name = "Blah";
 
-        //    Assert.AreEqual(tmpClass1.MethodeList[0].Parameter[0], (tmpSet.CodeEntries[0] as SetFieldWithValue).VariableToAccess.CodeEntries[0]);
-        //}
 
+            Assert.AreEqual(tmpMethode, tmpMethodeCall.MethodeLink);
+        }
     }
 }

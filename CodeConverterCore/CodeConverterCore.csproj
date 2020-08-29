@@ -70,6 +70,7 @@
     <Compile Include="ImportExport\AliasObject.cs" />
     <Compile Include="ImportExport\ImportHelper.cs" />
     <Compile Include="ImportExport\ExportHelper.cs" />
+    <Compile Include="Model\TypeConversion.cs" />
     <Compile Include="Model\UnknownTypeClass.cs" />
     <Compile Include="Converter\ConverterBase.cs" />
     <Compile Include="Converter\IConverter.cs" />
