@@ -8,6 +8,7 @@ using CodeConverterCore.Model;
 using CodeConverterCSharp;
 using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;
+using JavaToCSharpConverter.Helper;
 using JavaToCSharpConverter.Resources;
 using System;
 using System.Collections.Generic;
@@ -60,14 +61,8 @@ namespace JavaToCSharpConverter
                 {
                     continue;
                 }
-                if (!tmpClass.UsingList.Contains("UnknownTypes"))
-                {
-                    tmpClass.UsingList.Add("UnknownTypes");
-                }
-                if (!tmpClass.UsingList.Contains("System"))
-                {
-                    tmpClass.UsingList.Add("System");
-                }
+                NamespaceHelper.HandleNamespaces(tmpClass);
+
                 var tmpCSharp = tmpWriter.CreateClassFile(tmpClass).Content;
 
                 //Do Replacements for non-Fixable Code Changes
@@ -110,6 +105,7 @@ namespace UnknownTypes
             Directory.CreateDirectory(Path.Combine(inOutPath));
             File.WriteAllText(Path.Combine(inOutPath, "UnknownTypes.cs"), tmpUnknownFile);
         }
+
 
         private static List<string> LoadFIleContents(string inSourcePath)
         {

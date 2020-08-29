@@ -11,5 +11,11 @@
         /// Abstract Modifier
         /// </summary>
         public static string Abstract = "abstract";
+
+        /// <summary>
+        /// System.Diagnostics
+        /// </summary>
+        public static string SystemDiagnosis = "System.Diagnostics";
+
     }
 }

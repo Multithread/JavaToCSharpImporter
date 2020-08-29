@@ -23,6 +23,10 @@ namespace CodeConverterCSharp.Lucenene
                 {
                     yield return "System";
                 }
+                else if (tmpNamespace.StartsWith("java"))
+                {
+                    //DoNothing
+                }
                 else
                 {
                     yield return tmpNamespace;

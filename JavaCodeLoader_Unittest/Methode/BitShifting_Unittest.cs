@@ -28,7 +28,7 @@ public void Run(){
 
             var tmpMethodeContent = tmpObjectInformation.ClassList[0].MethodeList[0];
             var tmpCodeLine1 = (tmpMethodeContent.Code.CodeEntries[0] as ReturnCodeEntry).CodeEntries[0] as TypeConversion;
-            var tmpExpr = (tmpCodeLine1.PreconversionValue.CodeEntries[0] as CodeBlocContainer).InnerBlock.CodeEntries[0] as CodeExpression;
+            var tmpExpr = (tmpCodeLine1.PreconversionValue.CodeEntries[0] as CodeBlockContainer).InnerBlock.CodeEntries[0] as CodeExpression;
             Assert.AreEqual(VariableOperatorType.BitShiftRight, tmpExpr.Manipulator);
 
         }

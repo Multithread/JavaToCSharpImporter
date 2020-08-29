@@ -89,6 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\ConverterHelper.cs" />
+    <Compile Include="Helper\NamespaceHelper.cs" />
+    <Compile Include="Model\ElvisStatementCodeStepper.cs" />
+    <Compile Include="Model\NamespaceCodeStepper.cs" />
     <Compile Include="Model\ReplaceInFile.cs" />
     <Compile Include="Model\SearchAndReplacePattern.cs" />
     <Compile Include="Program.cs" />

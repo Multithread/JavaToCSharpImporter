@@ -83,7 +83,7 @@
         {
         ""Name"": ""compareTo"",
         ""ReturnType"": {
-          ""Name"": ""Int32""
+          ""Name"": ""Integer""
         },
         ""ModifierList"": [
           ""public""
@@ -150,7 +150,8 @@
     ""Namespace"": ""java.lang"",
     ""ModifierList"": [
       ""public"",
-      ""class""
+      ""class"",
+      ""struct""
     ]
   },
   {
@@ -160,7 +161,8 @@
     ""Namespace"": ""java.lang"",
     ""ModifierList"": [
       ""public"",
-      ""class""
+      ""class"",
+      ""struct""
     ]
   },
   {
@@ -185,12 +187,23 @@
   },
   {
     ""Type"": {
-      ""Name"": ""Int64""
+      ""Name"": ""null""
     },
     ""Namespace"": ""java.lang"",
     ""ModifierList"": [
       ""public"",
       ""class""
+    ]
+  },
+  {
+    ""Type"": {
+      ""Name"": ""Int64""
+    },
+    ""Namespace"": ""java.lang"",
+    ""ModifierList"": [
+      ""public"",
+      ""class"",
+      ""struct""
     ]
   },
   {

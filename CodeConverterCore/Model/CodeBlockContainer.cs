@@ -2,7 +2,7 @@
 
 namespace CodeConverterCore.Model
 {
-    public class CodeBlocContainer : ICodeEntry
+    public class CodeBlockContainer : ICodeEntry
     {
         /// <summary>
         /// Name of the Variable to access (filled from Code-Resolver)

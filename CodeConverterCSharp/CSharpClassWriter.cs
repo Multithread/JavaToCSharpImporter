@@ -332,9 +332,9 @@ namespace CodeConverterCSharp
                     ));
                 inOutput.Append(")");
             }
-            else if (inCodeEntry is CodeBlocContainer)
+            else if (inCodeEntry is CodeBlockContainer)
             {
-                inOutput.Append(CreateStatementCodeBlock((inCodeEntry as CodeBlocContainer).InnerBlock));
+                inOutput.Append(CreateStatementCodeBlock((inCodeEntry as CodeBlockContainer).InnerBlock));
             }
             else if (inCodeEntry is TypeConversion)
             {

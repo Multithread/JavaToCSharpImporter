@@ -467,9 +467,9 @@ namespace CodeConverterCore.Analyzer
                     }
                 }
             }
-            else if (inCodeEntry is CodeBlocContainer)
+            else if (inCodeEntry is CodeBlockContainer)
             {
-                var tmpExpr = inCodeEntry as CodeBlocContainer;
+                var tmpExpr = inCodeEntry as CodeBlockContainer;
                 tmpReturnType = inReturnType;
                 foreach (var tmpEntry in tmpExpr.InnerBlock.CodeEntries)
                 {

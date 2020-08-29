@@ -288,7 +288,7 @@ namespace CodeConverterJava.Model
 
                     if (tmpPrimary.expression() != null)
                     {
-                        var tmpCodeBlock = new CodeBlocContainer();
+                        var tmpCodeBlock = new CodeBlockContainer();
                         HandleExpressionContext(tmpCodeBlock.InnerBlock, tmpPrimary.expression(), inVariable);
                         inCodeBlock.CodeEntries.Add(tmpCodeBlock);
                     }

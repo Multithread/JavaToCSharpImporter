@@ -63,6 +63,7 @@
     <Compile Include="Analyzer\AnalyzerSettings.cs" />
     <Compile Include="Analyzer\DictionaryHelper.cs" />
     <Compile Include="Helper\ClassHelper.cs" />
+    <Compile Include="Helper\CodeSteppingHelper.cs" />
     <Compile Include="Helper\Modifiers.cs" />
     <Compile Include="Helper\ProjectInformationHelper.cs" />
     <Compile Include="ImportExport\MappingObject.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="ImportExport\AliasObject.cs" />
     <Compile Include="ImportExport\ImportHelper.cs" />
     <Compile Include="ImportExport\ExportHelper.cs" />
+    <Compile Include="Interface\ICodeStepperEvents.cs" />
     <Compile Include="Model\TypeConversion.cs" />
     <Compile Include="Model\UnknownTypeClass.cs" />
     <Compile Include="Converter\ConverterBase.cs" />
@@ -104,7 +106,7 @@
     <Compile Include="Model\ReturnCodeEntry.cs" />
     <Compile Include="Model\SetFieldWithValue.cs" />
     <Compile Include="Model\StatementCode.cs" />
-    <Compile Include="Model\CodeBlocContainer.cs" />
+    <Compile Include="Model\CodeBlockContainer.cs" />
     <Compile Include="Model\VariableAccess.cs" />
     <Compile Include="Model\VariableDeclaration.cs" />
     <Compile Include="Model\MissingFunctionInformation.cs" />
