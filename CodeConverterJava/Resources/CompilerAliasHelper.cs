@@ -10,6 +10,8 @@
 {'From':'True','To':'true'},
 {'From':'False','To':'false'},
 {'From':'Int64','To':'long'},
+{'From':'Float','To':'float'},
+{'From':'Double','To':'double'},
 {'From':'Void','To':'void'},
 ]";
     }

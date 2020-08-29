@@ -208,6 +208,28 @@
   },
   {
     ""Type"": {
+      ""Name"": ""Double""
+    },
+    ""Namespace"": ""java.lang"",
+    ""ModifierList"": [
+      ""public"",
+      ""class"",
+      ""struct""
+    ]
+  },
+  {
+    ""Type"": {
+      ""Name"": ""Float""
+    },
+    ""Namespace"": ""java.lang"",
+    ""ModifierList"": [
+      ""public"",
+      ""class"",
+      ""struct""
+    ]
+  },
+  {
+    ""Type"": {
       ""Name"": ""Void""
     },
     ""Namespace"": ""java.lang"",

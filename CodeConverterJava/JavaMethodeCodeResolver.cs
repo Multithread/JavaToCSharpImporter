@@ -50,6 +50,9 @@ namespace CodeConverterJava.Model
                             {
                                 tmpCurrentCodeBlock = tmpCodeBlockStack.Pop();
                             }
+                            else if (tmpBlockText.StartsWith("/"))
+                            {
+                            }
                             else
                             {
                                 throw new NotImplementedException("Not done yet");

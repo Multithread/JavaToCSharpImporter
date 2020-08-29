@@ -28,6 +28,11 @@ namespace JavaToCSharpConverter.Model
                 var tmpVarDecl = inCodeEntry as VariableDeclaration;
                 AddToUsingIfRequired(_currentClass, tmpVarDecl.Type);
             }
+            else if (inCodeEntry is MethodeCall)
+            {
+                var tmpMethodeCall = inCodeEntry as MethodeCall;
+                //throw new System.Exception("Resolve Methode Call to Static Methodes with Namespace of other Class");
+            }
             else
             {
 
@@ -42,6 +47,10 @@ namespace JavaToCSharpConverter.Model
         public static void AddToUsingIfRequired(ClassContainer inClass, TypeContainer inType)
         {
             var tmpType = inClass.Parent.ClassFromBaseType(inType);
+            if (tmpType == null)
+            {
+                return;
+            }
             AddToUsingIfRequired(inClass, tmpType.Namespace);
         }
 

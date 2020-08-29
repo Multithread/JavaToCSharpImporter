@@ -27,6 +27,8 @@ namespace CodeConverterCSharp.Model
            //Bitshift Operators
            {">>", VariableOperatorType.BitShiftRight},
            {"<<", VariableOperatorType.BitShiftLeft},
+           {">> ", VariableOperatorType.BitShiftRightUnsigned},
+           {"<< ", VariableOperatorType.BitShiftLeftUnsigned},
         };
 
         public static VariableOperatorType GetManipulator(string inOperatorAssString)

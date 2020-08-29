@@ -124,6 +124,11 @@ namespace CodeConverterCore.Model
             return tmpClassList.FirstOrDefault(inItem => inItem.Type.Type == inType.Type);
         }
 
+        internal void AddToDictionaryWithNewName(ClassContainer tmpClass)
+        {
+            AddClass(tmpClass);
+        }
+
         private Dictionary<string, ClassContainer> _systemAlias = new Dictionary<string, ClassContainer>();
 
         /// <summary>

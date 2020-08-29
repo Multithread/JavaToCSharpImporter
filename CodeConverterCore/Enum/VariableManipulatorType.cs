@@ -22,5 +22,7 @@
         //Bitshift Operators
         BitShiftRight = 20,
         BitShiftLeft = 21,
+        BitShiftRightUnsigned = 22,
+        BitShiftLeftUnsigned = 23,
     }
 }

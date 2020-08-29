@@ -114,7 +114,10 @@ namespace JavaToCSharpConverter.Model
                     {
                         throw new NotImplementedException("Not implemented yet");
                     }
-                    return null;
+                }
+                else if (tmpEntry is VariableAccess)
+                {
+                    var tmpAccess = tmpEntry as VariableAccess;
                 }
                 else
                 {
