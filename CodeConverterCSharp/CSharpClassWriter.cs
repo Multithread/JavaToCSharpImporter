@@ -420,9 +420,9 @@ namespace CodeConverterCSharp
             }
             if (inType.GenericTypes.Count > 0)
             {
-                return $"{inType.Type?.Name ?? inType.Name}<{string.Join(" ,", inType.GenericTypes.Select(inItem => CreateStringFromType(inItem, false)))}>{(inType.IsArray ? "[]" : "")}{(inAddEndEntry ? " " : "")}";
+                return $"{inType.Type?.Name ?? inType.Name}{(inType.IsNullable ? "?" : "")}<{string.Join(" ,", inType.GenericTypes.Select(inItem => CreateStringFromType(inItem, false)))}>{(inType.IsArray ? "[]" : "")}{(inAddEndEntry ? " " : "")}";
             }
-            return $"{inType.Type?.Name ?? inType.Name}{(inType.IsArray ? "[]" : "")}{(inAddEndEntry ? " " : "")}";
+            return $"{inType.Type?.Name ?? inType.Name}{(inType.IsNullable ? "?" : "")}{(inType.IsArray ? "[]" : "")}{(inAddEndEntry ? " " : "")}";
         }
 
         /// <summary>

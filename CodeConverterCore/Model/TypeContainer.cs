@@ -57,6 +57,11 @@ namespace CodeConverterCore.Model
         public bool IsArray { get; set; }
 
         /// <summary>
+        /// Type as Nullable Type
+        /// </summary>
+        public bool IsNullable { get; set; }
+
+        /// <summary>
         /// Inizialising Array Data
         /// </summary>
         public ICodeEntry ArrayInizialiser { get; set; }

@@ -13,6 +13,11 @@
         public static string Abstract = "abstract";
 
         /// <summary>
+        /// Struct Modifier
+        /// </summary>
+        public static string Struct = "struct";
+
+        /// <summary>
         /// System.Diagnostics
         /// </summary>
         public static string SystemDiagnosis = "System.Diagnostics";
