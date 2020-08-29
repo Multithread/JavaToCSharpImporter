@@ -424,7 +424,7 @@ namespace CodeConverterJava.Model
                             tmpStatement.StatementCodeBlocks.Add(tmpCodeBlock);
                             //Second Result
                             tmpCodeBlock = new CodeBlock();
-                            HandleExpressionContext(tmpCodeBlock, tmpChildList[2] as ExpressionContext, inVariable);
+                            HandleExpressionContext(tmpCodeBlock, tmpChildList[4] as ExpressionContext, inVariable);
                             tmpStatement.StatementCodeBlocks.Add(tmpCodeBlock);
 
                             inCodeBlock.CodeEntries.Add(tmpStatement);
@@ -439,6 +439,16 @@ namespace CodeConverterJava.Model
                         var tmpValue = tmpChildList[0] as MethodCallContext;
                         MethodeCall tmpMethodeCall = HandleMethodeCall(tmpValue);
                         inCodeBlock.CodeEntries.Add(tmpMethodeCall);
+                    }
+                    else if (tmpChildList.Count == 2
+                        && tmpChildList[1] is ExpressionContext)
+                    {
+                        if (tmpChildList[0].GetText() != "-")
+                        {
+                            throw new NotImplementedException("Not done yet");
+                        }
+                        HandleExpressionContext(inCodeBlock, tmpChildList[1] as ExpressionContext, inVariable);
+                        (inCodeBlock.CodeEntries.Last() as ConstantValue).Value = "-" + (inCodeBlock.CodeEntries.Last() as ConstantValue).Value;
                     }
                     else if (tmpChildList.Count == 2)
                     {

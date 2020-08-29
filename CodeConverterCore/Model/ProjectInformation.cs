@@ -112,6 +112,11 @@ namespace CodeConverterCore.Model
             {
                 inType.Type = new BaseType(inType.Name);
             }
+            var tmpAlias = GetAliasType(inType.Name);
+            if (tmpAlias != null)
+            {
+                return tmpAlias;
+            }
             if (!ClassDict.TryGetValue(inType.Name, out var tmpClassList))
             {
                 return null;

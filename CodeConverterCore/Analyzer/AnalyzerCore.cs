@@ -236,8 +236,7 @@ namespace CodeConverterCore.Analyzer
                 }
                 else if (tmpVal.EndsWith("\""))
                 {
-                    //Nichts zu Tun
-                    throw new NotImplementedException("CodeEntryHandling: Text Handling missing");
+                    tmpReturnType = ProjectInformation.GetAliasType("string")?.Type ?? tmpReturnType;
                 }
                 else if (RegexHelper.NumberCheck.IsMatch(tmpVal))
                 {
@@ -264,7 +263,7 @@ namespace CodeConverterCore.Analyzer
                     {
                         //GetGlobalTypeForType(inNameFinder, tmpConstant, "String");
                     }
-                    else if (new Regex("^[0-9]*$").IsMatch(tmpVal))
+                    else if (new Regex("^\\-?[0-9]*(L|S)?$").IsMatch(tmpVal))
                     {
                         //GetGlobalTypeForType(inNameFinder, tmpConstant, "Integer");
                     }

@@ -166,6 +166,7 @@ namespace CodeConverterCSharp
                 var tmpLastChar = inOutput[inOutput.Length - 1];
                 if (tmpLastChar == ')' ||
                     tmpLastChar == ']' ||
+                    tmpLastChar == '"' ||
                     char.IsLetterOrDigit(tmpLastChar))
                 {
                     if (inAddSemicolon)

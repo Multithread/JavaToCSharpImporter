@@ -41,7 +41,7 @@ namespace org
     {
         public void OneSmallerThanTwo(bool inFirst, int in1, int in2)
         {
-            return inFirst ? in1 : in1;
+            return inFirst ? in1 : in2;
         }
     }
 }

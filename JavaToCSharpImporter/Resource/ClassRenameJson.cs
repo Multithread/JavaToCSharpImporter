@@ -6,6 +6,7 @@
 {'Source':{'Namespace':'java.lang','ClassName':'Object','MethodeName':'super'},'Target':{'Namespace':'System','ClassName':'object','MethodeName':'base'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Object','MethodeName':'getClass'},'Target':{'Namespace':'System','ClassName':'object','MethodeName':'GetType'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Object','MethodeName':'hashCode'},'Target':{'Namespace':'System','ClassName':'object','MethodeName':'GetHashCode'}},
+{'Source':{'Namespace':'java.lang','ClassName':'Object','MethodeName':'toString'},'Target':{'Namespace':'System','ClassName':'object','MethodeName':'ToString'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Object'},'Target':{'Namespace':'System','ClassName':'object'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Boolean'},'Target':{'Namespace':'System','ClassName':'bool'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Integer'},'Target':{'Namespace':'System','ClassName':'int'}},
