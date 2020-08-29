@@ -23,6 +23,10 @@ namespace CodeConverterCSharp.Model
            {"<=", VariableOperatorType.LessOrEquals},
            {">=", VariableOperatorType.MoreOrEquals},
            {"^", VariableOperatorType.XOR},
+
+           //Bitshift Operators
+           {">>", VariableOperatorType.BitShiftRight},
+           {"<<", VariableOperatorType.BitShiftLeft},
         };
 
         public static VariableOperatorType GetManipulator(string inOperatorAssString)

@@ -18,5 +18,9 @@
         And = 16,
         Or= 17,
         XOR = 18,
+
+        //Bitshift Operators
+        BitShiftRight = 20,
+        BitShiftLeft = 21,
     }
 }

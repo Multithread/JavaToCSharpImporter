@@ -317,7 +317,7 @@ namespace CodeConverterJava.Model
                         inCodeBlock.CodeEntries.Add(new ConstantValue { Value = tmpPrimaryAsText });
                     }
                 }
-                else if (inBlockStatement.expression().Length > 0
+                else if (inBlockStatement.expression().Length == 1
                     && inBlockStatement.typeType() != null)
                 {
                     //Type Conversion
@@ -329,6 +329,25 @@ namespace CodeConverterJava.Model
                     var tmpType = inBlockStatement.typeType();
                     tmpConverter.Type = JavaAntlrClassLoader.GetTypeContainer(tmpType);
                     inCodeBlock.CodeEntries.Add(tmpConverter);
+                }
+                else if (inBlockStatement.expression().Length == 2
+                    && inBlockStatement.children[1].GetText() != "=")
+                {
+                    var tmpCodeExpression = new CodeExpression
+                    {
+                        Manipulator = JavaStaticInfo.GetManipulator(string.Join("", inBlockStatement.children
+                        .Where(inItem => inItem is ITerminalNode)
+                        .Select(inItem => inItem.GetText())))
+                    };
+                    var tmpCodeBlock = new CodeBlock();
+                    HandleExpressionContext(tmpCodeBlock, inBlockStatement.expression()[0], inVariable);
+                    tmpCodeExpression.SubClauseEntries.Add(tmpCodeBlock);
+                    tmpCodeBlock = new CodeBlock();//Second Code Block
+                    HandleExpressionContext(tmpCodeBlock, inBlockStatement.expression()[1], inVariable);
+                    tmpCodeExpression.SubClauseEntries.Add(tmpCodeBlock);
+
+                    inCodeBlock.CodeEntries.Add(tmpCodeExpression);
+
                 }
                 else
                 {

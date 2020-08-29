@@ -236,12 +236,13 @@ namespace CodeConverterCore.Analyzer
                 }
                 else if (tmpVal.EndsWith("\""))
                 {
+                    //It's a number, nothing to do
                     tmpReturnType = ProjectInformation.GetAliasType("string")?.Type ?? tmpReturnType;
                 }
                 else if (RegexHelper.NumberCheck.IsMatch(tmpVal))
                 {
                     //It's a number, nothing to do
-                    throw new NotImplementedException("CodeEntryHandling: Number Handling not done yet");
+                    tmpReturnType = ProjectInformation.GetAliasType("int")?.Type ?? tmpReturnType;
                 }
                 else
                 {

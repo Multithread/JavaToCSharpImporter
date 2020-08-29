@@ -76,7 +76,8 @@
     ""Namespace"": ""java.lang"",
     ""ModifierList"": [
       ""public"",
-      ""class""
+      ""class"",
+      ""struct""
     ],
     ""MethodeList"": [
         {
@@ -88,6 +89,16 @@
           ""public""
         ]
       }
+    ]
+  },{
+    ""Type"": {
+      ""Name"": ""Date""
+    },
+    ""Namespace"": ""java.lang"",
+    ""ModifierList"": [
+      ""public"",
+      ""class"",
+      ""struct""
     ]
   },
   {

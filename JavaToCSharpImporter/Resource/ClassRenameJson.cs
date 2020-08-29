@@ -21,6 +21,7 @@
 {'Source':{'Namespace':'java.lang','ClassName':'Class'},'Target':{'Namespace':'System','ClassName':'Type'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Comparable','MethodeName':'compareTo'},'Target':{'Namespace':'System','ClassName':'IComparable','MethodeName':'CompareTo'}},
 {'Source':{'Namespace':'java.lang','ClassName':'Comparable'},'Target':{'Namespace':'System','ClassName':'IComparable'}},
+{'Source':{'Namespace':'java.lang','ClassName':'Date'},'Target':{'Namespace':'System','ClassName':'DateTime'}},
 ]";
     }
 }
