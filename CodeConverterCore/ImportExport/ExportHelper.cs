@@ -34,6 +34,11 @@ namespace CodeConverterCore.ImportExport
         {
             return JsonConvert.SerializeObject(inMappingObjectList, Settings());
         }
+
+        public static string SaveStringReplacements(List<StringReplacement> inStringReplacementList)
+        {
+            return JsonConvert.SerializeObject(inStringReplacementList, Settings());
+        }
     }
 
     public class ShouldSerializeContractResolver : DefaultContractResolver

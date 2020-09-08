@@ -23,5 +23,10 @@ namespace CodeConverterCore.ImportExport
         {
             return JsonConvert.DeserializeObject<List<LanguageMappingObject>>(inMappingJson);
         }
+
+        public static List<StringReplacement> ImportStringReplacements(string inReplacementJson)
+        {
+            return JsonConvert.DeserializeObject<List<StringReplacement>>(inReplacementJson);
+        }
     }
 }

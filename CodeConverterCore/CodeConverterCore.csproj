@@ -71,6 +71,7 @@
     <Compile Include="ImportExport\AliasObject.cs" />
     <Compile Include="ImportExport\ImportHelper.cs" />
     <Compile Include="ImportExport\ExportHelper.cs" />
+    <Compile Include="ImportExport\StringReplacement.cs" />
     <Compile Include="Interface\ICodeStepperEvents.cs" />
     <Compile Include="Model\TypeConversion.cs" />
     <Compile Include="Model\UnknownTypeClass.cs" />

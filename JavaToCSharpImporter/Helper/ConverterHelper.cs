@@ -9,12 +9,14 @@ using CodeConverterCSharp;
 using CodeConverterCSharp.Lucenene;
 using CodeConverterJava.Model;
 using JavaToCSharpConverter.Helper;
+using JavaToCSharpConverter.Resource;
 using JavaToCSharpConverter.Resources;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace JavaToCSharpConverter
 {
@@ -40,7 +42,7 @@ namespace JavaToCSharpConverter
             {
                 throw new Exception("Missing Methodes Class to be Implemented");
             }
-            WriteCSharpCode(inOutPath, tmpObjectInformation, null);
+            WriteCSharpCode(inOutPath, tmpObjectInformation, ImportHelper.ImportStringReplacements(StringReplacementJson.ReplacementJson));
 
             CreateCSharpSLNFile(tmpObjectInformation, inOutPath);
         }
@@ -52,9 +54,20 @@ namespace JavaToCSharpConverter
         /// <param name="tmpClassList"></param>
         /// <param name="inProjectInformation"></param>
         /// <param name="tmpReplacer"></param>
-        private static void WriteCSharpCode(string inOutPath, ProjectInformation inProjectInformation, IniParser.Model.IniData tmpReplacer)
+        private static void WriteCSharpCode(string inOutPath, ProjectInformation inProjectInformation, List<StringReplacement> inReplacementList)
         {
             var tmpWriter = new CSharpClassWriter();
+            //Predo StringReplacements
+            var tmpList = new List<Tuple<Regex, StringReplacement>>();
+            foreach (var tmpEntry in inReplacementList)
+            {
+                tmpList.Add(new Tuple<Regex, StringReplacement>
+                (
+                    new Regex(tmpEntry.NameRegex, RegexOptions.Compiled)
+                    , tmpEntry
+                ));
+            }
+
             foreach (var tmpClass in inProjectInformation.ClassList)
             {
                 if (tmpClass.ClassType == ClassTypeEnum.System)
@@ -65,12 +78,19 @@ namespace JavaToCSharpConverter
 
                 var tmpCSharp = tmpWriter.CreateClassFile(tmpClass).Content;
 
-                //Do Replacements for non-Fixable Code Changes
-                if (tmpReplacer != null)
+                foreach (var tmpReplacement in tmpList)
                 {
-                    foreach (var tmpKV in tmpReplacer[tmpClass.Name])
+                    if (tmpReplacement.Item1.IsMatch(tmpClass.Name))
                     {
-                        tmpCSharp = tmpCSharp.Replace(tmpKV.KeyName, tmpKV.Value);
+                        if (!string.IsNullOrEmpty(tmpReplacement.Item2.RequiredUsing))
+                        {
+                            if (tmpCSharp.Contains(tmpReplacement.Item2.SourceText)
+                                && !tmpCSharp.Contains(tmpReplacement.Item2.RequiredUsing))
+                            {
+                                tmpCSharp = $"using {tmpReplacement.Item2.RequiredUsing};{Environment.NewLine}{tmpCSharp}";
+                            }
+                        }
+                        tmpCSharp = tmpCSharp.Replace(tmpReplacement.Item2.SourceText, tmpReplacement.Item2.ReplacementText);
                     }
                 }
 
@@ -193,6 +213,9 @@ namespace UnknownTypes
     <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include=""JavaCoreReplacer"">
+      <HintPath>..\..\..\Users\Marco\Documents\Visual Studio 2019\Projects\JavaToCSharpImporter\JavaToCSharpImporter\bin\Debug\JavaCoreReplacer.dll</HintPath>
+    </Reference>
     <Reference Include=""MoreLinq, Version=3.1.0.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL"">
       <HintPath>..\packages\morelinq.3.1.0\lib\net451\MoreLinq.dll</HintPath>
     </Reference>

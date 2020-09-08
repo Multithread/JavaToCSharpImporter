@@ -98,6 +98,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\SearchInFile.cs" />
     <Compile Include="Resource\ClassRenameJson.cs" />
+    <Compile Include="Resource\StringReplacementJson.cs" />
     <Compile Include="ResultCache.cs" />
     <Compile Include="TestData.cs" />
   </ItemGroup>
@@ -117,6 +118,10 @@
     <ProjectReference Include="..\CodeConverterJava\CodeConverterJava.csproj">
       <Project>{863f8c69-dd75-4a95-a8a0-8dc3863857b2}</Project>
       <Name>CodeConverterJava</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JavaCoreReplacer\JavaCoreReplacer.csproj">
+      <Project>{be3bfe74-e55e-489e-9dd7-3f945ab5effa}</Project>
+      <Name>JavaCoreReplacer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
