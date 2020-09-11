@@ -17,10 +17,13 @@ namespace CodeConverterCore.Model
         /// </summary>
         public StatementTypeEnum StatementType { get; set; }
 
+        /// <summary>
+        /// Content inside the Statement
+        /// </summary>
         public CodeBlock InnerContent { get; set; }
 
         /// <summary>
-        /// Code that is Required by the statement (aka if expression and for information)
+        /// Code that is Required by the statement (aka if expression or for(;;) information)
         /// </summary>
         public List<CodeBlock> StatementCodeBlocks { get; set; }
 

@@ -93,33 +93,7 @@ namespace CodeConverterJava.Model
             var tmpVar = inBlockStatement.localVariableDeclaration();
             if (tmpVar != null)
             {
-                var tmpVarDeclaration = new VariableDeclaration();
-                if (tmpVar.typeType() != null)
-                {
-                    tmpVarDeclaration.Type = JavaAntlrClassLoader.GetTypeContainer(tmpVar.typeType());
-                }
-                if (tmpVar.variableDeclarators() != null)
-                {
-                    foreach (var tmpVariableDeclaration in tmpVar.variableDeclarators().variableDeclarator())
-                    {
-                        var tmpVarDec = new VariableDeclaration()
-                        {
-                            Type = tmpVarDeclaration.Type,
-                            Name = tmpVariableDeclaration.variableDeclaratorId().GetText(),
-                        };
-                        inCodeBlock.CodeEntries.Add(tmpVarDec);
-                        if (tmpVariableDeclaration.variableInitializer() != null)
-                        {
-                            HandleArrayInizializer(inCodeBlock, tmpVariableDeclaration.variableInitializer().arrayInitializer(), tmpVarDec);
-                            HandleExpressionContext(inCodeBlock, tmpVariableDeclaration.variableInitializer().expression(), tmpVarDec);
-                        }
-                    }
-                }
-                if (tmpVar.variableModifier().Length > 0)
-                {
-
-                    throw new NotImplementedException("Not done yet");
-                }
+                HandleLocalVariableDeclarationContext(inCodeBlock, tmpVar);
             }
             var tmpType = inBlockStatement.localTypeDeclaration();
             if (tmpType != null)
@@ -132,6 +106,37 @@ namespace CodeConverterJava.Model
                 HandleBlockStatementStatement(inCodeBlock, inBlockStatement.statement());
             }
 
+        }
+
+        private void HandleLocalVariableDeclarationContext(CodeBlock inCodeBlock, LocalVariableDeclarationContext tmpVar)
+        {
+            var tmpVarDeclaration = new VariableDeclaration();
+            if (tmpVar.typeType() != null)
+            {
+                tmpVarDeclaration.Type = JavaAntlrClassLoader.GetTypeContainer(tmpVar.typeType());
+            }
+            if (tmpVar.variableDeclarators() != null)
+            {
+                foreach (var tmpVariableDeclaration in tmpVar.variableDeclarators().variableDeclarator())
+                {
+                    var tmpVarDec = new VariableDeclaration()
+                    {
+                        Type = tmpVarDeclaration.Type,
+                        Name = tmpVariableDeclaration.variableDeclaratorId().GetText(),
+                    };
+                    inCodeBlock.CodeEntries.Add(tmpVarDec);
+                    if (tmpVariableDeclaration.variableInitializer() != null)
+                    {
+                        HandleArrayInizializer(inCodeBlock, tmpVariableDeclaration.variableInitializer().arrayInitializer(), tmpVarDec);
+                        HandleExpressionContext(inCodeBlock, tmpVariableDeclaration.variableInitializer().expression(), tmpVarDec);
+                    }
+                }
+            }
+            if (tmpVar.variableModifier().Length > 0)
+            {
+
+                throw new NotImplementedException("Not done yet");
+            }
         }
 
         /// <summary>
@@ -229,6 +234,46 @@ namespace CodeConverterJava.Model
                     HandloBlockStatementContent(inParentCodeBlock, tmpCode);
                 }
                 return;
+            }
+            else if (inStatement.forControl() != null)
+            {
+                var tmpForControl = inStatement.forControl();
+                tmpStatement.StatementType = StatementTypeEnum.For;
+                tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { new CodeBlock(), new CodeBlock(), new CodeBlock() };
+                tmpStatement.InnerContent = new CodeBlock();
+                HandleBlockStatementStatement(tmpStatement.InnerContent, inStatement.statement()[0]);
+
+                if (tmpForControl.forInit() != null)
+                {
+                    if (tmpForControl.forInit().localVariableDeclaration() != null)
+                    {
+                        HandleLocalVariableDeclarationContext(tmpStatement.StatementCodeBlocks[0], tmpForControl.forInit().localVariableDeclaration());
+                    }
+                    if (tmpForControl.forInit().expressionList() != null)
+                    {
+                        foreach (var tmpExpr in tmpForControl.forInit().expressionList().expression())
+                        {
+                            HandleExpressionContext(tmpStatement.StatementCodeBlocks[0], tmpExpr);
+                        }
+                    }
+                }
+                if (tmpForControl.expression() != null)
+                {
+                    HandleExpressionContext(tmpStatement.StatementCodeBlocks[1], tmpForControl.expression());
+                }
+                if (tmpForControl.expressionList() != null)
+                {
+                    foreach (var tmpExpr in tmpForControl.expressionList().expression())
+                    {
+                        HandleExpressionContext(tmpStatement.StatementCodeBlocks[2], tmpExpr);
+                    }
+                }
+                if (tmpForControl.enhancedForControl() != null)
+                {
+                    throw new NotImplementedException("for Inline Variable Declaration missing yet");
+                    HandleExpressionContext(tmpStatement.StatementCodeBlocks[1], tmpForControl.expression());
+                }
+
             }
             else
             {
@@ -469,6 +514,17 @@ namespace CodeConverterJava.Model
                         {
                             throw new NotImplementedException("Not done yet");
                         }
+                        HandleExpressionContext(inCodeBlock, tmpChildList[1] as ExpressionContext, inVariable);
+                        (inCodeBlock.CodeEntries.Last() as ConstantValue).Value = "-" + (inCodeBlock.CodeEntries.Last() as ConstantValue).Value;
+                    }
+                    else if (tmpChildList.Count == 2
+                        && tmpChildList[0] is ExpressionContext)
+                    {
+                        if (tmpChildList[1].GetText() != "--" && tmpChildList[1].GetText() != "++")
+                        {
+                            throw new NotImplementedException("Not done yet");
+                        }
+                        throw new NotImplementedException("Not done yet");
                         HandleExpressionContext(inCodeBlock, tmpChildList[1] as ExpressionContext, inVariable);
                         (inCodeBlock.CodeEntries.Last() as ConstantValue).Value = "-" + (inCodeBlock.CodeEntries.Last() as ConstantValue).Value;
                     }

@@ -17,14 +17,14 @@
   },
   {
     ""NameRegex"": ""."",
-    ""SourceText"": ""double.doubleToLongBits"",
+    ""SourceText"": ""float.floatToIntBits"",
     ""ReplacementText"": ""FLoatCompareHelper.FloatToIntBits"",
     ""RequiredUsing"": ""JavaCoreReplacer""
   },
   {
     ""NameRegex"": ""."",
-    ""SourceText"": ""float.floatToIntBits"",
-    ""ReplacementText"": ""FLoatCompareHelper.DoubleToLongBits"",
+    ""SourceText"": ""double.doubleToLongBits"",
+    ""ReplacementText"": ""(int)FLoatCompareHelper.DoubleToLongBits"",
     ""RequiredUsing"": ""JavaCoreReplacer""
   }
 ]";
