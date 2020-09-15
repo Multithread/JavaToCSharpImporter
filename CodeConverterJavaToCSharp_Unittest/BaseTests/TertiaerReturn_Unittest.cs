@@ -44,7 +44,7 @@ namespace System
 
         public abstract object ToObject();
 
-        public String ToString()
+        public override String ToString()
         {
             return Exists() ? ToObject().ToString() : ""(null)"";
         }

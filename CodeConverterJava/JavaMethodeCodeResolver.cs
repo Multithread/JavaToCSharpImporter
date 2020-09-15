@@ -283,7 +283,8 @@ namespace CodeConverterJava.Model
             if (inStatement.statement().Length > 0)
             {
                 var tmpinnercount = (inStatement.ELSE() != null ? 1 : 0)
-                    + (inStatement.IF() != null ? 1 : 0);
+                    + (inStatement.IF() != null ? 1 : 0)
+                    + (inStatement.FOR() != null ? 1 : 0);
 
                 if (inStatement.statement().Length != tmpinnercount)
                 {
@@ -524,9 +525,13 @@ namespace CodeConverterJava.Model
                         {
                             throw new NotImplementedException("Not done yet");
                         }
-                        throw new NotImplementedException("Not done yet");
-                        HandleExpressionContext(inCodeBlock, tmpChildList[1] as ExpressionContext, inVariable);
-                        (inCodeBlock.CodeEntries.Last() as ConstantValue).Value = "-" + (inCodeBlock.CodeEntries.Last() as ConstantValue).Value;
+                        var tmpCodeExpression = new CodeExpression
+                        {
+                            Manipulator = JavaStaticInfo.GetManipulator(tmpChildList[1].GetText())
+                        };
+                        tmpCodeExpression.SubClauseEntries = new List<CodeBlock> { new CodeBlock() };
+                        HandleExpressionContext(tmpCodeExpression.SubClauseEntries[0], tmpChildList[0] as ExpressionContext, inVariable);
+                        inCodeBlock.CodeEntries.Add(tmpCodeExpression);
                     }
                     else if (tmpChildList.Count == 2)
                     {

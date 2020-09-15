@@ -24,5 +24,11 @@
         BitShiftLeft = 21,
         BitShiftRightUnsigned = 22,
         BitShiftLeftUnsigned = 23,
+
+        //MathEqualsOperatiosn
+        PlusPlus = 31,
+        MinusMinus = 32,
+        PlusEquals = 33,
+        MinusEquals = 34,
     }
 }

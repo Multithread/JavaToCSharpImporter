@@ -524,6 +524,8 @@ namespace CodeConverterCSharp
                    case "static":
                        return 80;
                    case "class":
+                       return 90;
+                   case "struct":
                        return 100;
                    case "interface":
                        return 101;

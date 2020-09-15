@@ -32,14 +32,13 @@ return false;
             var tmpStatement = (tmpMethodeContent.Code.CodeEntries[0]) as StatementCode;
 
             //Statement IF
-            Assert.AreEqual(StatementTypeEnum.If, tmpStatement.StatementType);
+            Assert.AreEqual(StatementTypeEnum.For, tmpStatement.StatementType);
 
             //Inner Content (return true);
-            Assert.AreNotEqual(null, tmpStatement.InnerContent);
+            Assert.AreEqual(VariableOperatorType.MinusMinus, (tmpStatement.InnerContent.CodeEntries[0] as CodeExpression).Manipulator);
 
-            //IF Statement (in1<in2)
-            Assert.AreNotEqual(null, tmpStatement.StatementCodeBlocks[0]);
+            //Inner Content (return true);
+            Assert.AreEqual(VariableOperatorType.PlusPlus, (tmpStatement.StatementCodeBlocks[2].CodeEntries[0] as CodeExpression).Manipulator);
         }
-
     }
 }

@@ -29,6 +29,11 @@ namespace CodeConverterJava.Model
            {"<<", VariableOperatorType.BitShiftLeft},
            {">>>", VariableOperatorType.BitShiftRightUnsigned},
            {"<<<", VariableOperatorType.BitShiftLeftUnsigned},
+
+           {"++", VariableOperatorType.PlusPlus},
+           {"--", VariableOperatorType.MinusMinus},
+           {"+=", VariableOperatorType.PlusEquals},
+           {"-=", VariableOperatorType.MinusEquals},
         };
 
         public static VariableOperatorType GetManipulator(string inOperatorAssString)
