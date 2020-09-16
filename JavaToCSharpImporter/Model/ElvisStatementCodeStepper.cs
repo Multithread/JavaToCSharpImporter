@@ -31,9 +31,9 @@ namespace JavaToCSharpConverter.Model
                         var tmpTypeConverter = new TypeConversion();
                         tmpTypeConverter.Type = CreateNullableType(GetTypeFromCodeBlock(tmpStatement.StatementCodeBlocks[2]));
                         var tmpType = _currentClass.Parent.ClassFromBaseType(tmpTypeConverter.Type);
-                        
+
                         if (tmpType.ModifierList.Contains(Modifiers.Struct))
-                        { 
+                        {
                             tmpTypeConverter.PreconversionValue = tmpStatement.StatementCodeBlocks[2];
 
                             tmpStatement.StatementCodeBlocks[2] = new CodeBlock()
@@ -118,6 +118,18 @@ namespace JavaToCSharpConverter.Model
                 else if (tmpEntry is VariableAccess)
                 {
                     var tmpAccess = tmpEntry as VariableAccess;
+                    if (tmpAccess.Child != null)
+                    {
+                        return GetTypeFromCodeBlock(new CodeBlock() { CodeEntries = new List<ICodeEntry> { tmpAccess.Child } });
+                    }
+                    else
+                    {
+                        return GetTypeFromCodeBlock(new CodeBlock() { CodeEntries = new List<ICodeEntry> { tmpAccess.Access } });
+                    }
+                }
+                else if (tmpEntry is MethodeCall)
+                {
+                    return (tmpEntry as MethodeCall).MethodeLink?.ReturnType ?? _currentClass.Parent.GetClassForType("void", _currentClass.FullUsingList).Type;
                 }
                 else
                 {

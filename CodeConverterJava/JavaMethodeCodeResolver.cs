@@ -615,7 +615,7 @@ namespace CodeConverterJava.Model
         {
             var tmpMethodeCall = new MethodeCall()
             {
-                Name = (inMethodeCallContext.SUPER() ?? inMethodeCallContext.IDENTIFIER()).GetText()
+                Name = (inMethodeCallContext.SUPER()?? inMethodeCallContext.THIS() ?? inMethodeCallContext.IDENTIFIER()).GetText()
             };
             if (inMethodeCallContext.expressionList() != null)
             {
