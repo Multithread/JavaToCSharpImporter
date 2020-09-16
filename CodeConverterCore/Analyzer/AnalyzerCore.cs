@@ -279,7 +279,8 @@ namespace CodeConverterCore.Analyzer
             {
                 var tmpStatement = inCodeEntry as StatementCode;
                 if (tmpStatement.StatementType == Enum.StatementTypeEnum.If
-                    || tmpStatement.StatementType == Enum.StatementTypeEnum.Else)
+                    || tmpStatement.StatementType == Enum.StatementTypeEnum.Else
+                    || tmpStatement.StatementType == Enum.StatementTypeEnum.For)
                 {
                     if (tmpStatement.InnerContent != null)
                     {

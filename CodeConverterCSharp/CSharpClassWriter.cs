@@ -166,6 +166,8 @@ namespace CodeConverterCSharp
                 var tmpLastChar = inOutput[inOutput.Length - 1];
                 if (tmpLastChar == ')' ||
                     tmpLastChar == ']' ||
+                    tmpLastChar == '-' ||
+                    tmpLastChar == '+' ||
                     tmpLastChar == '"' ||
                     char.IsLetterOrDigit(tmpLastChar))
                 {
@@ -326,11 +328,25 @@ namespace CodeConverterCSharp
             else if (inCodeEntry is CodeExpression)
             {
                 var tmpExpr = inCodeEntry as CodeExpression;
-                inOutput.Append("(");
+                var tmpIsSingleEntryExpression = tmpExpr.Manipulator == VariableOperatorType.MinusMinus
+                       || tmpExpr.Manipulator == VariableOperatorType.PlusPlus;
+
+                if (!tmpIsSingleEntryExpression)
+                {
+                    inOutput.Append("(");
+                }
                 inOutput.Append(string.Join($" {CSharpStaticInfo.GetOperatorString(tmpExpr.Manipulator)} ",
                     tmpExpr.SubClauseEntries.Select(inItem => CreateStatementCodeBlock(inItem))
                     ));
-                inOutput.Append(")");
+                // Operators -- and ++ do not habe a second Entry
+                if (tmpIsSingleEntryExpression)
+                {
+                    inOutput.Append(CSharpStaticInfo.GetOperatorString(tmpExpr.Manipulator));
+                }
+                else
+                {
+                    inOutput.Append(")");
+                }
             }
             else if (inCodeEntry is CodeBlockContainer)
             {
@@ -399,6 +415,18 @@ namespace CodeConverterCSharp
                     AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[1], 0, false);
                     inOutput.Append(" : ");
                     AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[2], 0);
+                    break;
+                case StatementTypeEnum.For:
+                    inOutput.Append("for (");
+                    AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[0], 0, false);
+                    inOutput.Append(":");
+                    AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[1], 0, false);
+                    inOutput.Append(":");
+                    AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[2], 0, false);
+                    inOutput.AppendLine(")");
+                    inOutput.AppendLine(CreateIndent(inIndentDepth) + "{");
+                    AddCodeBlockToString(inOutput, inStatement.InnerContent, inIndentDepth + 1);
+                    inOutput.AppendLine(CreateIndent(inIndentDepth) + "}");
                     break;
                 default:
                     throw new Exception("Unhandlet Statement Type");

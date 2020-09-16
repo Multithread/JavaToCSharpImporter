@@ -29,7 +29,8 @@ namespace CodeConverterJava.Model
            {"<<", VariableOperatorType.BitShiftLeft},
            {">>>", VariableOperatorType.BitShiftRightUnsigned},
            {"<<<", VariableOperatorType.BitShiftLeftUnsigned},
-
+           
+           //VarOperations With Set
            {"++", VariableOperatorType.PlusPlus},
            {"--", VariableOperatorType.MinusMinus},
            {"+=", VariableOperatorType.PlusEquals},
