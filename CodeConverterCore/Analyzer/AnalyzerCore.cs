@@ -252,6 +252,10 @@ namespace CodeConverterCore.Analyzer
                         inNameFinder.VariableList = new List<VariableDeclaration>();
                         tmpConstant.Type = inNameFinder.MethodeParentClass.Type;
                     }
+                    else if (tmpVal == "value")
+                    {
+                        throw new NotImplementedException("TODO Handle 'value' Parameter");
+                    }
                     else if (tmpVal == "base")
                     {
                         inNameFinder.Class = inNameFinder.Class.InterfaceList
@@ -264,9 +268,20 @@ namespace CodeConverterCore.Analyzer
                     {
                         //GetGlobalTypeForType(inNameFinder, tmpConstant, "String");
                     }
-                    else if (new Regex("^\\-?[0-9]*(L|S)?$").IsMatch(tmpVal))
+                    else if (new Regex("^\\-?[0-9]*(\\.[0-9]*)?(S|D)?$").IsMatch(tmpVal))
                     {
-                        //GetGlobalTypeForType(inNameFinder, tmpConstant, "Integer");
+                        if (tmpVal.EndsWith("D"))
+                        {
+                            GetGlobalTypeForType(inNameFinder, tmpConstant, "long");
+                        }
+                        else if (tmpVal.EndsWith("S"))
+                        {
+                            GetGlobalTypeForType(inNameFinder, tmpConstant, "short");
+                        }
+                        else
+                        {
+                            GetGlobalTypeForType(inNameFinder, tmpConstant, "int");
+                        }
                     }
                     else
                     {
@@ -519,7 +534,7 @@ namespace CodeConverterCore.Analyzer
                 else
                 {
                     //Check for Static Types, System aliases or other Unknown Type
-                    var tmpStaticClassOrUnknown = ProjectInformation.GetClassOrUnknownForType(tmpVal, inNameFinder.Class?.FullUsingList ?? new List<string>());
+                    var tmpStaticClassOrUnknown = ProjectInformation.GetClassOrUnknownForType(tmpVal, inNameFinder.Class ?? new ClassContainer());
                     tmpConstant.Value = tmpStaticClassOrUnknown.Type;
                     if (tmpConstant.Type != null)
                     {
@@ -548,7 +563,7 @@ namespace CodeConverterCore.Analyzer
             {
                 return;
             }
-            var tmpResult = ProjectInformation.GetClassOrUnknownForType(inTypeContainer.Name, inClass.FullUsingList);
+            var tmpResult = ProjectInformation.GetClassOrUnknownForType(inTypeContainer.Name, inClass);
             inTypeContainer.Type = tmpResult.Type.Type;
 
             //Generic sub-Types handling

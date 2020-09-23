@@ -18,6 +18,7 @@ namespace CodeConverterCore.Helper
         public static ClassContainer GetParentClass(this ClassContainer inClass)
         {
             var tmpPartentClass = inClass.InterfaceList
+                .Where(inItem => inItem.Type != null)
                 .Select(inItem => inClass.Parent.GetClassForType(inItem.Type.Name, inClass.FullUsingList))
                 .FirstOrDefault(inItem => inItem != null && !inItem.ModifierList.Any(inModifier => inModifier == "interface"));
 

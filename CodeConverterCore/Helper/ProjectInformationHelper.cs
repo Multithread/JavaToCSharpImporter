@@ -17,13 +17,13 @@ namespace CodeConverterCore.Helper
         /// <param name="inClassName"></param>
         /// <param name="inPossibleNamespaces"></param>
         /// <returns></returns>
-        public static ClassContainer GetClassOrUnknownForType(this ProjectInformation inProject, string inClassName, List<string> inPossibleNamespaces)
+        public static ClassContainer GetClassOrUnknownForType(this ProjectInformation inProject, string inClassName, ClassContainer inParentClass)
         {
             if (string.IsNullOrEmpty(inClassName))
             {
                 return null;
             }
-            var tmpClass = inProject.ClassForNameAndNamespaces(inClassName, inPossibleNamespaces);
+            var tmpClass = inProject.ClassForNameAndNamespaces(inClassName, inParentClass.FullUsingList);
             if (tmpClass != null)
             {
                 return tmpClass;
@@ -32,12 +32,30 @@ namespace CodeConverterCore.Helper
             {
                 return inProject.GetAliasType(inClassName);
             }
-            var tmpUnknown = inProject.UnknownClassForNameAndNamespaces(inClassName, inPossibleNamespaces);
+
+            var tmpGenericType = inParentClass.Type.GenericTypes.FirstOrDefault(inItem => inItem.Name == inClassName);
+            if (tmpGenericType != null)
+            {
+                return new ClassContainer { Type = tmpGenericType };
+            }
+
+            var tmpParentClass = inParentClass;
+            while (tmpParentClass != null)
+            {
+                var tmpField = tmpParentClass.FieldList.FirstOrDefault(inItem => inItem.Name == inClassName);
+                if (tmpField != null)
+                {
+                    return new ClassContainer { Type = tmpField.Type };
+                }
+                tmpParentClass = tmpParentClass.GetParentClass();
+            }
+
+            var tmpUnknown = inProject.UnknownClassForNameAndNamespaces(inClassName, inParentClass.FullUsingList);
             if (tmpUnknown == null)
             {
                 tmpUnknown = new UnknownTypeClass(inClassName)
                 {
-                    PossibleNamespace = inPossibleNamespaces
+                    PossibleNamespace = inParentClass.FullUsingList
                 };
                 inProject.AddUnknownClass(tmpUnknown);
             }
@@ -57,7 +75,7 @@ namespace CodeConverterCore.Helper
 
             foreach (var tmpAlias in inAliasList)
             {
-                tmpProject.AddAlias(tmpAlias.To, tmpProject.GetClassOrUnknownForType(tmpAlias.From, new List<string> { inSystemNamespace }));
+                tmpProject.AddAlias(tmpAlias.To, tmpProject.GetClassOrUnknownForType(tmpAlias.From, new ClassContainer { Namespace = inSystemNamespace }));
             }
 
             return tmpProject;
@@ -117,7 +135,7 @@ namespace CodeConverterCore.Helper
         public static ProjectInformation DoFullRun(List<LanguageMappingObject> inLanguageMapping, IConverter inConverter, ILoadOOPLanguage inLanguageLoader, params string[] inClassStringData)
         {
             var tmpProject = inLanguageLoader.CreateObjectInformation(inClassStringData.ToList(), null);
-            foreach(var tmpClass in tmpProject.ClassList)
+            foreach (var tmpClass in tmpProject.ClassList)
             {
                 if (!tmpClass.UsingList.Contains("java.lang"))
                 {
