@@ -240,7 +240,20 @@ namespace CodeConverterCSharp
                 }
                 else
                 {
-                    inOutput.Append($"{tmpConstant.Value}");
+                    if (tmpConstant.Value == null)
+                    {
+                        inOutput.Append($"{tmpConstant.Type.Type.Name}");
+                    }
+                    else
+                    {
+                        inOutput.Append($"{tmpConstant.Value}");
+                    }
+                    if (tmpConstant.Type?.ArrayInizialiser != null)
+                    {
+                        inOutput.Append("[");
+                        AddCodeEntryToString(inOutput, tmpConstant.Type.ArrayInizialiser);
+                        inOutput.Append("]");
+                    }
                 }
             }
             else if (inCodeEntry is StatementCode)

@@ -49,8 +49,10 @@ namespace CodeConverterCore.Analyzer
             //Load all Types of Inner Classes
             foreach (var tmpClass in inLoadedProject.ClassList)
             {
+                tmpClass.Parent = inLoadedProject;
                 for (var tmpI = 0; tmpI < tmpClass.InnerClasses.Count; tmpI++)
                 {
+                    tmpClass.InnerClasses[tmpI].Parent = inLoadedProject;
                     tmpTypeDictionary.Add(tmpClass.InnerClasses[tmpI].Name, new BaseType(tmpClass.InnerClasses[tmpI].Type.Name, tmpClass.Namespace));
                     if (tmpTypeDictionary.TryGetValue(tmpClass.InnerClasses[tmpI].Name, inItem => inItem.Namespace == tmpClass.Namespace, out var tmpResult))
                     {
@@ -252,10 +254,6 @@ namespace CodeConverterCore.Analyzer
                         inNameFinder.VariableList = new List<VariableDeclaration>();
                         tmpConstant.Type = inNameFinder.MethodeParentClass.Type;
                     }
-                    else if (tmpVal == "value")
-                    {
-                        throw new NotImplementedException("TODO Handle 'value' Parameter");
-                    }
                     else if (tmpVal == "base")
                     {
                         inNameFinder.Class = inNameFinder.Class.InterfaceList
@@ -268,20 +266,30 @@ namespace CodeConverterCore.Analyzer
                     {
                         //GetGlobalTypeForType(inNameFinder, tmpConstant, "String");
                     }
-                    else if (new Regex("^\\-?[0-9]*(\\.[0-9]*)?(S|D)?$").IsMatch(tmpVal))
+                    else if (new Regex("^\\-?[0-9]*(\\.[0-9]*)?(S|D|F|L)?$").IsMatch(tmpVal))
                     {
-                        if (tmpVal.EndsWith("D"))
+                        var tmpConstValue = tmpConstant.Value;
+                        if (tmpVal.EndsWith("L"))
                         {
                             GetGlobalTypeForType(inNameFinder, tmpConstant, "long");
+                        }
+                        else if (tmpVal.EndsWith("D"))
+                        {
+                            GetGlobalTypeForType(inNameFinder, tmpConstant, "double");
                         }
                         else if (tmpVal.EndsWith("S"))
                         {
                             GetGlobalTypeForType(inNameFinder, tmpConstant, "short");
                         }
+                        else if (tmpVal.EndsWith("F"))
+                        {
+                            GetGlobalTypeForType(inNameFinder, tmpConstant, "float");
+                        }
                         else
                         {
                             GetGlobalTypeForType(inNameFinder, tmpConstant, "int");
                         }
+                        tmpConstant.Value = tmpConstValue;
                     }
                     else
                     {
@@ -534,8 +542,8 @@ namespace CodeConverterCore.Analyzer
                 else
                 {
                     //Check for Static Types, System aliases or other Unknown Type
-                    var tmpStaticClassOrUnknown = ProjectInformation.GetClassOrUnknownForType(tmpVal, inNameFinder.Class ?? new ClassContainer());
-                    tmpConstant.Value = tmpStaticClassOrUnknown.Type;
+                    var tmpStaticClassOrUnknown = ProjectInformation.GetClassOrUnknownForType(tmpVal, inNameFinder.Class ?? inNameFinder.MethodeParentClass ?? new ClassContainer());
+                    //tmpConstant.Value = tmpStaticClassOrUnknown.Type;
                     if (tmpConstant.Type != null)
                     {
                         tmpConstant.Type.Type = tmpStaticClassOrUnknown.Type.Type;

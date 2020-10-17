@@ -36,7 +36,11 @@ namespace CodeConverterCore.Helper
             var tmpGenericType = inParentClass.Type.GenericTypes.FirstOrDefault(inItem => inItem.Name == inClassName);
             if (tmpGenericType != null)
             {
-                return new ClassContainer { Type = tmpGenericType };
+                return new ClassContainer
+                {
+                    Type = tmpGenericType,
+                    Parent = inProject
+                };
             }
 
             var tmpParentClass = inParentClass;
@@ -45,7 +49,11 @@ namespace CodeConverterCore.Helper
                 var tmpField = tmpParentClass.FieldList.FirstOrDefault(inItem => inItem.Name == inClassName);
                 if (tmpField != null)
                 {
-                    return new ClassContainer { Type = tmpField.Type };
+                    return new ClassContainer
+                    {
+                        Type = tmpField.Type,
+                        Parent = inProject
+                    };
                 }
                 tmpParentClass = tmpParentClass.GetParentClass();
             }
@@ -55,7 +63,8 @@ namespace CodeConverterCore.Helper
             {
                 tmpUnknown = new UnknownTypeClass(inClassName)
                 {
-                    PossibleNamespace = inParentClass.FullUsingList
+                    PossibleNamespace = inParentClass.FullUsingList,
+                    Parent = inProject
                 };
                 inProject.AddUnknownClass(tmpUnknown);
             }
