@@ -32,7 +32,10 @@ namespace CodeConverterCore.Helper
             {
                 return inProject.GetAliasType(inClassName);
             }
-
+            if (inParentClass.Type == null)
+            {
+                return null;
+            }
             var tmpGenericType = inParentClass.Type.GenericTypes.FirstOrDefault(inItem => inItem.Name == inClassName);
             if (tmpGenericType != null)
             {

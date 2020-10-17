@@ -421,7 +421,8 @@ namespace CodeConverterCore.Analyzer
                             CodeEntryHandling(tmpEntry, new FieldNameFinder()
                             {
                                 VariableList = inNameFinder.GetMethodeVariableList(),
-                                Class = inNameFinder.MethodeParentClass ?? inNameFinder.Class
+                                Class = inNameFinder.MethodeParentClass ?? inNameFinder.Class,
+                                MethodeParentClass = inNameFinder.MethodeParentClass
                             });
                         }
                     }
@@ -442,7 +443,8 @@ namespace CodeConverterCore.Analyzer
                                     CodeEntryHandling(tmpCodeBlock, new FieldNameFinder()
                                     {
                                         VariableList = inNameFinder.GetMethodeVariableList(),
-                                        Class = inNameFinder.MethodeParentClass ?? inNameFinder.Class
+                                        Class = inNameFinder.MethodeParentClass ?? inNameFinder.Class,
+                                        MethodeParentClass = inNameFinder.MethodeParentClass
                                     });
                                 }
                             }
@@ -472,7 +474,8 @@ namespace CodeConverterCore.Analyzer
                                 CodeEntryHandling(tmpCodeBlock, new FieldNameFinder()
                                 {
                                     VariableList = inNameFinder.GetMethodeVariableList(),
-                                    Class = inNameFinder.MethodeParentClass ?? inNameFinder.Class
+                                    Class = inNameFinder.MethodeParentClass ?? inNameFinder.Class,
+                                    MethodeParentClass = inNameFinder.MethodeParentClass
                                 });
                             }
                         }

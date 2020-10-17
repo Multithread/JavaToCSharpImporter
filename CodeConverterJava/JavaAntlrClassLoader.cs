@@ -68,7 +68,6 @@ namespace CodeConverterJava.Model
             foreach (var tmpElement in tmpClasses)
             {
                 var tmpClass = new ClassContainer();
-                tmpClassList.Add(tmpClass);
                 tmpClass.Namespace = tmpPackage;
                 tmpClass.UsingList = tmpUsingList;
                 //Add Namespace-comment, if existing
@@ -83,13 +82,16 @@ namespace CodeConverterJava.Model
                     tmpClassComments.RemoveAt(0);
                 }
 
-                ExtractClassFromTreeTypeDeclaration(tmpElement, tmpClass);
+                if (ExtractClassFromTreeTypeDeclaration(tmpElement, tmpClass))
+                {
+                    tmpClassList.Add(tmpClass);
+                }
             }
 
             return tmpClassList;
         }
 
-        private static void ExtractClassFromTreeTypeDeclaration(TypeDeclarationContext tmpElement, ClassContainer tmpClass)
+        private static bool ExtractClassFromTreeTypeDeclaration(TypeDeclarationContext tmpElement, ClassContainer tmpClass)
         {
             for (var tmpI = 0; tmpI < tmpElement.ChildCount; tmpI++)
             {
@@ -186,9 +188,22 @@ namespace CodeConverterJava.Model
                 }
                 else
                 {
+                    if (tmpElement.ChildCount == 1)
+                    {
+                        return false;
+                    }
+                    else
+                    {
 
+                    }
                 }
             }
+            if (string.IsNullOrEmpty(tmpClass.Name) || tmpClass.Type == null)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>

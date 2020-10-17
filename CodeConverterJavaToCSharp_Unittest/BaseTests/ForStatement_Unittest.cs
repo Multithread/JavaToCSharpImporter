@@ -49,7 +49,7 @@ namespace org
     {
         public void ForIInLength(int inLen)
         {
-            for (int i = 0:(i < inLen):i++)
+            for (int i = 0;(i < inLen);i++)
             {
                 i--;
             }

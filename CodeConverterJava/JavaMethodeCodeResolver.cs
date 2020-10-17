@@ -225,6 +225,15 @@ namespace CodeConverterJava.Model
                 inParentCodeBlock.CodeEntries.Add(tmpReturnCodeEntry);
                 return;
             }
+            else if (inStatement.THROW() != null)
+            {
+                tmpStatement.StatementType = StatementTypeEnum.Throw;
+                tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { };
+                var tmpBlock = new CodeBlock();
+                HandleExpressionContext(tmpBlock, inStatement.expression()[0]);
+                tmpStatement.StatementCodeBlocks.Add(tmpBlock);
+                return;
+            }
             else if (inStatement.SEMI() != null)
             {
                 //Semicolon, so it is a simple Statement
@@ -562,15 +571,23 @@ namespace CodeConverterJava.Model
                     {
                         if (tmpChildList[0].GetText() == "!")
                         {
-                            //Not boolean
-                            throw new NotImplementedException("Not done yet");
+                            var tmpCodeExpression = new CodeExpression
+                            {
+                                Manipulator = JavaStaticInfo.GetManipulator(tmpChildList[0].GetText())
+                            };
+                            tmpCodeExpression.SubClauseEntries = new List<CodeBlock> { new CodeBlock() };
+                            HandleExpressionContext(tmpCodeExpression.SubClauseEntries[0], tmpChildList[1] as ExpressionContext, inVariable);
+                            inCodeBlock.CodeEntries.Add(tmpCodeExpression);
                         }
                         else if (tmpChildList[0].GetText() != "-")
                         {
                             throw new NotImplementedException("Not done yet");
                         }
-                        HandleExpressionContext(inCodeBlock, tmpChildList[1] as ExpressionContext, inVariable);
-                        (inCodeBlock.CodeEntries.Last() as ConstantValue).Value = "-" + (inCodeBlock.CodeEntries.Last() as ConstantValue).Value;
+                        else
+                        {
+                            HandleExpressionContext(inCodeBlock, tmpChildList[1] as ExpressionContext, inVariable);
+                            (inCodeBlock.CodeEntries.Last() as ConstantValue).Value = "-" + (inCodeBlock.CodeEntries.Last() as ConstantValue).Value;
+                        }
                     }
                     else if (tmpChildList.Count == 2
                         && tmpChildList[0] is ExpressionContext)

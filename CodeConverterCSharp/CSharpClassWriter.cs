@@ -357,6 +357,10 @@ namespace CodeConverterCSharp
                 {
                     inOutput.Append("(");
                 }
+                if(tmpExpr.Manipulator == VariableOperatorType.Not)
+                {
+                    inOutput.Append(CSharpStaticInfo.GetOperatorString(tmpExpr.Manipulator));
+                }
                 inOutput.Append(string.Join($" {CSharpStaticInfo.GetOperatorString(tmpExpr.Manipulator)} ",
                     tmpExpr.SubClauseEntries.Select(inItem => CreateStatementCodeBlock(inItem))
                     ));
@@ -441,9 +445,9 @@ namespace CodeConverterCSharp
                 case StatementTypeEnum.For:
                     inOutput.Append("for (");
                     AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[0], 0, false);
-                    inOutput.Append(":");
+                    inOutput.Append(";");
                     AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[1], 0, false);
-                    inOutput.Append(":");
+                    inOutput.Append(";");
                     AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[2], 0, false);
                     inOutput.AppendLine(")");
                     inOutput.AppendLine(CreateIndent(inIndentDepth) + "{");

@@ -23,6 +23,7 @@ namespace CodeConverterCSharp.Model
            {"<=", VariableOperatorType.LessOrEquals},
            {">=", VariableOperatorType.MoreOrEquals},
            {"^", VariableOperatorType.XOR},
+           {"!", VariableOperatorType.Not},
 
            //Bitshift Operators
            {">>", VariableOperatorType.BitShiftRight},
