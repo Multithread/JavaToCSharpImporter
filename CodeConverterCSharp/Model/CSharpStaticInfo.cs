@@ -29,6 +29,8 @@ namespace CodeConverterCSharp.Model
            {"<<", VariableOperatorType.BitShiftLeft},
            {">> ", VariableOperatorType.BitShiftRightUnsigned},
            {"<< ", VariableOperatorType.BitShiftLeftUnsigned},
+           {"&", VariableOperatorType.BitwiseAnd},
+           {"|", VariableOperatorType.BitwiseOr},
 
            //VarOperations With Set
            {"++", VariableOperatorType.PlusPlus},

@@ -132,9 +132,19 @@ namespace CodeConverterJava.Model
                     }
                 }
             }
-            if (tmpVar.variableModifier().Length > 0)
+            if (tmpVar.variableModifier().Length == 1)
             {
-
+                if (tmpVar.variableModifier()[0].GetText() == "final")
+                {
+                    //Do Nothing?
+                }
+                else
+                {
+                    throw new NotImplementedException("Not done yet");
+                }
+            }
+            else if (tmpVar.variableModifier().Length > 1)
+            {
                 throw new NotImplementedException("Not done yet");
             }
         }
@@ -275,6 +285,18 @@ namespace CodeConverterJava.Model
                 }
 
             }
+            else if (inStatement.WHILE() != null)
+            {
+                if (inStatement.statement().Length > 2)
+                {
+                    throw new NotImplementedException("statement.statement length bigger than 1");
+                }
+                tmpStatement.StatementType = StatementTypeEnum.While;
+                tmpStatement.StatementCodeBlocks = new List<CodeBlock>() { new CodeBlock() };
+                HandleExpressionContext(tmpStatement.StatementCodeBlocks[0], inStatement.parExpression().expression(), null);
+                tmpStatement.InnerContent = new CodeBlock();
+                HandleBlockStatementStatement(tmpStatement.InnerContent, inStatement.statement()[0]);
+            }
             else
             {
                 throw new NotImplementedException("Not done yet");
@@ -284,7 +306,8 @@ namespace CodeConverterJava.Model
             {
                 var tmpinnercount = (inStatement.ELSE() != null ? 1 : 0)
                     + (inStatement.IF() != null ? 1 : 0)
-                    + (inStatement.FOR() != null ? 1 : 0);
+                    + (inStatement.FOR() != null ? 1 : 0)
+                    + (inStatement.WHILE() != null ? 1 : 0);
 
                 if (inStatement.statement().Length != tmpinnercount)
                 {
@@ -347,7 +370,19 @@ namespace CodeConverterJava.Model
                     }
                     else if (tmpPrimary.typeTypeOrVoid() != null)
                     {
-                        throw new NotImplementedException("Not done yet");
+                        var tmpType = JavaAntlrClassLoader.CreateTypeContainerFromType(tmpPrimary.typeTypeOrVoid());
+                        var tmpConst = new ConstantValue { Type = tmpType, Value = tmpPrimary.typeTypeOrVoid().typeType().GetText() };
+                        if (tmpPrimary.CLASS() != null)
+                        {
+                            var tmpVariableAccess = new VariableAccess();
+                            tmpVariableAccess.Access = tmpConst;
+                            tmpVariableAccess.Child = new ConstantValue { Value = "class" };
+                            inCodeBlock.CodeEntries.Add(tmpConst);
+                        }
+                        else
+                        {
+                            inCodeBlock.CodeEntries.Add(tmpConst);
+                        }
                     }
                     else if (tmpPrimary.nonWildcardTypeArguments() != null)
                     {
@@ -380,6 +415,21 @@ namespace CodeConverterJava.Model
                     inCodeBlock.CodeEntries.Add(tmpConverter);
                 }
                 else if (inBlockStatement.expression().Length == 2
+                    && inBlockStatement.children[1].GetText() == "[")
+                {
+                    var tmpAccess = new VariableAccess { };
+                    var tmpCodeBlock = new CodeBlock();
+                    HandleExpressionContext(tmpCodeBlock, inBlockStatement.expression()[0], null);
+                    tmpAccess.Access = tmpCodeBlock.CodeEntries[0];
+
+                    tmpCodeBlock = new CodeBlock();
+                    HandleExpressionContext(tmpCodeBlock, inBlockStatement.expression()[1], null);
+                    tmpAccess.Child = new CodeBlockContainer { InnerBlock = tmpCodeBlock };
+                    tmpAccess.IsArrayAccess = true;
+
+                    inCodeBlock.CodeEntries.Add(tmpAccess);
+                }
+                else if (inBlockStatement.expression().Length == 2
                     && inBlockStatement.children[1].GetText() != "=")
                 {
                     var tmpCodeExpression = new CodeExpression
@@ -396,7 +446,6 @@ namespace CodeConverterJava.Model
                     tmpCodeExpression.SubClauseEntries.Add(tmpCodeBlock);
 
                     inCodeBlock.CodeEntries.Add(tmpCodeExpression);
-
                 }
                 else
                 {
@@ -511,7 +560,12 @@ namespace CodeConverterJava.Model
                     else if (tmpChildList.Count == 2
                         && tmpChildList[1] is ExpressionContext)
                     {
-                        if (tmpChildList[0].GetText() != "-")
+                        if (tmpChildList[0].GetText() == "!")
+                        {
+                            //Not boolean
+                            throw new NotImplementedException("Not done yet");
+                        }
+                        else if (tmpChildList[0].GetText() != "-")
                         {
                             throw new NotImplementedException("Not done yet");
                         }
@@ -615,7 +669,7 @@ namespace CodeConverterJava.Model
         {
             var tmpMethodeCall = new MethodeCall()
             {
-                Name = (inMethodeCallContext.SUPER()?? inMethodeCallContext.THIS() ?? inMethodeCallContext.IDENTIFIER()).GetText()
+                Name = (inMethodeCallContext.SUPER() ?? inMethodeCallContext.THIS() ?? inMethodeCallContext.IDENTIFIER()).GetText()
             };
             if (inMethodeCallContext.expressionList() != null)
             {

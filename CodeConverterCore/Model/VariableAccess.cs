@@ -16,6 +16,11 @@ namespace CodeConverterCore.Model
         public ICodeEntry Child { get; set; }
 
         /// <summary>
+        /// Is Access to an Array
+        /// </summary>
+        public bool IsArrayAccess { get; set; }
+
+        /// <summary>
         /// Base Code Entry with link to the actual source 
         /// (Field, Methode-call, Variable, inParameter) 
         /// filled during code-analysis

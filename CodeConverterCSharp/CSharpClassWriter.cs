@@ -280,8 +280,17 @@ namespace CodeConverterCSharp
                 AddCodeEntryToString(inOutput, tmpVarAccess.Access);
                 if (tmpVarAccess.Child != null)
                 {
-                    inOutput.Append(".");
-                    AddCodeEntryToString(inOutput, tmpVarAccess.Child);
+                    if (tmpVarAccess.IsArrayAccess)
+                    {
+                        inOutput.Append("[");
+                        AddCodeEntryToString(inOutput, tmpVarAccess.Child);
+                        inOutput.Append("]");
+                    }
+                    else
+                    {
+                        inOutput.Append(".");
+                        AddCodeEntryToString(inOutput, tmpVarAccess.Child);
+                    }
                 }
                 else if (tmpVarAccess.BaseDataSource != null)
                 {
@@ -436,6 +445,14 @@ namespace CodeConverterCSharp
                     AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[1], 0, false);
                     inOutput.Append(":");
                     AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[2], 0, false);
+                    inOutput.AppendLine(")");
+                    inOutput.AppendLine(CreateIndent(inIndentDepth) + "{");
+                    AddCodeBlockToString(inOutput, inStatement.InnerContent, inIndentDepth + 1);
+                    inOutput.AppendLine(CreateIndent(inIndentDepth) + "}");
+                    break;
+                case StatementTypeEnum.While:
+                    inOutput.Append("while (");
+                    AddCodeBlockToString(inOutput, inStatement.StatementCodeBlocks[0], 0, false);
                     inOutput.AppendLine(")");
                     inOutput.AppendLine(CreateIndent(inIndentDepth) + "{");
                     AddCodeBlockToString(inOutput, inStatement.InnerContent, inIndentDepth + 1);
